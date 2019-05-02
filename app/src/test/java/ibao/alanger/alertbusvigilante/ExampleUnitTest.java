@@ -1,4 +1,4 @@
-package ibao.alanger.alertbus;
+package ibao.alanger.alertbusvigilante;
 
 import org.junit.Test;
 
