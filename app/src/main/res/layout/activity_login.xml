@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/fondo4"
+
+        android:contentDescription="sdfsdf" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constCombo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constComboBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:alpha="0.8"
+            android:background="@drawable/shape_white_br30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constComboContenido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/iViewLogoIncavo"
+                android:layout_width="126dp"
+                android:layout_height="106dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="logo"
+                android:cropToPadding="true"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constETextUsuario"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iViewLogoIncavo"
+                tools:ignore="MissingConstraints">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0.5"
+                    android:background="@drawable/shape_materialgrey600_br15"
+                    app:layout_constraintBottom_toBottomOf="@+id/eTextUsuario"
+                    app:layout_constraintEnd_toEndOf="@+id/eTextUsuario"
+                    app:layout_constraintStart_toStartOf="@+id/eTextUsuario"
+                    app:layout_constraintTop_toTopOf="@+id/eTextUsuario">
+
+                </android.support.constraint.ConstraintLayout>
+
+
+                <EditText
+                    android:id="@+id/eTextUsuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/usuario"
+                    android:inputType="text"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:textColorHint="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="Autofill,MissingConstraints" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <!--
+            ETEXT USUARIO
+            -->
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constETextContrasena"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/constETextUsuario"
+                app:layout_constraintStart_toStartOf="@+id/constETextUsuario"
+                app:layout_constraintTop_toBottomOf="@+id/constETextUsuario">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0.5"
+                    android:background="@drawable/shape_materialgrey600_br15"
+                    app:layout_constraintBottom_toBottomOf="@+id/eTextPassword"
+                    app:layout_constraintEnd_toEndOf="@+id/eTextPassword"
+                    app:layout_constraintStart_toStartOf="@+id/eTextPassword"
+                    app:layout_constraintTop_toTopOf="@+id/eTextPassword">
+
+                </android.support.constraint.ConstraintLayout>
+
+
+                <EditText
+                    android:id="@+id/eTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/contrasena"
+                    android:inputType="textPassword"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="40dp"
+                    android:textColorHint="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="Autofill,MissingConstraints" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btnEnter"
+                android:layout_width="103dp"
+                android:layout_height="37dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/shape_white_br15"
+                android:text="@string/ingresar"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize_tertiary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/constETextContrasena"
+                app:layout_constraintStart_toStartOf="@+id/constETextContrasena"
+                app:layout_constraintTop_toBottomOf="@+id/constETextContrasena" />
+
+            <ImageView
+                android:id="@+id/iViewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="password"
+                android:src="@drawable/ic_remove_red_eye_black_24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/constETextContrasena"
+                app:layout_constraintEnd_toEndOf="@+id/constETextContrasena"
+                app:layout_constraintTop_toTopOf="@+id/constETextContrasena" />
+
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iViewLogoIncavo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iViewLogoIncavo"
+                app:layout_constraintTop_toTopOf="@+id/iViewLogoIncavo">
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="2dp"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+
+                    android:textSize="38sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tViewCompanyMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mark_margin_bottom"
+        android:layout_marginEnd="@dimen/mark_margin_end"
+        android:text="@string/company_mark"
+        android:textColor="@color/white"
+        android:textSize="@dimen/mark_size_text"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+
+</android.support.constraint.ConstraintLayout>
