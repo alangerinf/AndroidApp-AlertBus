@@ -60,6 +60,8 @@ public class LoginHelper {
                     public void onResponse(String response) {
                         progress.dismiss();
                         try {
+
+                            Log.d(TAG,"resp:"+response);
                             new LoginDataDAO(ctx).borrarTable();
                             JSONObject data = new JSONObject(response);
                             int success = data.getInt("success");
@@ -112,6 +114,7 @@ public class LoginHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progress.dismiss();
+                        Log.d(TAG,"ERROR: "+error.toString());
                         Toast.makeText(ctx,"Error conectando con el servidor",Toast.LENGTH_LONG).show();
 
                     }

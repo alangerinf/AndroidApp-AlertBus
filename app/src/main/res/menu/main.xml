@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/main_menu_info"
+        android:title="Mi informacion"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/actualizar"
+        android:title="Buscar Viajes"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/logout"
+        android:title="Cerrar Sesión"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/version"
+        android:title="Versión"
+        app:showAsAction="never" />
+</menu>

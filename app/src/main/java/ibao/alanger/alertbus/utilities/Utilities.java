@@ -45,7 +45,7 @@ public class Utilities {
             TABLE_VIAJE_TYPECOL_PLACA           ="VARCHAR(50)",
             TABLE_VIAJE_COL_CONDUCTOR           ="conductor",
             TABLE_VIAJE_TYPECOL_CONDUCTOR       ="varchar(50)",
-            TABLE_VIAJE_COL_PORCAPACIDAD        ="capacidadTotal",
+            TABLE_VIAJE_COL_PORCAPACIDAD        ="porCapacidad",
             TABLE_VIAJE_TYPECOL_PORCAPACIDAD    ="REAL",
             TABLE_VIAJE_COL_NUMPASAJEROS        ="capacidadTotal",
             TABLE_VIAJE_TYPECOL_NUMPASAJEROS    ="INTEGER",
@@ -81,7 +81,6 @@ public class Utilities {
                     TABLE_PASAJERO_COL_ID       +" "+TABLE_PASAJERO_TYPECOL_ID+" PRIMARY KEY AUTOINCREMENT," +
                     TABLE_PASAJERO_COL_DNI      +" "+TABLE_PASAJERO_TYPECOL_DNI+"," +
                     TABLE_PASAJERO_COL_NAME     +" "+TABLE_PASAJERO_TYPECOL_NAME+"," +
-                    TABLE_PASAJERO_COL_NAME     +" "+TABLE_PASAJERO_TYPECOL_NAME+","+
                     TABLE_PASAJERO_COL_IDVIAJE  +" "+ TABLE_PASAJERO_TYPECOL_IDVIAJE +" "+
                     ")";
 
