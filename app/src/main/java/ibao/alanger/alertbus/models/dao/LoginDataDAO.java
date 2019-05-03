@@ -1,33 +1,31 @@
-package com.ibao.alanger.agroq.models.dao;
+package ibao.alanger.alertbus.models.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.ibao.alanger.agroq.ConexionSQLiteHelper;
-import com.ibao.alanger.agroq.models.vo.entitiesInternal.LoginDataVO;
+import com.google.gson.Gson;
 
-import static com.ibao.alanger.agroq.ConexionSQLiteHelper.VERSION_DB;
-import static com.ibao.alanger.agroq.utilities.Utilities.DATABASE_NAME;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_CODIGO;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_IDCULTIVO;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_IDPLANTA;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_IDTIPOPROCESO;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_IDUSER;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_LASTNAME;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_LISTIDTIPOPROCESO;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_NAME;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_PASSWORD;
-import static com.ibao.alanger.agroq.utilities.Utilities.TABLE_LOGINDATA_COL_USER;
+import ibao.alanger.alertbus.ConexionSQLiteHelper;
+import ibao.alanger.alertbus.models.vo.LoginDataVO;
+
+import static ibao.alanger.alertbus.ConexionSQLiteHelper.VERSION_DB;
+import static ibao.alanger.alertbus.utilities.Utilities.DATABASE_NAME;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA_COL_IDUSER;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA_COL_LASTNAME;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA_COL_NAME;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA_COL_PASSWORD;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA_COL_USER;
 
 public class LoginDataDAO {
 
     Context ctx;
 
-  //  static String TAG = "LoginData DAO";
+    private static String TAG = LoginDataDAO.class.getSimpleName();
     
     public LoginDataDAO(Context ctx) {
         this.ctx=ctx;
@@ -57,12 +55,7 @@ public class LoginDataDAO {
             values.put(TABLE_LOGINDATA_COL_PASSWORD, loginDataVO.getPassword());
             values.put(TABLE_LOGINDATA_COL_NAME,loginDataVO.getName());
             values.put(TABLE_LOGINDATA_COL_LASTNAME,loginDataVO.getLastName());
-            values.put(TABLE_LOGINDATA_COL_CODIGO,loginDataVO.getCodigo());
-            values.put(TABLE_LOGINDATA_COL_IDTIPOPROCESO,loginDataVO.getIdTipoProceso());
-            values.put(TABLE_LOGINDATA_COL_LISTIDTIPOPROCESO,loginDataVO.getListIdTipoProcesos());
-            values.put(TABLE_LOGINDATA_COL_IDCULTIVO,loginDataVO.getIdCultivo());
-            values.put(TABLE_LOGINDATA_COL_IDPLANTA,loginDataVO.getIdPlanta());
-        int id = (int)db.insert(TABLE_LOGINDATA, TABLE_LOGINDATA_COL_IDUSER, values);
+            int id = (int)db.insert(TABLE_LOGINDATA, TABLE_LOGINDATA_COL_IDUSER, values);
         db.close();
         c.close();
 
@@ -78,17 +71,11 @@ public class LoginDataDAO {
         try{
             Cursor cursor = db.rawQuery(
                     "SELECT " +
-                            "LD."+TABLE_LOGINDATA_COL_IDUSER        +", " +//0
-                            "LD."+TABLE_LOGINDATA_COL_USER +", " +//1
-                            "LD."+TABLE_LOGINDATA_COL_PASSWORD   +", " +//2
-                            "LD."+TABLE_LOGINDATA_COL_NAME   +", "+//3
-                            "LD."+TABLE_LOGINDATA_COL_LASTNAME+", "+//4
-                            "LD."+TABLE_LOGINDATA_COL_CODIGO+", "+ //5
-                            "LD."+TABLE_LOGINDATA_COL_IDCULTIVO+", "+ //6
-                            "LD."+TABLE_LOGINDATA_COL_IDPLANTA+", "+ //7
-                            "LD."+TABLE_LOGINDATA_COL_IDTIPOPROCESO+", "+ //8
-                            "LD."+TABLE_LOGINDATA_COL_LISTIDTIPOPROCESO+ //9
-
+                            "LD."+TABLE_LOGINDATA_COL_IDUSER+", " +//0
+                            "LD."+TABLE_LOGINDATA_COL_USER+", " +//1
+                            "LD."+TABLE_LOGINDATA_COL_PASSWORD+", " +//2
+                            "LD."+TABLE_LOGINDATA_COL_NAME+", "+//3
+                            "LD."+TABLE_LOGINDATA_COL_LASTNAME+" "+//4
                             " FROM "+
                             TABLE_LOGINDATA+" as LD "
                     ,null);
@@ -106,24 +93,6 @@ public class LoginDataDAO {
                 temp.setName(cursor.getString(3));
                // Log.d(TAG,"4");
                 temp.setLastName(cursor.getString(4));
-               // Log.d(TAG,"5");
-                temp.setCodigo(cursor.getString(5));
-               // Log.d(TAG,"6");
-                temp.setIdCultivo(cursor.getInt(6));
-               // Log.d(TAG,"7");
-                temp.setIdPlanta((cursor.getInt(7)));
-               // Log.d(TAG,"8");
-                temp.setIdTipoProceso((cursor.getInt(8)));
-               // Log.d(TAG,"9");
-                temp.setListIdTipoProcesos(cursor.getString(9));
-
-                if(temp.getIdTipoProceso()>0){
-                    String nameTypeProcess;
-                    nameTypeProcess = new TipoProcesoDAO(ctx).consultarByid(temp.getIdTipoProceso()).getName();
-                    temp.setNameTypeProcess(String.valueOf(nameTypeProcess.charAt(0)).toUpperCase()+nameTypeProcess.toLowerCase().substring(1));
-
-                }
-
             }
             cursor.close();
 
@@ -134,29 +103,13 @@ public class LoginDataDAO {
             db.close();
             c.close();
         }
+
+        Gson gson = new Gson();
+        String usuarioJson = gson.toJson(temp);
+        Log.d(TAG,"usuario:"+usuarioJson);
+
         return temp;
     }
 
-    public boolean editIdTipoProceso(int idTipoProceso) {
 
-            boolean flag = false;
-            ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
-            SQLiteDatabase db = c.getWritableDatabase();
-            /*String[] parametros =
-                    {
-                            String.valueOf(idTipoProceso),
-                    };
-            */
-            ContentValues values = new ContentValues();
-            values.put(TABLE_LOGINDATA_COL_IDTIPOPROCESO,idTipoProceso);
-            int res = db.update(TABLE_LOGINDATA,values,null,null);
-            if(res>0){
-                flag=true;
-            }
-            db.close();
-            c.close();
-            return  flag;
-
-
-    }
 }

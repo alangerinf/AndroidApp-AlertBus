@@ -1,4 +1,4 @@
-package com.ibao.alanger.agroq.helpers;
+package ibao.alanger.alertbus.helpers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,11 +11,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.ibao.alanger.agroq.app.AppController;
-import com.ibao.alanger.agroq.models.dao.LoginDataDAO;
-import com.ibao.alanger.agroq.models.vo.entitiesInternal.LoginDataVO;
-import com.ibao.alanger.agroq.views.ActivityPostloader;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,15 +18,22 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ibao.alanger.agroq.utilities.Utilities.URL_AUTENTIFICATION;
+import ibao.alanger.alertbus.app.AppController;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.vo.LoginDataVO;
+import ibao.alanger.alertbus.views.MainActivity;
+
+import static ibao.alanger.alertbus.utilities.Utilities.URL_AUTENTIFICATION;
 
 
 public class LoginHelper {
 
     public static String POST_USER = "usuario";
-    public static String POST_PASSWORD = "password";
-    public static String POST_IDCULTIVO = "idCultivo";
-    public static String POST_IDPLANTA = "idPlanta";
+    public static String POST_PASS = "password";
+
+
+    private String data_id = "id";
+    private String data_name = "name";
 
     static String TAG = "login Helper";
 
@@ -46,7 +48,7 @@ public class LoginHelper {
         LoginDataVO  temp = new LoginDataDAO(ctx).verficarLogueo();
         return temp;
     }
-    public void intentoLogueo(final String user, final String pass,final int idPlanta,final int idCultivo){
+    public void intentoLogueo(final String user, final String pass){
         progress = new ProgressDialog(ctx);
         progress.setCancelable(false);
         progress.setMessage("Comprobando Credenciales");
@@ -70,13 +72,12 @@ public class LoginHelper {
                                 for(int i=0;i<main.length();i++){
                                     JSONObject temp = new JSONObject(main.get(i).toString());
                                     LoginDataVO loginDataVO = new LoginDataVO();
-                                    loginDataVO.setId(temp.getInt("id"));
+                                    loginDataVO.setId(temp.getInt(data_id));
+                                    loginDataVO.setName(temp.getString(data_name));
                                     loginDataVO.setUser(user);
                                     loginDataVO.setPassword(pass);
-                                    loginDataVO.setIdPlanta(idPlanta);
-                                    loginDataVO.setIdCultivo(idCultivo);
-                                    loginDataVO.setListIdTipoProcesos(temp.getString("idTipoProceso"));
-                                    loginDataVO.setName(temp.getString("evaluador"));
+
+
                                     loginDataVO.setLastName("");
                                     /***
 
@@ -87,8 +88,8 @@ public class LoginHelper {
                                     if( verificarLogueo() != null){
                                         LoginDataVO u = verificarLogueo();
                                         if(u!=null){
-                                            //Toast.makeText(ctx,"Espere un momento...",Toast.LENGTH_LONG).show();
-                                            Intent intent = new Intent(ctx, ActivityPostloader.class);
+
+                                            Intent intent = new Intent(ctx, MainActivity.class);
                                             ctx.startActivity(intent);
                                         }else {
                                             Toast.makeText(ctx,"Error de Base de Datos Interna",Toast.LENGTH_LONG).show();
@@ -119,9 +120,7 @@ public class LoginHelper {
             protected Map<String,String> getParams(){
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(POST_USER, user);
-                params.put(POST_PASSWORD, pass);
-                params.put(POST_IDPLANTA, String.valueOf(idPlanta));
-                params.put(POST_IDCULTIVO, String.valueOf(idCultivo));
+                params.put(POST_PASS, pass);
                 return params;
             }
 

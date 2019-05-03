@@ -1,4 +1,4 @@
-package com.ibao.alanger.agroq.models.vo.entitiesInternal;
+package ibao.alanger.alertbus.models.vo;
 
 public class LoginDataVO {
 
@@ -11,42 +11,12 @@ public class LoginDataVO {
     private String name;
     private String lastName;
 
-    private int idTipoProceso;
-    private String nameTypeProcess;
 
-    private String ListIdTipoProcesos;
-
-    private int idCultivo;
-
-    private int idPlanta;
 
     public int getId() {
         return id;
     }
 
-    public int getIdTipoProceso() {
-        return idTipoProceso;
-    }
-
-    public void setIdTipoProceso(int idTipoProceso) {
-        this.idTipoProceso = idTipoProceso;
-    }
-
-    public String getNameTypeProcess() {
-        return nameTypeProcess;
-    }
-
-    public void setNameTypeProcess(String nameTypeProcess) {
-        this.nameTypeProcess = nameTypeProcess;
-    }
-
-    public String getListIdTipoProcesos() {
-        return ListIdTipoProcesos;
-    }
-
-    public void setListIdTipoProcesos(String listIdTipoProcesos) {
-        ListIdTipoProcesos = listIdTipoProcesos;
-    }
 
     public String getCodigo() {
         return codigo;
@@ -66,22 +36,6 @@ public class LoginDataVO {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public int getIdCultivo() {
-        return idCultivo;
-    }
-
-    public void setIdCultivo(int idCultivo) {
-        this.idCultivo = idCultivo;
-    }
-
-    public int getIdPlanta() {
-        return idPlanta;
-    }
-
-    public void setIdPlanta(int idPlanta) {
-        this.idPlanta = idPlanta;
     }
 
     public void setId(int id) {

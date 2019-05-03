@@ -1,7 +1,9 @@
-package ibao.alanger.alertbus;
+package ibao.alanger.alertbus.views;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import ibao.alanger.alertbus.R;
 
 public class LoginActivity extends Activity {
 

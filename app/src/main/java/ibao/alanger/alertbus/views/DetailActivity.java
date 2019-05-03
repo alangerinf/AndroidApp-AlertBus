@@ -1,7 +1,9 @@
-package ibao.alanger.alertbus;
+package ibao.alanger.alertbus.views;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import ibao.alanger.alertbus.R;
 
 public class DetailActivity extends AppCompatActivity {
 

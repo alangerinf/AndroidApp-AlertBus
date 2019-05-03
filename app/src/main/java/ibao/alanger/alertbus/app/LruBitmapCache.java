@@ -1,4 +1,4 @@
-package ibao.alanger.alertbusvigilante.app;
+package ibao.alanger.alertbus.app;
 
 
 import android.graphics.Bitmap;

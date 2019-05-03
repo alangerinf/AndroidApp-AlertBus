@@ -1,4 +1,4 @@
-package ibao.alanger.alertbusvigilante;
+package ibao.alanger.alertbus;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
