@@ -18,9 +18,11 @@ import static ibao.alanger.alertbus.ConexionSQLiteHelper.VERSION_DB;
 import static ibao.alanger.alertbus.utilities.Utilities.DATABASE_NAME;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_DNI;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_HORASUBIDA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_ID;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_IDVIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_NAME;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_OBSERVACION;
 
 
 public class PasajeroDAO {
@@ -45,7 +47,7 @@ public class PasajeroDAO {
         return flag;
     }
 
-    public boolean insertar(String dni, String name,int idViaje){
+    public boolean insertar(String dni, String name,int idViaje, String hSubida, String observacion){
 
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -54,6 +56,9 @@ public class PasajeroDAO {
             values.put(TABLE_PASAJERO_COL_DNI,dni);
             values.put(TABLE_PASAJERO_COL_NAME,name);
             values.put(TABLE_PASAJERO_COL_IDVIAJE,idViaje);
+            values.put(TABLE_PASAJERO_COL_HORASUBIDA,hSubida);
+            values.put(TABLE_PASAJERO_COL_OBSERVACION,observacion);
+
             Long temp = db.insert(TABLE_PASAJERO,TABLE_PASAJERO_COL_ID,values);
             db.close();
             conn.close();
@@ -110,7 +115,9 @@ public class PasajeroDAO {
                     TABLE_PASAJERO_COL_ID,
                     TABLE_PASAJERO_COL_NAME,
                     TABLE_PASAJERO_COL_DNI,
-                    TABLE_PASAJERO_COL_IDVIAJE
+                    TABLE_PASAJERO_COL_IDVIAJE,
+                    TABLE_PASAJERO_COL_HORASUBIDA,
+                    TABLE_PASAJERO_COL_OBSERVACION
             };
             String[] arg = {String.valueOf(idViaje)};
             Cursor cursor= db.query(TABLE_PASAJERO,campos,TABLE_PASAJERO_COL_IDVIAJE+"=?",arg,null,null,TABLE_PASAJERO_COL_NAME+" COLLATE UNICODE ASC");
@@ -121,6 +128,8 @@ public class PasajeroDAO {
                     temp.setName(cursor.getString(1));
                     temp.setDni(cursor.getString(2));
                     temp.setIdViaje(cursor.getInt(3));
+                    temp.sethSubida(cursor.getString(4));
+                    temp.setObservacion(cursor.getString(5));
                 categoriaVOList.add(temp);
 
             }

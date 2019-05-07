@@ -60,6 +60,12 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
         //fin labels
         holder.tViewName.setText(""+pasajeroVO.getName());
         holder.tViewDNI.setText(""+pasajeroVO.getDni());
+        holder.tViewObservacion.setText("*"+pasajeroVO.getObservacion());
+        holder.tViewFecha.setText(""+pasajeroVO.gethSubida());
+
+        if(pasajeroVO.getObservacion().isEmpty()){
+            holder.tViewObservacion.setHeight(0);
+        }
 
     }
 
@@ -81,11 +87,14 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
         //fin labels
         TextView tViewName ;
         TextView tViewDNI ;
-
+        TextView tViewObservacion;
+        TextView tViewFecha;
         public ViewHolder(View itemView){
             super(itemView);
             tViewName = itemView.findViewById(R.id.tViewName);
             tViewDNI = itemView.findViewById(R.id.tViewDNI);
+            tViewObservacion = itemView.findViewById(R.id.tViewObservacion);
+            tViewFecha = itemView.findViewById(R.id.tViewFecha);
 
         }
     }

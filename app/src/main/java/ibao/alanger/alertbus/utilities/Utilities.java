@@ -33,7 +33,11 @@ public class Utilities {
             TABLE_PASAJERO_COL_NAME             ="name",
             TABLE_PASAJERO_TYPECOL_NAME         ="varchar(50)",
             TABLE_PASAJERO_COL_IDVIAJE          ="idViaje",
-            TABLE_PASAJERO_TYPECOL_IDVIAJE      ="INTEGER";
+            TABLE_PASAJERO_TYPECOL_IDVIAJE      ="INTEGER",
+            TABLE_PASAJERO_COL_HORASUBIDA       ="hSubida",
+            TABLE_PASAJERO_TYPECOL_HORASUBIDA   ="VARCHAR(100)",
+            TABLE_PASAJERO_COL_OBSERVACION      ="observacion",
+            TABLE_PASAJERO_TYPECOL_OBSERVACION  ="VARCHAR(100)";
     
     
     public static final String TABLE_VIAJE ="viaje",
@@ -78,10 +82,12 @@ public class Utilities {
 
     public static final String CREATE_TABLE_PASAJERO =
             " CREATE TABLE IF NOT EXISTS "+TABLE_PASAJERO+" (" +
-                    TABLE_PASAJERO_COL_ID       +" "+TABLE_PASAJERO_TYPECOL_ID+" PRIMARY KEY AUTOINCREMENT," +
-                    TABLE_PASAJERO_COL_DNI      +" "+TABLE_PASAJERO_TYPECOL_DNI+"," +
-                    TABLE_PASAJERO_COL_NAME     +" "+TABLE_PASAJERO_TYPECOL_NAME+"," +
-                    TABLE_PASAJERO_COL_IDVIAJE  +" "+ TABLE_PASAJERO_TYPECOL_IDVIAJE +" "+
+                    TABLE_PASAJERO_COL_ID           +" "+TABLE_PASAJERO_TYPECOL_ID+" PRIMARY KEY AUTOINCREMENT," +
+                    TABLE_PASAJERO_COL_DNI          +" "+TABLE_PASAJERO_TYPECOL_DNI+"," +
+                    TABLE_PASAJERO_COL_NAME         +" "+TABLE_PASAJERO_TYPECOL_NAME+"," +
+                    TABLE_PASAJERO_COL_IDVIAJE      +" "+ TABLE_PASAJERO_TYPECOL_IDVIAJE +", "+
+                    TABLE_PASAJERO_COL_HORASUBIDA   +" "+ TABLE_PASAJERO_TYPECOL_HORASUBIDA +", "+
+                    TABLE_PASAJERO_COL_OBSERVACION  +" "+ TABLE_PASAJERO_TYPECOL_OBSERVACION +" "+
                     ")";
 
     public static final String CREATE_TABLE_LOGINDATA =

@@ -5,14 +5,26 @@ public class PasajeroVO {
     private String name;
     private String dni;
     private int idViaje;
+    private String hSubida;
+    private String observacion;
 
     public PasajeroVO(){
     }
 
-    public PasajeroVO(int id, String name,String dni) {
-        this.id = id;
-        this.name = name;
-        this.dni = dni;
+    public String gethSubida() {
+        return hSubida;
+    }
+
+    public void sethSubida(String hSubida) {
+        this.hSubida = hSubida;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
     }
 
     public int getId() {

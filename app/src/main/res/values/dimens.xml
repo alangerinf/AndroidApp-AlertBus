@@ -17,4 +17,6 @@
     <dimen name="mark_margin_bottom">8dp</dimen>
     <dimen name="mark_margin_end">8dp</dimen>
 
+    <dimen name="padding_buttons">10dp</dimen>
+
 </resources>

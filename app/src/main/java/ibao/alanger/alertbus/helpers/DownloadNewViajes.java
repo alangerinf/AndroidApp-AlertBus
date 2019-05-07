@@ -15,9 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ibao.alanger.alertbus.app.AppController;
@@ -26,9 +24,9 @@ import ibao.alanger.alertbus.models.dao.PasajeroDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.SearchViajesService;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
-import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
 
 public class DownloadNewViajes {
 
@@ -63,20 +61,30 @@ public class DownloadNewViajes {
                                 if(main.getInt("success")==1){
                                     Log.d("asd ","flag2");
                                     JSONArray dataViajes = main.getJSONArray("viajes");
+
+                                    if(0<dataViajes.length()){
+                                        SearchViajesService.statusActualizar = true;
+                                    }
+
                                     for(int i=0;i<dataViajes.length();i++){
+
                                         JSONObject viaje = new JSONObject(dataViajes.get(i).toString());
                                         /***
-                                         * {"id":"1",
-                                         * "ruta":"TRUJILLO - CHAO",
-                                         * "conductor":"QUIROZ NUNEZ, DORITA",
-                                         * "placa":"XYZ-123",
-                                         * "capacidadTeorica":45,
-                                         * "totalTrabajadores":4,
-                                         * "horaInicio":"2019-05-03 10:00:00",
-                                         * "horaFin":"2019-05-03 12:00:00"}
+                                         * {
+                                         *             "id": "1",
+                                         *             "proveedor": "Transporte El Sol",
+                                         *             "ruta": "TRUJILLO - CHAO",
+                                         *             "conductor": "QUIROZ NUNEZ, DORITA",
+                                         *             "placa": "XYZ-123",
+                                         *             "capacidadTeorica": 45,
+                                         *             "totalTrabajadores": 4,
+                                         *             "horaInicio": "2019-05-03 10:00:00",
+                                         *             "horaFin": "2019-05-03 12:00:00"
+                                         *         }
                                           */
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
+                                        viajeVO.setProveedor(viaje.getString("proveedor"));
                                         viajeVO.setRuta(viaje.getString("ruta"));
                                         viajeVO.setConductor(viaje.getString("conductor"));
                                         viajeVO.setPlaca(viaje.getString("placa"));
@@ -101,20 +109,29 @@ public class DownloadNewViajes {
                                     for(int i=0;i<dataPasajeros.length();i++){
                                         JSONObject pasajero = new JSONObject(dataPasajeros.get(i).toString());
                                         /***
-                                         * {"id":"1",
-                                         * "idViaje":"1",
-                                         * "nroDocumento":"19201830",
-                                         * "trabajador":"QUIROZ ASTACIO, LUIS"},
+                                         *{
+                                         *             "id": "1",
+                                         *             "idViaje": "1",
+                                         *             "nroDocumento": "19201830",
+                                         *             "trabajador": "QUIROZ ASTACIO, LUIS",
+                                         *             "inicioLectura": "2019-05-03 10:01:00",
+                                         *             "observacion": "DESCANSO VACACIONAL"
+                                         *}
                                          */
                                         PasajeroVO pasajeroVO = new PasajeroVO();
                                         pasajeroVO.setIdViaje(pasajero.getInt("idViaje"));
                                         pasajeroVO.setName(pasajero.getString("trabajador"));
                                         pasajeroVO.setDni(pasajero.getString("nroDocumento"));
+                                        pasajeroVO.sethSubida(pasajero.getString("inicioLectura"));
+                                        pasajeroVO.setObservacion(pasajero.getString("observacion"));
 
                                         new PasajeroDAO(ctx).insertar(
                                                 pasajeroVO.getDni(),
                                                 pasajeroVO.getName(),
-                                                pasajeroVO.getIdViaje());
+                                                pasajeroVO.getIdViaje(),
+                                                pasajeroVO.gethSubida(),
+                                                pasajeroVO.getObservacion()
+                                        );
                                     }
                                     status=3;
                                 }

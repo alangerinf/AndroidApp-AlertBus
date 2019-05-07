@@ -20,7 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <service
-            android:name=".services.SeachViajesService"
+            android:name=".services.SearchViajesService"
             android:enabled="true"
             android:exported="true">
 

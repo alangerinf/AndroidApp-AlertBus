@@ -106,7 +106,7 @@ public class ViajeDAO {
 
         ContentValues values = new ContentValues();
         values.put(TABLE_VIAJE_COL_STATUS,1);
-        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=? AND "+TABLE_VIAJE_COL_STATUS+"<1",parametros);
         if(res>0){
             flag=true;
         }
@@ -135,6 +135,26 @@ public class ViajeDAO {
         c.close();
         return  flag;
     }
+
+    public boolean editComentarioById(int id, String comentario) {
+        boolean flag = false;
+        ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
+        SQLiteDatabase db = c.getWritableDatabase();
+        String[] parametros =
+                {
+                        String.valueOf(id),
+                };
+        ContentValues values = new ContentValues();
+        values.put(TABLE_VIAJE_COL_COMENTARIO,comentario);
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        c.close();
+        return  flag;
+    }
+
 
     public ViajeVO buscarById(int id){
         ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );

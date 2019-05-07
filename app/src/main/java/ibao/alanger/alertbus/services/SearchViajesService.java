@@ -8,12 +8,16 @@ import android.os.IBinder;
 
 import ibao.alanger.alertbus.helpers.DownloadNewViajes;
 
-public class SeachViajesService extends Service {
+public class SearchViajesService extends Service {
 
 
     final Handler handler = new Handler();
     Context ctx;
-    public SeachViajesService() {
+
+    public static boolean statusActualizar = false;
+
+
+    public SearchViajesService() {
     }
 
     @Override
@@ -39,7 +43,7 @@ public class SeachViajesService extends Service {
     private static int timeMilis=1000*5;
 
     public void setTimeMilis(int timeMilis) {
-        SeachViajesService.timeMilis = timeMilis;
+        SearchViajesService.timeMilis = timeMilis;
     }
 
     public static int getTimeMilis() {

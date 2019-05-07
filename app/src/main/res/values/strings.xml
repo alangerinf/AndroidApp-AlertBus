@@ -32,4 +32,13 @@
     <string name="twoPoints">:</string>
 
 
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="comentario">Comentario</string>
+    <string name="texthint_escribecomentario">Escribe tu comentario</string>
+    <string name="listo">Listo</string>
+    <string name="item_1">Item 1</string>
+
+
+
 </resources>

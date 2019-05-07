@@ -2,6 +2,7 @@ package ibao.alanger.alertbus.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,11 +15,14 @@ import java.util.List;
 
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.helpers.DownloadNewViajes;
 import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajes;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
-import ibao.alanger.alertbus.services.SeachViajesService;
+import ibao.alanger.alertbus.services.SearchViajesService;
+
+import static ibao.alanger.alertbus.services.SearchViajesService.statusActualizar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView rViewViajes;
     private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajes rViewAdapterListViajes;
+
+    private static Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +59,35 @@ public class MainActivity extends AppCompatActivity {
         //super.onBackPressed();
         moveTaskToBack(true);
 
+    }
+
+
+
+    Runnable runnable = new Runnable() {
+        public void run() {
+            if(statusActualizar){
+                statusActualizar = false;
+                actualizarData();
+            }
+             handler.postDelayed(runnable, 1000);
+        }
+    };
+
+
+
+
+    void actualizarData(){
+        viajeVOList = new ViajeDAO(ctx).listAll();
+        rViewAdapterListViajes = new RViewAdapterListViajes(ctx,viajeVOList,rViewViajes);
+        rViewViajes.setAdapter(rViewAdapterListViajes);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        actualizarData();
+        handler.post(runnable);
     }
 
     @Override
@@ -87,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.actualizar) {
 
-            Intent intent = new Intent(this, SeachViajesService.class);
+            Intent intent = new Intent(this, SearchViajesService.class);
             startService(intent);
             //finish();
         }

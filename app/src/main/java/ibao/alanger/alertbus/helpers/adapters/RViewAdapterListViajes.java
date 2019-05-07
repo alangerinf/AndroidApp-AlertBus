@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -69,61 +70,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             }
         });
 
-        holder.fAButtonCheckDirectly.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-                dialogAlert.setContentView(R.layout.dialog_danger);
-                Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
-                Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
-                ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
-                TextView mensaje = (TextView) dialogAlert.findViewById(R.id.tViewRecomendacion);
-
-                try{
-
-                    mensaje.setText("¿Esta seguro que quiere confirmar un viaje sin inspeccionarlo?\n¿Desea Continuar?");
-                    iViewDialogClose.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialogAlert.dismiss();
-                        }
-                    });
-                    btnDialogClose.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            dialogAlert.dismiss();
-
-                        }
-                    });
-
-                    btnDialogAcept.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            ViajeDAO viajeDAO = new ViajeDAO(ctx);
-                            boolean x=(viajeDAO.toStatus1(viajeVO.getId()));
-
-                            if(!x){
-                                Toast.makeText(ctx,"Error al Actualizar",Toast.LENGTH_SHORT).show();
-                            }else{
-                                viajeVO.setStatus(1);
-                                recyclerView.getAdapter().notifyDataSetChanged();
-                            }
-                            dialogAlert.dismiss();
-                        }
-                    });
-
-                    dialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialogAlert.show();
-
-                }catch (Exception e){
-                    Toast.makeText(ctx,e.toString(),Toast.LENGTH_LONG).show();
-                    Log.d(TAG,e.toString());
-                }
-            }
-        });
 
         holder.fAButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,16 +133,18 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             @Override
             public void onClick(View v) {
 
-
                 dialogAlert.setContentView(R.layout.dialog_danger);
                 Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
                 Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
                 ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
                 TextView mensaje = (TextView) dialogAlert.findViewById(R.id.tViewRecomendacion);
-
                 try{
+                    if(viajeVO.getStatus()==0){
+                        mensaje.setText("¿Usted va ha sincronizar un viaje sin verlo?");
+                    }else {
+                            mensaje.setText("Usted va ha sincronizar una confirmación de viaje\n¿Desea Continuar?");
+                    }
 
-                    mensaje.setText("Usted va ha sincronizar una confirmación de viaje\n¿Desea Continuar?");
                     iViewDialogClose.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -247,10 +196,10 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonCheckDirectly.setVisibility(View.VISIBLE);
-                holder.fAButtonUpload.setVisibility(View.INVISIBLE);
-                holder.fAButtonDelete.setVisibility(View.INVISIBLE);
-
+                holder.fAButtonUpload.setVisibility(View.VISIBLE);
+                holder.fAButtonDelete.setVisibility(View.VISIBLE);
+                holder.fAButtonDelete.setClickable(false);
+                holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
                 break;
 
             case 1:
@@ -259,9 +208,12 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonCheckDirectly.setVisibility(View.INVISIBLE);
                 holder.fAButtonUpload.setVisibility(View.VISIBLE);
-                holder.fAButtonDelete.setVisibility(View.INVISIBLE);
+                holder.fAButtonDelete.setVisibility(View.VISIBLE);
+                holder.fAButtonDelete.setClickable(false);
+                holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+                holder.fAButtonUpload.setBackgroundTintList(ColorStateList.valueOf(colorEnable));
+
                 break;
 
             case 2:
@@ -270,9 +222,9 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                 holder.tViewStatusSincronizado.setTextColor(colorEnable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonCheckDirectly.setVisibility(View.INVISIBLE);
                 holder.fAButtonUpload.setVisibility(View.INVISIBLE);
                 holder.fAButtonDelete.setVisibility(View.VISIBLE);
+                holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.red)));
                 break;
         }
         //fin labels
@@ -286,8 +238,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         Log.d(TAG,"tViewCapacidad: "+viajeVO.getCapacidad());
         float porc = (float) (((1.0)*(viajeVO.getNumpasajeros())/viajeVO.getCapacidad())*100);
         holder.tViewPorCapacidad.setText(""+getFloatFormateado(porc)+"%");
-
-
 
 
 
@@ -324,7 +274,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         TextView tViewStatusVerificado;
         TextView tViewStatusSincronizado;
 
-        FloatingActionButton fAButtonCheckDirectly;
 
 
         //buttons
@@ -350,11 +299,9 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             fAButtonReview = itemView.findViewById(R.id.fAButtonReview);
             fAButtonUpload = itemView.findViewById(R.id.fAButtonUpload);
             fAButtonDelete = itemView.findViewById(R.id.fAButtonDelete);
-            fAButtonCheckDirectly = itemView.findViewById(R.id.fAButtonCheckDirectly);
 
         }
     }
-
 
 
 
