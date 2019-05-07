@@ -17,6 +17,16 @@ public class AppController extends Application {
 
     private static AppController mInstance;
 
+    private static boolean statusOnMain=false;
+
+    public static boolean isStatusOnMain() {
+        return statusOnMain;
+    }
+
+    public static void setStatusOnMain(boolean statusOnMain) {
+        AppController.statusOnMain = statusOnMain;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

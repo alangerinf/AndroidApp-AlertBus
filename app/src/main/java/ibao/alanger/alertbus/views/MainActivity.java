@@ -1,23 +1,50 @@
 package ibao.alanger.alertbus.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.List;
+
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajes;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.dao.ViajeDAO;
+import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.SeachViajesService;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    Context ctx = this;
+    private static RecyclerView rViewViajes;
+    private static List<ViajeVO> viajeVOList;
+    private static RViewAdapterListViajes rViewAdapterListViajes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        viajeVOList = new ViajeDAO(ctx).listAll();
+        rViewViajes = findViewById(R.id.rViewViajes);
+        rViewAdapterListViajes = new RViewAdapterListViajes(ctx,viajeVOList,rViewViajes);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext()) {
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                super.onLayoutChildren(recycler, state);
+                //  initSpruce();
+            }
+        };
+
+        rViewViajes.setLayoutManager(linearLayoutManager);
+        rViewViajes.setAdapter(rViewAdapterListViajes);
     }
     @Override
     public void onBackPressed() {
@@ -51,14 +78,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (id == R.id.logout) {
-            int i=0;
 
-                Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
-                new LoginDataDAO(getBaseContext()).borrarTable();
-                Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
-                startActivity(intent);
-                //finish();
-            }
+            Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
+            new LoginDataDAO(getBaseContext()).borrarTable();
+            Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
+            startActivity(intent);
+            //finish();
+        }
+        if (id == R.id.actualizar) {
+
+            Intent intent = new Intent(this, SeachViajesService.class);
+            startService(intent);
+            //finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }

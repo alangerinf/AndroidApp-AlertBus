@@ -7,12 +7,21 @@ public class ViajeVO {
     private String placa;
     private String ruta;
     private int numpasajeros;
-    private float porCapacidad;
+    private int capacidad;
     private String proveedor;
     private String comentario;
     private int status;
+    private String conductor;
 
     public ViajeVO(){
+    }
+
+    public String getConductor() {
+        return conductor;
+    }
+
+    public void setConductor(String conductor) {
+        this.conductor = conductor;
     }
 
     public int getId() {
@@ -63,12 +72,12 @@ public class ViajeVO {
         this.numpasajeros = numpasajeros;
     }
 
-    public float getPorCapacidad() {
-        return porCapacidad;
+    public int getCapacidad() {
+        return capacidad;
     }
 
-    public void setPorCapacidad(float porCapacidad) {
-        this.porCapacidad = porCapacidad;
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
     }
 
     public String getProveedor() {

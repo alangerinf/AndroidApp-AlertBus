@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shadow_center"
+    android:id="@+id/cLayoutSearch"
     app:layout_constraintTop_toTopOf="parent">
 
 
@@ -84,7 +85,7 @@
         android:id="@+id/tView_porCapacidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="%Capacidad"
+        android:text="%Ocupación"
         android:textStyle="bold"
         android:textColor="@color/primaryText"
         android:textSize="@dimen/textsize_secondary"
@@ -324,6 +325,20 @@
             app:srcCompat="@drawable/ic_backup_black_24dp" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fAButtonCheckDirectly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/customGreen"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:layout_constraintBottom_toTopOf="@+id/fAButtonDelete"
+            app:layout_constraintEnd_toEndOf="@+id/fAButtonReview"
+            app:layout_constraintTop_toBottomOf="@+id/fAButtonReview"
+            app:srcCompat="@drawable/ic_check_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fAButtonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -356,6 +371,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Verificado"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tViewS1"
         app:layout_constraintStart_toEndOf="@+id/tViewS1"
         app:layout_constraintTop_toTopOf="@+id/tViewS1" />
@@ -366,6 +382,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Sincronizado"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tViewS2"
         app:layout_constraintStart_toEndOf="@+id/tViewS2"
         app:layout_constraintTop_toTopOf="@+id/tViewS2" />

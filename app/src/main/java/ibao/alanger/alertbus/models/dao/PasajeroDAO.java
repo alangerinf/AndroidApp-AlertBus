@@ -106,7 +106,12 @@ public class PasajeroDAO {
         SQLiteDatabase db = c.getReadableDatabase();
         List<PasajeroVO> categoriaVOList = new ArrayList<>();
         try{
-            String[] campos = {TABLE_PASAJERO_COL_ID,TABLE_PASAJERO_COL_NAME,TABLE_PASAJERO_COL_DNI};
+            String[] campos = {
+                    TABLE_PASAJERO_COL_ID,
+                    TABLE_PASAJERO_COL_NAME,
+                    TABLE_PASAJERO_COL_DNI,
+                    TABLE_PASAJERO_COL_IDVIAJE
+            };
             String[] arg = {String.valueOf(idViaje)};
             Cursor cursor= db.query(TABLE_PASAJERO,campos,TABLE_PASAJERO_COL_IDVIAJE+"=?",arg,null,null,TABLE_PASAJERO_COL_NAME+" COLLATE UNICODE ASC");
             while(cursor.moveToNext()){

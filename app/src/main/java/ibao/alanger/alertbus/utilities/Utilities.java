@@ -5,9 +5,9 @@ public class Utilities {
 
     private static String TAG = Utilities.class.getSimpleName();
 
-    public static final String URL_ROOT="http://35.167.15.182/AlertBus/EcoSad/Requests/";
+    public static final String URL_ROOT="http://35.167.15.182/AlertBus/EcoSac/Requests/";
     public static final String URL_AUTENTIFICATION=URL_ROOT+"autenticar.php";
-    public static final String URL_BUSCARNUEVOS=URL_ROOT+"getEmpresas.php";
+    public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
 
     public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertFotos.php";
 
@@ -45,9 +45,9 @@ public class Utilities {
             TABLE_VIAJE_TYPECOL_PLACA           ="VARCHAR(50)",
             TABLE_VIAJE_COL_CONDUCTOR           ="conductor",
             TABLE_VIAJE_TYPECOL_CONDUCTOR       ="varchar(50)",
-            TABLE_VIAJE_COL_PORCAPACIDAD        ="porCapacidad",
-            TABLE_VIAJE_TYPECOL_PORCAPACIDAD    ="REAL",
-            TABLE_VIAJE_COL_NUMPASAJEROS        ="capacidadTotal",
+            TABLE_VIAJE_COL_CAPACIDAD           ="capacidad",
+            TABLE_VIAJE_TYPECOL_CAPACIDAD       ="INTEGER",
+            TABLE_VIAJE_COL_NUMPASAJEROS        ="numPasajeros",
             TABLE_VIAJE_TYPECOL_NUMPASAJEROS    ="INTEGER",
             TABLE_VIAJE_COL_RUTA                ="ruta",
             TABLE_VIAJE_TYPECOL_RUTA            ="VARCHAR(50)",
@@ -67,7 +67,7 @@ public class Utilities {
                     TABLE_VIAJE_COL_PROVEEDOR   +" "+TABLE_VIAJE_TYPECOL_PROVEEDOR +" , "+
                     TABLE_VIAJE_COL_PLACA       +" "+TABLE_VIAJE_TYPECOL_PLACA +" , "+
                     TABLE_VIAJE_COL_CONDUCTOR   +" "+TABLE_VIAJE_TYPECOL_CONDUCTOR +", "+
-                    TABLE_VIAJE_COL_PORCAPACIDAD+" "+TABLE_VIAJE_TYPECOL_PORCAPACIDAD+", "+
+                    TABLE_VIAJE_COL_CAPACIDAD +" "+ TABLE_VIAJE_TYPECOL_CAPACIDAD +", "+
                     TABLE_VIAJE_COL_NUMPASAJEROS+" "+TABLE_VIAJE_TYPECOL_NUMPASAJEROS+", "+
                     TABLE_VIAJE_COL_RUTA        +" "+TABLE_VIAJE_TYPECOL_RUTA+", "+
                     TABLE_VIAJE_COL_HORAINICIO  +" "+TABLE_VIAJE_TYPECOL_HORAINICIO+", "+

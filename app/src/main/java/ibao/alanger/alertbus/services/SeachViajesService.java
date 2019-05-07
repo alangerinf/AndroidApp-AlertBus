@@ -1,31 +1,40 @@
 package ibao.alanger.alertbus.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
+import ibao.alanger.alertbus.helpers.DownloadNewViajes;
+
 public class SeachViajesService extends Service {
+
+
+    final Handler handler = new Handler();
+    Context ctx;
     public SeachViajesService() {
     }
 
     @Override
     public void onCreate(){
-
+        super.onCreate();
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flag, int idProcess)
-    {
-
+    {   ctx = this;
+        handler.removeCallbacks(runnable);
+        runnable.run();
         return START_STICKY;
     }
 
     @Override
     public void onDestroy(){
-
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
-
 
     private static int timeMilis=1000*5;
 
@@ -33,22 +42,17 @@ public class SeachViajesService extends Service {
         SeachViajesService.timeMilis = timeMilis;
     }
 
-    void buscarNuevos(){
-        Handler hander = new Handler();
-        hander.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                consultaNuevos();
-                buscarNuevos();
-            }
-        },timeMilis
-        );
-
+    public static int getTimeMilis() {
+        return timeMilis;
     }
 
-    private void consultaNuevos() {
+    Runnable runnable = new Runnable() {
+        public void run() {
 
-    }
+            new DownloadNewViajes(ctx).SearchNews();
+           // handler.postDelayed(runnable, timeMilis);
+        }
+    };
 
 
     @Override

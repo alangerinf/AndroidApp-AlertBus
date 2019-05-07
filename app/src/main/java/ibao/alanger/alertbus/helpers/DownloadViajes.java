@@ -26,7 +26,7 @@ import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 
-import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
 
 public class DownloadViajes {
 
@@ -43,7 +43,7 @@ public class DownloadViajes {
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
-                URL_UPLOAD_CONFIRMARVIAJE,
+                URL_BUSCARNUEVOS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
