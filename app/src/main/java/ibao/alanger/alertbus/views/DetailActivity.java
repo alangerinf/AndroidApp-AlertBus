@@ -59,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
 
         fAButtonClearText = findViewById(R.id.fAButtonClearText);
         fAButtonComent = findViewById(R.id.fAButtonComent);
-        fABurronAlerts = findViewById(R.id.fABurronAlerts);
+
 
         rViewPasajeros = findViewById(R.id.rViewPasajeros);
 

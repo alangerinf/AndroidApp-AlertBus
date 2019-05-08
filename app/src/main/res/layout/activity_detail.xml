@@ -90,16 +90,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_mode_comment_white_24dp" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fABurronAlerts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        app:backgroundTint="@color/accent"
-        app:layout_constraintBottom_toTopOf="@+id/fAButtonComent"
-        app:layout_constraintEnd_toEndOf="@+id/fAButtonComent"
-        app:layout_constraintStart_toStartOf="@+id/fAButtonComent"
-        app:srcCompat="@drawable/ic_warning_white_24dp" />
-
 </android.support.constraint.ConstraintLayout>

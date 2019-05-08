@@ -98,4 +98,5 @@ public class Utilities {
                     TABLE_LOGINDATA_COL_NAME    +" "+TABLE_LOGINDATA_TYPECOL_NAME+","+
                     TABLE_LOGINDATA_COL_LASTNAME+" "+TABLE_LOGINDATA_TYPECOL_LASTNAME+" "+
                     ")";
+
 }

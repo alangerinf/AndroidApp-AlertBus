@@ -138,7 +138,7 @@ public class DownloadNewViajes {
                                 status=3;//SE TERMINO SIN FOTOS
 
                             } catch (JSONException e) {
-                                Toast.makeText(ctx, "Puede que no se hallan sincronizar sus datos JSON, por favor de aviso al administrador de la  aplicación", Toast.LENGTH_LONG).show();
+                             //   Toast.makeText(ctx, "Puede que no se hallan sincronizar sus datos JSON, por favor de aviso al administrador de la  aplicación", Toast.LENGTH_LONG).show();
                                 Log.d(TAG, e.toString());
                                 status = -1;
                             }

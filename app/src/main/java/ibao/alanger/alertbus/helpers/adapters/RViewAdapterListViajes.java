@@ -191,8 +191,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
 
         switch (viajeVO.getStatus()){
             case 0:
-                holder.tViewSatusRecibido.setTextColor(colorEnable);
-                holder.tViewStatusVerificado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
@@ -203,8 +201,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                 break;
 
             case 1:
-                holder.tViewSatusRecibido.setTextColor(colorDisable);
-                holder.tViewStatusVerificado.setTextColor(colorEnable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
@@ -217,8 +213,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                 break;
 
             case 2:
-                holder.tViewSatusRecibido.setTextColor(colorDisable);
-                holder.tViewStatusVerificado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorEnable);
 
                 holder.fAButtonReview.setVisibility(View.VISIBLE);
@@ -270,10 +264,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         TextView tViewPorCapacidad;
 
         //status
-        TextView tViewSatusRecibido;
-        TextView tViewStatusVerificado;
         TextView tViewStatusSincronizado;
-
 
 
         //buttons
@@ -292,8 +283,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             tViewNPasajeros = itemView.findViewById(R.id.tViewNPasajeros);
             tViewPorCapacidad = itemView.findViewById(R.id.tViewPorCapacidad);
 
-            tViewSatusRecibido = itemView.findViewById(R.id.tViewSatusRecibido);
-            tViewStatusVerificado = itemView.findViewById(R.id.tViewStatusVerificado);
             tViewStatusSincronizado = itemView.findViewById(R.id.tViewStatusSincronizado);
 
             fAButtonReview = itemView.findViewById(R.id.fAButtonReview);
