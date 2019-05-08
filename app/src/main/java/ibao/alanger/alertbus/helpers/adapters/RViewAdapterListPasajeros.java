@@ -66,7 +66,6 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
         if(pasajeroVO.getObservacion().isEmpty()){
             holder.tViewObservacion.setHeight(0);
         }
-
     }
 
     public float getFloatFormateado(float n){

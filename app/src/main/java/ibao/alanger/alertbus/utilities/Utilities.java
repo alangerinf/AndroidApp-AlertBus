@@ -9,7 +9,7 @@ public class Utilities {
     public static final String URL_AUTENTIFICATION=URL_ROOT+"autenticar.php";
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
 
-    public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertFotos.php";
+    public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertDataFromMovil.php";
 
     public static final String DATABASE_NAME="data";
 
@@ -38,8 +38,17 @@ public class Utilities {
             TABLE_PASAJERO_TYPECOL_HORASUBIDA   ="VARCHAR(100)",
             TABLE_PASAJERO_COL_OBSERVACION      ="observacion",
             TABLE_PASAJERO_TYPECOL_OBSERVACION  ="VARCHAR(100)";
-    
-    
+
+    public static final String TABLE_RESTRICCION="restriccion",
+            TABLE_RESTRICCION_COL_ID            ="id",
+            TABLE_RESTRICCION_TYPECOL_ID        ="INTEGER",
+            TABLE_RESTRICCION_COL_NAME          ="name",
+            TABLE_RESTRICCION_TYPECOL_NAME      ="varchar(50)",
+            TABLE_RESTRICCION_COL_DESC          ="descripcion",
+            TABLE_RESTRICCION_TYPECOL_DESC      ="varchar(200)",
+            TABLE_RESTRICCION_COL_IDVIAJE       ="INTEGER",
+            TABLE_RESTRICCION_TYPECOL_IDVIAJE   ="INTEGER";
+
     public static final String TABLE_VIAJE ="viaje",
             TABLE_VIAJE_COL_ID                  ="id",
             TABLE_VIAJE_TYPECOL_ID              ="INTEGER",
@@ -62,22 +71,25 @@ public class Utilities {
             TABLE_VIAJE_COL_COMENTARIO          ="comentario",
             TABLE_VIAJE_TYPECOL_COMENTARIO      ="VARCHAR(200)",
             TABLE_VIAJE_COL_STATUS              ="status", // 0:recibido, 1:verificado, 2:sincronizado
-            TABLE_VIAJE_TYPECOL_STATUS          ="INTEGER";
+            TABLE_VIAJE_TYPECOL_STATUS          ="INTEGER",
+            TABLE_VIAJE_COL_HORACONFIRMADO      ="horaOk", // HORA EN LA  Q SE  VERIFICO
+            TABLE_VIAJE_TYPECOL_HORACONFIRMADO  ="DATETIME";
 
     //SCRIPTS SQL CREATE TABLES
     public static final String CREATE_TABLE_VIAJE =
             " CREATE TABLE IF NOT EXISTS "+ TABLE_VIAJE +" ("+
-                    TABLE_VIAJE_COL_ID          +" "+TABLE_VIAJE_TYPECOL_ID +" PRIMARY KEY , "+
-                    TABLE_VIAJE_COL_PROVEEDOR   +" "+TABLE_VIAJE_TYPECOL_PROVEEDOR +" , "+
-                    TABLE_VIAJE_COL_PLACA       +" "+TABLE_VIAJE_TYPECOL_PLACA +" , "+
-                    TABLE_VIAJE_COL_CONDUCTOR   +" "+TABLE_VIAJE_TYPECOL_CONDUCTOR +", "+
-                    TABLE_VIAJE_COL_CAPACIDAD +" "+ TABLE_VIAJE_TYPECOL_CAPACIDAD +", "+
-                    TABLE_VIAJE_COL_NUMPASAJEROS+" "+TABLE_VIAJE_TYPECOL_NUMPASAJEROS+", "+
-                    TABLE_VIAJE_COL_RUTA        +" "+TABLE_VIAJE_TYPECOL_RUTA+", "+
-                    TABLE_VIAJE_COL_HORAINICIO  +" "+TABLE_VIAJE_TYPECOL_HORAINICIO+", "+
-                    TABLE_VIAJE_COL_HORAFIN     +" "+TABLE_VIAJE_TYPECOL_HORAFIN+", "+
-                    TABLE_VIAJE_COL_COMENTARIO  +" "+TABLE_VIAJE_TYPECOL_COMENTARIO+", "+
-                    TABLE_VIAJE_COL_STATUS      +" "+TABLE_VIAJE_TYPECOL_STATUS+" "+
+                    TABLE_VIAJE_COL_ID              +" "+TABLE_VIAJE_TYPECOL_ID +" PRIMARY KEY , "+
+                    TABLE_VIAJE_COL_PROVEEDOR       +" "+TABLE_VIAJE_TYPECOL_PROVEEDOR +" , "+
+                    TABLE_VIAJE_COL_PLACA           +" "+TABLE_VIAJE_TYPECOL_PLACA +" , "+
+                    TABLE_VIAJE_COL_CONDUCTOR       +" "+TABLE_VIAJE_TYPECOL_CONDUCTOR +", "+
+                    TABLE_VIAJE_COL_CAPACIDAD       +" "+ TABLE_VIAJE_TYPECOL_CAPACIDAD +", "+
+                    TABLE_VIAJE_COL_NUMPASAJEROS    +" "+TABLE_VIAJE_TYPECOL_NUMPASAJEROS+", "+
+                    TABLE_VIAJE_COL_RUTA            +" "+TABLE_VIAJE_TYPECOL_RUTA+", "+
+                    TABLE_VIAJE_COL_HORAINICIO      +" "+TABLE_VIAJE_TYPECOL_HORAINICIO+", "+
+                    TABLE_VIAJE_COL_HORAFIN         +" "+TABLE_VIAJE_TYPECOL_HORAFIN+", "+
+                    TABLE_VIAJE_COL_COMENTARIO      +" "+TABLE_VIAJE_TYPECOL_COMENTARIO+", "+
+                    TABLE_VIAJE_COL_STATUS          +" "+TABLE_VIAJE_TYPECOL_STATUS+", "+
+                    TABLE_VIAJE_COL_HORACONFIRMADO +" "+ TABLE_VIAJE_TYPECOL_HORACONFIRMADO +" "+
                     ")";
 
     public static final String CREATE_TABLE_PASAJERO =
@@ -89,7 +101,13 @@ public class Utilities {
                     TABLE_PASAJERO_COL_HORASUBIDA   +" "+ TABLE_PASAJERO_TYPECOL_HORASUBIDA +", "+
                     TABLE_PASAJERO_COL_OBSERVACION  +" "+ TABLE_PASAJERO_TYPECOL_OBSERVACION +" "+
                     ")";
-
+    public static final String CREATE_TABLE_RESTRICCION =
+            " CREATE TABLE IF NOT EXISTS "+TABLE_RESTRICCION+" (" +
+                    TABLE_RESTRICCION_COL_ID           +" "+TABLE_RESTRICCION_TYPECOL_ID+" PRIMARY KEY AUTOINCREMENT," +
+                    TABLE_RESTRICCION_COL_NAME         +" "+TABLE_RESTRICCION_TYPECOL_NAME+"," +
+                    TABLE_RESTRICCION_COL_DESC         +" "+TABLE_RESTRICCION_TYPECOL_DESC+", " +
+                    TABLE_RESTRICCION_COL_IDVIAJE      +" "+ TABLE_RESTRICCION_TYPECOL_IDVIAJE +" "+
+                    ")";
     public static final String CREATE_TABLE_LOGINDATA =
             " CREATE TABLE IF NOT EXISTS "+TABLE_LOGINDATA+" (" +
                     TABLE_LOGINDATA_COL_IDUSER  +" "+TABLE_LOGINDATA_TYPECOL_IDUSER+" PRIMARY KEY  ," +

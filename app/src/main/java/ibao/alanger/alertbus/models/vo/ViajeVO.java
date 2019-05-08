@@ -13,6 +13,8 @@ public class ViajeVO {
     private int status;
     private String conductor;
 
+    private String hConfirmado;
+
     public ViajeVO(){
     }
 
@@ -96,11 +98,22 @@ public class ViajeVO {
         this.comentario = comentario;
     }
 
+    public String gethConfirmado() {
+        return hConfirmado;
+    }
+
+    public void sethConfirmado(String hConfirmado) {
+        this.hConfirmado = hConfirmado;
+    }
+
     public int getStatus() {
         return status;
     }
 
+
     public void setStatus(int status) {
         this.status = status;
     }
+
+
 }

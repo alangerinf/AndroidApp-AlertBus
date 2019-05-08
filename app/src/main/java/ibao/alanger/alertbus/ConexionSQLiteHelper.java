@@ -8,9 +8,11 @@ import android.widget.Toast;
 
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_LOGINDATA;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_PASAJERO;
+import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_RESTRICCION;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_VIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_RESTRICCION;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper{
@@ -36,6 +38,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
          */
         db.execSQL(CREATE_TABLE_VIAJE);//1
         db.execSQL(CREATE_TABLE_PASAJERO);//2
+        db.execSQL(CREATE_TABLE_RESTRICCION);//2
 
 
     }
@@ -53,6 +56,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
          */
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_VIAJE);//1
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_PASAJERO);//2
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_RESTRICCION);//2
 
         onCreate(db);
 

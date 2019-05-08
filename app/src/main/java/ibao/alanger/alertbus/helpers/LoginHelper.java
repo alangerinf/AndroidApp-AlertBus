@@ -115,7 +115,7 @@ public class LoginHelper {
                     public void onErrorResponse(VolleyError error) {
                         progress.dismiss();
                         Log.d(TAG,"ERROR: "+error.toString());
-                        Toast.makeText(ctx,"Error conectando con el servidor",Toast.LENGTH_LONG).show();
+                        Toast.makeText(ctx,"Error conectando con el servidor"+URL_AUTENTIFICATION+ error.toString(),Toast.LENGTH_LONG).show();
 
                     }
                 }){

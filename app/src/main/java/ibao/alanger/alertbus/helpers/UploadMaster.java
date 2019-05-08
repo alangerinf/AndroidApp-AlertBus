@@ -24,8 +24,8 @@ import java.util.Map;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
-import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.UploadService;
 
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
@@ -36,13 +36,14 @@ public class UploadMaster {
     String TAG = UploadMaster.class.getSimpleName();
     public static int status;
 
+
     public UploadMaster(Context ctx)
     {
         status=0;
         this.ctx = ctx;
     }
 
-    public void UploadViaje(final List<ViajeVO> viajeVOList, final List<PasajeroVO> pasajeroVOList){
+    public void UploadViaje(final List<ViajeVO> viajeVOList){
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
@@ -51,19 +52,23 @@ public class UploadMaster {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.d("respuestaServidor",response);
+                        Log.d(TAG,"RESP: "+response);
                         status=2;
 
                         if(!response.isEmpty()){
                             try {
                                 JSONObject main = new JSONObject(response);
-                                Log.d("asd ","flag1");
-                                if(main.getInt("success")==1){
-                                    Log.d("asd ","flag2");
+                                Log.d(TAG,"flag1");
+                                if(main.getBoolean("hasSuccess")){
+                                    Log.d(TAG,"flag2");
                                     for(ViajeVO vi: viajeVOList){
-                                        new ViajeDAO(ctx).clearTableUpload(vi.getId());
+                                        //new ViajeDAO(ctx).clearTableUpload(vi.getId());
+                                        new ViajeDAO(ctx).toStatus2(vi.getId());
                                     }
+                                    UploadService.statusUpload=true;
                                     status=3;
+                                }else {
+                                    Toast.makeText(ctx,main.getString("errors"),Toast.LENGTH_LONG).show();
                                 }
                                 status=3;//SE TERMINO SIN FOTOS
 
@@ -97,7 +102,7 @@ public class UploadMaster {
                 String usuarioJson = gson.toJson(new LoginDataDAO(ctx).verficarLogueo());
                 params.put("usuario",usuarioJson);
 
-                //recepciones
+                //viajes
                 gson = new Gson();
                 List<ViajeVO> viajeVOS = viajeVOList;
                 String viajesJson = gson.toJson(
@@ -105,18 +110,9 @@ public class UploadMaster {
                         new TypeToken<ArrayList<ViajeVO>>() {}.getType());
                 params.put("viajes",viajesJson);
 
-                //muestras
-                gson = new Gson();
-                List<PasajeroVO> pasajeroVOS = pasajeroVOList;
-                String pasajerosJson = gson.toJson(
-                        pasajeroVOS,
-                        new TypeToken<ArrayList<PasajeroVO>>() {}.getType());
-                params.put("pasajeros",pasajerosJson);
-
 
                 Log.d(TAG,"usuario:"+usuarioJson);
                 Log.d(TAG,"viajes:"+viajesJson);
-                Log.d(TAG,"pasajeros:"+pasajerosJson);
 
                 return params;
             }

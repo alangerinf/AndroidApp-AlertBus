@@ -21,8 +21,10 @@ import java.util.Map;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.PasajeroDAO;
+import ibao.alanger.alertbus.models.dao.RestriccionDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
+import ibao.alanger.alertbus.models.vo.RestriccionVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
 
@@ -131,6 +133,25 @@ public class DownloadNewViajes {
                                                 pasajeroVO.getIdViaje(),
                                                 pasajeroVO.gethSubida(),
                                                 pasajeroVO.getObservacion()
+                                        );
+                                    }
+                                    JSONArray dataRestrinccion = main.getJSONArray("restricciones");
+                                    for(int i=0;i<dataRestrinccion.length();i++){
+                                        JSONObject restriccion = new JSONObject(dataPasajeros.get(i).toString());
+                                        /***
+                                         *{"id":"2",
+                                         * "nombre":"Persona",
+                                         * "descripcion":"LICENCIA VENCIDA"}
+                                         */
+                                        RestriccionVO restriccionVO = new RestriccionVO();
+                                        restriccionVO.setName(restriccion.getString("nombre"));
+                                        restriccionVO.setDesc(restriccion.getString("descripcion"));
+                                        restriccionVO.setIdViaje(restriccion.getInt("id"));
+
+                                        new RestriccionDAO(ctx).insertar(
+                                                restriccionVO.getName(),
+                                                restriccionVO.getDesc(),
+                                                restriccionVO.getIdViaje()
                                         );
                                     }
                                     status=3;

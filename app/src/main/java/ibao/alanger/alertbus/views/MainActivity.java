@@ -21,6 +21,7 @@ import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.services.UploadService;
 
 import static ibao.alanger.alertbus.services.SearchViajesService.statusActualizar;
 
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             if(statusActualizar){
                 statusActualizar = false;
+                actualizarData();
+            }
+            if(UploadService.statusUpload){
+                UploadService.statusUpload = false;
                 actualizarData();
             }
              handler.postDelayed(runnable, 1000);
@@ -127,7 +132,12 @@ public class MainActivity extends AppCompatActivity {
             startService(intent);
             //finish();
         }
-
+        if (id == R.id.upload) {
+            Intent intent = new Intent(this, UploadService.class);
+            startService(intent);
+            Toast.makeText(ctx,"subiendo",Toast.LENGTH_SHORT).show();
+            //finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 }
