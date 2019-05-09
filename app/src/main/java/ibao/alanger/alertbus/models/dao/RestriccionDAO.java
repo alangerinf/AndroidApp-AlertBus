@@ -56,11 +56,14 @@ public class RestriccionDAO {
             values.put(TABLE_RESTRICCION_COL_IDVIAJE,idViaje);
 
             Long temp = db.insert(TABLE_RESTRICCION,TABLE_RESTRICCION_COL_ID,values);
+            if(temp>0){
+                Log.d(TAG,"insertado "+name+" en idViaje "+idViaje);
+            }
             db.close();
             conn.close();
             return (temp>0);
         }catch (Exception e){
-            Log.d("ZonaDAO",e.toString());
+            Log.d(TAG,"insertado error: "+ e.toString());
         }
 
         return false;

@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.services.UploadService;
 
 
 public class ActivityPreloader extends Activity {
@@ -42,6 +44,7 @@ public class ActivityPreloader extends Activity {
                 if (networkInfo != null && networkInfo.isConnected()) {// si tiene internet
 
                     if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
+                        startServices();
                         openMain();
                         finish();
                     } else {
@@ -52,6 +55,7 @@ public class ActivityPreloader extends Activity {
 
                 } else {// sino  tiene internet
                     if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
+                        startServices();
                         openMain();
                         finish();
                     } else {
@@ -68,6 +72,15 @@ public class ActivityPreloader extends Activity {
 
 
     }
+
+    void  startServices(){
+        Intent intent = new Intent(this, SearchViajesService.class);
+        startService(intent);
+
+        intent = new Intent(this, UploadService.class);
+        startService(intent);
+    }
+
 
     void  openMain(){
         Intent intent = new Intent(this,MainActivity.class);

@@ -3,7 +3,7 @@
     <color name="primary">#31A9B8</color>
     <color name="primaryDark">@color/customGreen</color>
     <color name="primaryLight">#F6BE41</color>
-    <color name="accent">#CF3721</color>
+    <color name="accent">@color/red</color>
 
     <color name="primaryText">@color/black</color>
     <color name="secondaryText">#8D8D8D</color>
@@ -16,7 +16,7 @@
     <color name="blue">#2B4CFF</color>
     <color name="grayDark">#313131</color>
 
-    <color name="red">#DD0000</color>
+    <color name="red">#CF3721</color>
     <color name="gray">#DFDFDF</color>
     <color name="customGreen">#258039</color>
 

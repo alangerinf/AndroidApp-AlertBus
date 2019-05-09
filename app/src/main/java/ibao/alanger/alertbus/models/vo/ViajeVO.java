@@ -6,12 +6,22 @@ public class ViajeVO {
     private String hFin;
     private String placa;
     private String ruta;
-    private int numpasajeros;
+    private int numPasajeros;
     private int capacidad;
     private String proveedor;
     private String comentario;
     private int status;
     private String conductor;
+
+    private int numRestricciones;
+
+    public int getNumRestricciones() {
+        return numRestricciones;
+    }
+
+    public void setNumRestricciones(int numRestricciones) {
+        this.numRestricciones = numRestricciones;
+    }
 
     private String hConfirmado;
 
@@ -66,12 +76,12 @@ public class ViajeVO {
         this.ruta = ruta;
     }
 
-    public int getNumpasajeros() {
-        return numpasajeros;
+    public int getNumPasajeros() {
+        return numPasajeros;
     }
 
-    public void setNumpasajeros(int numpasajeros) {
-        this.numpasajeros = numpasajeros;
+    public void setNumPasajeros(int numPasajeros) {
+        this.numPasajeros = numPasajeros;
     }
 
     public int getCapacidad() {

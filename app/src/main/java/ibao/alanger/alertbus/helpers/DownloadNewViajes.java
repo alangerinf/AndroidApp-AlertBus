@@ -1,6 +1,14 @@
 package ibao.alanger.alertbus.helpers;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.PasajeroDAO;
@@ -27,6 +36,8 @@ import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.RestriccionVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.views.ActivityPreloader;
+import ibao.alanger.alertbus.views.MainActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
 
@@ -38,6 +49,8 @@ public class DownloadNewViajes {
     private static String HEADER_USUARIO = "usuario";
     public static int status;
 
+    static String CHANNEL_NOTIFICATION = "1992";
+    static int  COUNT_NOTIFICATION = 0;
     public DownloadNewViajes(Context ctx)
     {
         status=0;
@@ -70,6 +83,7 @@ public class DownloadNewViajes {
 
                                     for(int i=0;i<dataViajes.length();i++){
 
+
                                         JSONObject viaje = new JSONObject(dataViajes.get(i).toString());
                                         /***
                                          * {
@@ -90,7 +104,7 @@ public class DownloadNewViajes {
                                         viajeVO.setRuta(viaje.getString("ruta"));
                                         viajeVO.setConductor(viaje.getString("conductor"));
                                         viajeVO.setPlaca(viaje.getString("placa"));
-                                        viajeVO.setNumpasajeros(viaje.getInt("totalTrabajadores"));
+                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
                                         viajeVO.setCapacidad(viaje.getInt("capacidadTeorica"));
                                         viajeVO.sethInicio(viaje.getString("horaInicio"));
                                         viajeVO.sethFin(viaje.getString("horaFin"));
@@ -103,9 +117,30 @@ public class DownloadNewViajes {
                                                 viajeVO.getRuta(),
                                                 viajeVO.gethInicio(),
                                                 viajeVO.gethFin(),
-                                                viajeVO.getNumpasajeros(),
+                                                viajeVO.getNumPasajeros(),
                                                 viajeVO.getCapacidad()
                                                 );
+
+                                        //Notification
+                                        // Create an explicit intent for an Activity in your app
+                                        Intent intent = new Intent(ctx, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
+
+                                        createNotificationChannel();
+
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_NOTIFICATION)
+                                                .setSmallIcon(R.drawable.ic_comment_white_24dp)
+                                                .setContentTitle("Nuevo viaje de "+viajeVO.getProveedor())
+                                                .setContentText("Ruta: "+viajeVO.getRuta()+", llego con "+viajeVO.getNumPasajeros()+" pasajeros!")
+                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                                // Set the intent that will fire when the user taps the notification
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true);
+                                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
+
+                                        notificationManager.notify(COUNT_NOTIFICATION, builder.build());
+                                        COUNT_NOTIFICATION++;
                                     }
                                     JSONArray dataPasajeros = main.getJSONArray("pasajeros");
                                     for(int i=0;i<dataPasajeros.length();i++){
@@ -137,7 +172,7 @@ public class DownloadNewViajes {
                                     }
                                     JSONArray dataRestrinccion = main.getJSONArray("restricciones");
                                     for(int i=0;i<dataRestrinccion.length();i++){
-                                        JSONObject restriccion = new JSONObject(dataPasajeros.get(i).toString());
+                                        JSONObject restriccion = new JSONObject(dataRestrinccion.get(i).toString());
                                         /***
                                          *{"id":"2",
                                          * "nombre":"Persona",
@@ -202,7 +237,21 @@ public class DownloadNewViajes {
         AppController.getInstance().addToRequestQueue(sr);
     }
 
-
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "titulo xd";
+            String description = "descripcion del canal";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_NOTIFICATION, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
 
 }

@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     Runnable runnable = new Runnable() {
         public void run() {
             if(statusActualizar){
@@ -77,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
              handler.postDelayed(runnable, 1000);
         }
     };
-
-
 
 
     void actualizarData(){
@@ -119,25 +116,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (id == R.id.logout) {
+            if(new ViajeDAO(ctx).listByStatusNo2().size()>0){//si faltan sincronizar
+                Toast.makeText(getBaseContext(), "Sincronize todos sus Viajes", Toast.LENGTH_LONG).show();
+            }else {
+               // Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
+                new LoginDataDAO(getBaseContext()).borrarTable();
+                Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
+                startActivity(intent);
+                stopService(new Intent(getBaseContext(),SearchViajesService.class));
+                stopService(new Intent(getBaseContext(),UploadService.class));
+                finish();
+            }
+        }
 
-            Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
-            new LoginDataDAO(getBaseContext()).borrarTable();
-            Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
-            startActivity(intent);
-            //finish();
-        }
-        if (id == R.id.actualizar) {
-
-            Intent intent = new Intent(this, SearchViajesService.class);
-            startService(intent);
-            //finish();
-        }
-        if (id == R.id.upload) {
-            Intent intent = new Intent(this, UploadService.class);
-            startService(intent);
-            Toast.makeText(ctx,"subiendo",Toast.LENGTH_SHORT).show();
-            //finish();
-        }
         return super.onOptionsItemSelected(item);
     }
 }

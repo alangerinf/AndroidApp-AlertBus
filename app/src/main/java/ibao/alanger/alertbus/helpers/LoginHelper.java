@@ -21,6 +21,8 @@ import java.util.Map;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.vo.LoginDataVO;
+import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.services.UploadService;
 import ibao.alanger.alertbus.views.MainActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_AUTENTIFICATION;
@@ -90,7 +92,7 @@ public class LoginHelper {
                                     if( verificarLogueo() != null){
                                         LoginDataVO u = verificarLogueo();
                                         if(u!=null){
-
+                                            startServices();
                                             Intent intent = new Intent(ctx, MainActivity.class);
                                             ctx.startActivity(intent);
                                         }else {
@@ -136,6 +138,13 @@ public class LoginHelper {
         };
 
         AppController.getInstance().addToRequestQueue(sr);
+    }
+    void  startServices(){
+        Intent intent = new Intent(ctx, SearchViajesService.class);
+        ctx.startService(intent);
+
+        intent = new Intent(ctx, UploadService.class);
+        ctx.startService(intent);
     }
 
 }

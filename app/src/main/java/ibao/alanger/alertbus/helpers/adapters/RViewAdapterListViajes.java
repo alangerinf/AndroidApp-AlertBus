@@ -26,6 +26,7 @@ import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.views.DetailActivity;
+import ibao.alanger.alertbus.views.RestricionActivity;
 
 public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterListViajes.ViewHolder>  {
 
@@ -59,6 +60,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         final ViajeVO viajeVO = viajeVOList.get(pos);
         int colorDisable = ContextCompat.getColor(ctx, R.color.materialGrey400);
         int colorEnable = ContextCompat.getColor(ctx, R.color.customGreen);
+        int colorRed = ContextCompat.getColor(ctx, R.color.redAccent700);
 
         holder.fAButtonReview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +72,59 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             }
         });
 
+        holder.fAButtonCheckDirectly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+
+                dialogAlert.setContentView(R.layout.dialog_danger);
+                Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
+                Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
+                ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
+                TextView mensaje = (TextView) dialogAlert.findViewById(R.id.tViewRecomendacion);
+
+                try{
+
+                    mensaje.setText("¿Esta seguro que quiere CONFIRMAR el viaje?");
+                    iViewDialogClose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogAlert.dismiss();
+                        }
+                    });
+                    btnDialogClose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            dialogAlert.dismiss();
+
+                        }
+                    });
+
+                    btnDialogAcept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            ViajeDAO viajeDAO = new ViajeDAO(ctx);
+                            boolean x=(viajeDAO.toStatus1(viajeVO.getId()));
+
+
+                                viajeVO.setStatus(1);
+                                recyclerView.getAdapter().notifyDataSetChanged();
+
+                            dialogAlert.dismiss();
+                        }
+                    });
+
+                    dialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialogAlert.show();
+
+                }catch (Exception e){
+                    Toast.makeText(ctx,e.toString(),Toast.LENGTH_LONG).show();
+                    Log.d(TAG,e.toString());
+                }
+            }
+        });
 
         holder.fAButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +137,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
 
                 try{
 
-                    mensaje.setText("Si elimina este Viaje, no podra recuperarlo\n¿Desea Continuar?");
+                    mensaje.setText("¿Desea ELIMINAR el viaje?");
                     iViewDialogClose.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -191,34 +245,40 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
 
         switch (viajeVO.getStatus()){
             case 0:
+                holder.tViewSatusRecibido.setTextColor(colorEnable);
+                holder.tViewStatusVerificado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
-                holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonUpload.setVisibility(View.VISIBLE);
-                holder.fAButtonDelete.setVisibility(View.VISIBLE);
+
                 holder.fAButtonDelete.setClickable(false);
                 holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
                 break;
 
             case 1:
+                holder.tViewSatusRecibido.setTextColor(colorDisable);
+                holder.tViewStatusVerificado.setTextColor(colorEnable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
 
-                holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonUpload.setVisibility(View.VISIBLE);
-                holder.fAButtonDelete.setVisibility(View.VISIBLE);
+
                 holder.fAButtonDelete.setClickable(false);
                 holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
-                holder.fAButtonUpload.setBackgroundTintList(ColorStateList.valueOf(colorEnable));
+
+                holder.fAButtonCheckDirectly.setClickable(false);
+                holder.fAButtonCheckDirectly.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+
 
                 break;
 
             case 2:
+                holder.tViewSatusRecibido.setTextColor(colorDisable);
+                holder.tViewStatusVerificado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorEnable);
 
-                holder.fAButtonReview.setVisibility(View.VISIBLE);
-                holder.fAButtonUpload.setVisibility(View.INVISIBLE);
-                holder.fAButtonDelete.setVisibility(View.VISIBLE);
-                holder.fAButtonDelete.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.red)));
+
+                holder.fAButtonCheckDirectly.setClickable(false);
+                holder.fAButtonCheckDirectly.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+
+
                 break;
         }
         //fin labels
@@ -228,10 +288,36 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         holder.tViewRuta.setText(""+viajeVO.getRuta());
         holder.tViewHInicio.setText(""+viajeVO.gethInicio());
         holder.tViewHFin.setText(""+viajeVO.gethFin());
-        holder.tViewNPasajeros.setText(""+viajeVO.getNumpasajeros());
+        holder.tViewNPasajeros.setText(""+viajeVO.getNumPasajeros());
         Log.d(TAG,"tViewCapacidad: "+viajeVO.getCapacidad());
-        float porc = (float) (((1.0)*(viajeVO.getNumpasajeros())/viajeVO.getCapacidad())*100);
+        float porc = (float) (((1.0)*(viajeVO.getNumPasajeros())/viajeVO.getCapacidad())*100);
         holder.tViewPorCapacidad.setText(""+getFloatFormateado(porc)+"%");
+
+
+        if(viajeVO.getNumRestricciones()==0){
+            holder.tViewRestriccion.setText("SIN RESTRICCIONES");
+            holder.fAButtonRestriccion.setClickable(false);
+            holder.fAButtonRestriccion.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+        }else {
+            holder.tViewRestriccion.setText(""+viajeVO.getNumRestricciones()+" RESTRICCIONES");
+            holder.tViewRestriccion.setTextColor(colorRed);
+
+            holder.fAButtonRestriccion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(ctx, RestricionActivity.class);
+                    intent.putExtra("status", viajeVO.getStatus());
+                    intent.putExtra("id", viajeVO.getId());
+                    ctx.startActivity(intent);
+
+
+                }
+            });
+
+        }
+
+
 
 
 
@@ -262,8 +348,11 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         TextView tViewHFin ;
         TextView tViewNPasajeros ;
         TextView tViewPorCapacidad;
+        TextView tViewRestriccion;
 
         //status
+        TextView tViewSatusRecibido;
+        TextView tViewStatusVerificado;
         TextView tViewStatusSincronizado;
 
 
@@ -271,6 +360,8 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
         FloatingActionButton fAButtonReview;
         FloatingActionButton fAButtonUpload;
         FloatingActionButton fAButtonDelete;
+        FloatingActionButton fAButtonRestriccion;
+        FloatingActionButton fAButtonCheckDirectly;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -282,13 +373,16 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
             tViewHFin = itemView.findViewById(R.id.tViewHFin);
             tViewNPasajeros = itemView.findViewById(R.id.tViewNPasajeros);
             tViewPorCapacidad = itemView.findViewById(R.id.tViewPorCapacidad);
-
+            tViewRestriccion = itemView.findViewById(R.id.tViewRestriccion);
+            tViewSatusRecibido = itemView.findViewById(R.id.tViewSatusRecibido);
+            tViewStatusVerificado = itemView.findViewById(R.id.tViewStatusVerificado);
             tViewStatusSincronizado = itemView.findViewById(R.id.tViewStatusSincronizado);
 
             fAButtonReview = itemView.findViewById(R.id.fAButtonReview);
             fAButtonUpload = itemView.findViewById(R.id.fAButtonUpload);
             fAButtonDelete = itemView.findViewById(R.id.fAButtonDelete);
-
+            fAButtonRestriccion =itemView.findViewById(R.id.fAButtonRestriccion);
+            fAButtonCheckDirectly=itemView.findViewById(R.id.fAButtonCheckDirectly);
         }
     }
 

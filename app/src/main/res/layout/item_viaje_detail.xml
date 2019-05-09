@@ -312,8 +312,9 @@
         android:id="@+id/fAButtonUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
+        android:clickable="false"
+        android:focusable="false"
+            android:visibility="invisible"
         android:scaleX="0.7"
         android:scaleY="0.7"
         app:backgroundTint="@color/primary"
@@ -394,25 +395,70 @@
             android:focusable="true"
             android:scaleX="0.7"
             android:scaleY="0.7"
+            app:backgroundTint="#FF8922"
             app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fAButtonCheckDirectly"
-            app:srcCompat="@android:drawable/ic_dialog_alert" />
+            app:srcCompat="@drawable/ic_warning_white_24dp" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tViewSatusRecibido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Recibido"
+        android:textStyle="bold"
+        android:textColor="@color/customGreen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tViewStatusVerificado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Verificado"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewS1"
+        app:layout_constraintStart_toEndOf="@+id/tViewS1"
+        app:layout_constraintTop_toTopOf="@+id/tViewS1" />
 
     <TextView
         android:id="@+id/tViewStatusSincronizado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Sincronizado"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/tViewS2"
+        app:layout_constraintStart_toEndOf="@+id/tViewS2"
+        app:layout_constraintTop_toTopOf="@+id/tViewS2" />
 
+    <TextView
+        android:id="@+id/tViewS1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/slash"
+        android:textColor="@color/primaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewSatusRecibido"
+        app:layout_constraintStart_toEndOf="@+id/tViewSatusRecibido"
+        app:layout_constraintTop_toTopOf="@+id/tViewSatusRecibido" />
+
+    <TextView
+        android:id="@+id/tViewS2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/slash"
+        android:textColor="@color/primaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewStatusVerificado"
+        app:layout_constraintStart_toEndOf="@+id/tViewStatusVerificado"
+        app:layout_constraintTop_toTopOf="@+id/tViewStatusVerificado" />
     <TextView
         android:id="@+id/tView_Restricciones"
         android:layout_width="wrap_content"

@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class DetailActivity extends AppCompatActivity {
 
         pasajeroVOListAll = (new PasajeroDAO(ctx).listByIdViaje(VIAJE.getId()));
 
-        new ViajeDAO(ctx).toStatus1(VIAJE.getId());
+
 
         pasajeroVOListFiltrado = pasajeroVOListAll;
 

@@ -1,10 +1,15 @@
 package ibao.alanger.alertbus.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import ibao.alanger.alertbus.helpers.DownloadNewViajes;
 
@@ -15,7 +20,22 @@ public class SearchViajesService extends Service {
     Context ctx;
 
     public static boolean statusActualizar = false;
-
+    String CHANNEL_NOTIFICATION = "my cga";
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Activacion de Servicios";
+            String description = "Servicios Sincronizacióadminn";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_NOTIFICATION, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     public SearchViajesService() {
     }
@@ -23,12 +43,19 @@ public class SearchViajesService extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
+        ctx = this;
+        createNotificationChannel();
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_NOTIFICATION)
+                .setContentTitle("")
+                .setContentText("").build();
+
+        startForeground(9999999, notification);
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flag, int idProcess)
-    {   ctx = this;
+    {
         handler.removeCallbacks(runnable);
         runnable.run();
         return START_STICKY;
@@ -54,7 +81,7 @@ public class SearchViajesService extends Service {
         public void run() {
 
             new DownloadNewViajes(ctx).SearchNews();
-           // handler.postDelayed(runnable, timeMilis);
+            handler.postDelayed(runnable, timeMilis);
         }
     };
 

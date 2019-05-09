@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/upload"
-        android:title="Subir Verificados"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/actualizar"
-        android:title="Buscar Viajes"
-        app:showAsAction="never" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <item
         android:id="@+id/logout"
         android:title="Cerrar Sesión"
@@ -16,5 +9,6 @@
     <item
         android:id="@+id/version"
         android:title="Versión"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_error_white_24dp"
+        app:showAsAction="ifRoom" />
 </menu>

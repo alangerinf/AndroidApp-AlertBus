@@ -1,5 +1,6 @@
 package ibao.alanger.alertbus.models.dao;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +17,8 @@ import ibao.alanger.alertbus.models.vo.ViajeVO;
 
 import static ibao.alanger.alertbus.ConexionSQLiteHelper.VERSION_DB;
 import static ibao.alanger.alertbus.utilities.Utilities.DATABASE_NAME;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_RESTRICCION;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_RESTRICCION_COL_IDVIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_COMENTARIO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_CONDUCTOR;
@@ -203,7 +206,7 @@ public class ViajeDAO {
                     temp.setRuta(cursor.getString(4));
                     temp.sethInicio(cursor.getString(5));
                     temp.sethFin(cursor.getString(6));
-                    temp.setNumpasajeros(cursor.getInt(7));
+                    temp.setNumPasajeros(cursor.getInt(7));
                     temp.setCapacidad(cursor.getInt(8));
                     temp.setComentario(cursor.getString(9));
                     temp.setStatus(cursor.getInt(10));
@@ -225,7 +228,6 @@ public class ViajeDAO {
         SQLiteDatabase db = c.getReadableDatabase();
         List<ViajeVO> ViajeVOList = new  ArrayList<>();
         try{
-
             Cursor cursor = db.rawQuery(
                     "SELECT " +
                             "V."+TABLE_VIAJE_COL_ID+", " +//0
@@ -252,11 +254,26 @@ public class ViajeDAO {
                     temp.setRuta(cursor.getString(4));
                     temp.sethInicio(cursor.getString(5));
                     temp.sethFin(cursor.getString(6));
-                    temp.setNumpasajeros(cursor.getInt(7));
+                    temp.setNumPasajeros(cursor.getInt(7));
                     temp.setCapacidad(cursor.getInt(8));
                     temp.setComentario(cursor.getString(9));
                     temp.setStatus(cursor.getInt(10));
                     temp.sethConfirmado(cursor.getString(11));
+
+                Cursor cursor2 = db.rawQuery(
+                        "SELECT " +
+                                "count(*)"+" " +//0
+                                " FROM "+
+                                TABLE_RESTRICCION+" "+
+                                " WHERE "+
+                                TABLE_RESTRICCION_COL_IDVIAJE+" = "+temp.getId()
+                        ,null);
+                    if(cursor2.getCount()>0){
+                        cursor2.moveToFirst();
+                        temp.setNumRestricciones(cursor2.getInt(0));
+                    }
+
+
                 Log.d("listar ViajeDAO : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -307,6 +324,8 @@ public class ViajeDAO {
         boolean flag = false;
         //borrar pasajeros
         new PasajeroDAO(ctx).deleteByIdViaje(id);
+        //borrar restricciones
+        new RestriccionDAO(ctx).deleteByIdViaje(id);
 
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx, DATABASE_NAME,null,VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -359,7 +378,61 @@ public class ViajeDAO {
                 temp.setRuta(cursor.getString(4));
                 temp.sethInicio(cursor.getString(5));
                 temp.sethFin(cursor.getString(6));
-                temp.setNumpasajeros(cursor.getInt(7));
+                temp.setNumPasajeros(cursor.getInt(7));
+                temp.setCapacidad(cursor.getInt(8));
+                temp.setComentario(cursor.getString(9));
+                temp.setStatus(cursor.getInt(10));
+                temp.sethConfirmado(cursor.getString(11));
+                Log.d("listar ViajeDAO s1 : ",""+temp.getId());
+                ViajeVOList.add(temp);
+                // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
+            }
+            cursor.close();
+        }catch (Exception e){
+            Toast.makeText(ctx,e.toString(),Toast.LENGTH_SHORT).show();
+        }finally {
+            db.close();
+            c.close();
+        }
+        return ViajeVOList;
+
+    }
+
+    public List<ViajeVO> listByStatusNo2() {
+        ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = c.getReadableDatabase();
+        List<ViajeVO> ViajeVOList = new  ArrayList<>();
+        try{
+
+            Cursor cursor = db.rawQuery(
+                    "SELECT " +
+                            "V."+TABLE_VIAJE_COL_ID+", " +//0
+                            "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                            "V."+TABLE_VIAJE_COL_PLACA+", "+//2
+                            "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
+                            "V."+TABLE_VIAJE_COL_RUTA+", "+//4
+                            "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
+                            "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
+                            "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
+                            "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
+                            "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
+                            "V."+TABLE_VIAJE_COL_STATUS+", "+//10
+                            "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                            " FROM "+
+                            TABLE_VIAJE+" as V"+" "+
+                            " WHERE "+
+                            "V."+TABLE_VIAJE_COL_STATUS+" != "+2
+                    ,null);
+            while(cursor.moveToNext()){
+                ViajeVO temp = new ViajeVO();
+                temp.setId(cursor.getInt(0));
+                temp.setProveedor(cursor.getString(1));
+                temp.setPlaca(cursor.getString(2));
+                temp.setConductor(cursor.getString(3));
+                temp.setRuta(cursor.getString(4));
+                temp.sethInicio(cursor.getString(5));
+                temp.sethFin(cursor.getString(6));
+                temp.setNumPasajeros(cursor.getInt(7));
                 temp.setCapacidad(cursor.getInt(8));
                 temp.setComentario(cursor.getString(9));
                 temp.setStatus(cursor.getInt(10));

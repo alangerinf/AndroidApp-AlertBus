@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    //autoinicio despues de reinicio
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".app.AppController"
         android:allowBackup="true"
@@ -16,23 +20,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
+
+        <activity android:name=".views.RestricionActivity" />
 
         <service
             android:name=".services.SearchViajesService"
             android:enabled="true"
-            android:exported="true">
-
-        </service>
-
+            android:exported="true" />
         <service
             android:name=".services.UploadService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true" />
 
-        </service>
         <activity android:name=".views.ActivityPreloader">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,15 +43,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".views.DetailActivity" />
+        <activity android:name=".views.LoginActivity" />
+        <activity android:name=".views.MainActivity" />
 
-        <activity android:name=".views.DetailActivity">
 
-        </activity>
-        <activity android:name=".views.LoginActivity">
-        </activity>
-        <activity android:name=".views.MainActivity">
-
-        </activity>
+        <receiver android:name=".services.AutoArranqueBroadcast" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
