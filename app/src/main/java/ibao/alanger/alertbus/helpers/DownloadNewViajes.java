@@ -208,8 +208,8 @@ public class DownloadNewViajes {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 //                        progress.dismiss();
-                        Toast.makeText(ctx,"Error al conectarse, verifique su conexion con el servidor",Toast.LENGTH_LONG).show();
-                        Toast.makeText(ctx,error.toString(),Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(ctx,"Error al conectarse, verifique su conexion con el servidor",Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(ctx,error.toString(),Toast.LENGTH_LONG).show();
                         Log.d("error 2",error.toString());
                         status=-2;
                     }

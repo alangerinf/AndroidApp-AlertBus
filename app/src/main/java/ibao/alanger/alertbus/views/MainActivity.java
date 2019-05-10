@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Objects;
 
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
@@ -29,7 +30,7 @@ import static ibao.alanger.alertbus.services.SearchViajesService.statusActualiza
 public class MainActivity extends AppCompatActivity {
 
 
-    Context ctx;
+    private static Context ctx;
     private static RecyclerView rViewViajes;
     private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajes rViewAdapterListViajes;
@@ -109,6 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 
+        if(id == R.id.limpiar) {
+            new ViajeDAO(ctx).deleteByStatus2();
+            actualizarData();
+
+        }
+
         if(id == R.id.version) {
             try {
                 Toast.makeText(getBaseContext(),"Versión "+ BuildConfig.VERSION_NAME+" code."+BuildConfig.VERSION_CODE,Toast.LENGTH_LONG).show();
@@ -118,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.logout) {
             if(new ViajeDAO(ctx).listByStatusNo2().size()>0){//si faltan sincronizar
-                Snackbar.make(getCurrentFocus(), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
+                Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }else {
                // Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();

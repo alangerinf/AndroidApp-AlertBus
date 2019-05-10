@@ -58,7 +58,22 @@ public class ViajeDAO {
         return flag;
     }
 
-    
+    public boolean deleteByStatus2(){
+        boolean flag = false;
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = conn.getWritableDatabase();
+        String[] args = {
+                "2"
+        };
+        int res = db.delete(TABLE_VIAJE,TABLE_VIAJE_COL_STATUS+"=?",args);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        conn.close();
+        return flag;
+    }
+
     public boolean insertar(int id,
                             String proveedor,
                             String placa,

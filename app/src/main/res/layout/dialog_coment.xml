@@ -40,8 +40,8 @@
             android:id="@+id/btnAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/shape_customgreen_br30_b0"
             android:paddingLeft="@dimen/padding_buttons"
             android:paddingRight="@dimen/padding_buttons"
@@ -58,9 +58,7 @@
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/shape_redaccent700_br30_b0"
             android:paddingLeft="@dimen/padding_buttons"
             android:paddingRight="@dimen/padding_buttons"
@@ -68,8 +66,7 @@
             android:textAllCaps="false"
             android:textColor="@color/icons"
             android:textSize="@dimen/textsize_primary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/eTextComent"
             app:layout_constraintTop_toBottomOf="@+id/eTextComent" />
 
         <EditText
@@ -94,13 +91,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tViewTitulo"
             tools:ignore="MissingConstraints" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp" />
-
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -112,6 +102,14 @@
             app:layout_constraintBottom_toBottomOf="@+id/tViewTitulo"
             app:layout_constraintStart_toEndOf="@+id/tViewTitulo"
             app:layout_constraintTop_toTopOf="@+id/tViewTitulo" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Máximo 100 carateres"
+            app:layout_constraintEnd_toEndOf="@+id/eTextComent"
+            app:layout_constraintTop_toBottomOf="@+id/eTextComent" />
 
 
     </android.support.constraint.ConstraintLayout>
