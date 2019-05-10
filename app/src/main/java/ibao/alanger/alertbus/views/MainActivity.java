@@ -3,6 +3,7 @@ package ibao.alanger.alertbus.views;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +29,7 @@ import static ibao.alanger.alertbus.services.SearchViajesService.statusActualiza
 public class MainActivity extends AppCompatActivity {
 
 
-    Context ctx = this;
+    Context ctx;
     private static RecyclerView rViewViajes;
     private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajes rViewAdapterListViajes;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ctx = MainActivity.this;
 
         viajeVOList = new ViajeDAO(ctx).listAll();
         rViewViajes = findViewById(R.id.rViewViajes);
@@ -101,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -117,10 +118,12 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.logout) {
             if(new ViajeDAO(ctx).listByStatusNo2().size()>0){//si faltan sincronizar
-                Toast.makeText(getBaseContext(), "Sincronize todos sus Viajes", Toast.LENGTH_LONG).show();
+                Snackbar.make(getCurrentFocus(), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }else {
                // Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
                 new LoginDataDAO(getBaseContext()).borrarTable();
+                new ViajeDAO(getBaseContext()).clearTableUpload();
                 Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
                 startActivity(intent);
                 stopService(new Intent(getBaseContext(),SearchViajesService.class));

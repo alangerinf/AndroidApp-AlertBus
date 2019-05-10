@@ -85,7 +85,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
 
                 try{
 
-                    mensaje.setText("¿Esta seguro que quiere CONFIRMAR el viaje?");
+                    mensaje.setText("¿Desea CONFIRMAR el viaje?");
                     iViewDialogClose.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -107,7 +107,6 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
 
                             ViajeDAO viajeDAO = new ViajeDAO(ctx);
                             boolean x=(viajeDAO.toStatus1(viajeVO.getId()));
-
 
                                 viajeVO.setStatus(1);
                                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -158,7 +157,7 @@ public class RViewAdapterListViajes extends RecyclerView.Adapter<RViewAdapterLis
                         public void onClick(View v) {
 
 
-                            ViajeDAO viajeDAO = new ViajeDAO(ctx);
+                            ViajeDAO viajeDAO = new ViajeDAO(dialogAlert.getContext());
                             boolean x=(viajeDAO.deleteById(viajeVO.getId()));
 
                             if(!x){

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Alert Bus</string>
+    <string name="app_name">AlertBus</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">Fast Bici</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

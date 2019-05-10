@@ -98,6 +98,8 @@
                     android:background="@android:color/transparent"
                     android:hint="@string/usuario"
                     android:inputType="text"
+                    android:typeface="sans"
+
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:textColorHint="@color/primaryText"
@@ -145,13 +147,14 @@
                     android:inputType="textPassword"
                     android:paddingStart="15dp"
                     android:paddingEnd="40dp"
+                    android:typeface="sans"
                     android:textColorHint="@color/primaryText"
                     android:textSize="@dimen/textsize_secondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="Autofill,MissingConstraints" />
+                    tools:ignore="MissingConstraints" />
 
             </android.support.constraint.ConstraintLayout>
 
