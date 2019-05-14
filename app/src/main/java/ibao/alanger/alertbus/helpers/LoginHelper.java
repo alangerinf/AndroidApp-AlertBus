@@ -23,7 +23,7 @@ import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.vo.LoginDataVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
-import ibao.alanger.alertbus.views.MainActivity;
+import ibao.alanger.alertbus.views.MainSupervisorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_AUTENTIFICATION;
 
@@ -93,7 +93,7 @@ public class LoginHelper {
                                         LoginDataVO u = verificarLogueo();
                                         if(u!=null){
                                             startServices();
-                                            Intent intent = new Intent(ctx, MainActivity.class);
+                                            Intent intent = new Intent(ctx, MainSupervisorActivity.class);
                                             ctx.startActivity(intent);
                                         }else {
                                             Toast.makeText(ctx,"Error de Base de Datos Interna",Toast.LENGTH_LONG).show();

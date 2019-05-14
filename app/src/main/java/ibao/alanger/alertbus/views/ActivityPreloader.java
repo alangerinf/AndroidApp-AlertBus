@@ -83,7 +83,7 @@ public class ActivityPreloader extends Activity {
 
 
     void  openMain(){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainSupervisorActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }

@@ -1,6 +1,5 @@
 package ibao.alanger.alertbus.helpers;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,8 +35,7 @@ import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.RestriccionVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
-import ibao.alanger.alertbus.views.ActivityPreloader;
-import ibao.alanger.alertbus.views.MainActivity;
+import ibao.alanger.alertbus.views.MainSupervisorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
 
@@ -123,7 +121,7 @@ public class DownloadNewViajes {
 
                                         //Notification
                                         // Create an explicit intent for an Activity in your app
-                                        Intent intent = new Intent(ctx, MainActivity.class);
+                                        Intent intent = new Intent(ctx, MainSupervisorActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 

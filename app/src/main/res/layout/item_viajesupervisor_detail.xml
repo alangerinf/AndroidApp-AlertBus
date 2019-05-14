@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shadow_center"
+    android:id="@+id/cLayoutSearch"
+    app:layout_constraintTop_toTopOf="parent">
+
+
+    <TextView
+        android:id="@+id/tView_proveedor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Proveedor"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tViewStatusSincronizado"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tView_nPlaca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Placa"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tView_proveedor"
+        app:layout_constraintTop_toBottomOf="@+id/tViewProveedor" />
+
+    <TextView
+        android:id="@+id/tView_conductor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conductor"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+
+        app:layout_constraintStart_toStartOf="@+id/tView_nPlaca"
+        app:layout_constraintTop_toBottomOf="@+id/tViewPlaca" />
+
+    <TextView
+        android:id="@+id/tView_ruta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ruta"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tView_conductor"
+        app:layout_constraintTop_toBottomOf="@+id/tViewConductor" />
+
+    <TextView
+        android:id="@+id/tView_hInicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora Inicio"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+
+        app:layout_constraintStart_toStartOf="@+id/tView_ruta"
+        app:layout_constraintTop_toBottomOf="@+id/tViewRuta" />
+
+    <TextView
+        android:id="@+id/tView_nPasajeros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="# Pasajeros"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tView_hInicio"
+        app:layout_constraintTop_toBottomOf="@+id/tViewHFin" />
+
+    <TextView
+        android:id="@+id/tView_porCapacidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="%Ocupación"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tView_hInicio"
+        app:layout_constraintTop_toBottomOf="@+id/tViewNPasajeros" />
+
+    <TextView
+        android:id="@+id/tViewTP1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+
+        app:layout_constraintBottom_toBottomOf="@+id/tView_proveedor"
+        app:layout_constraintStart_toEndOf="@+id/tView_Restricciones" />
+
+    <TextView
+        android:id="@+id/tViewTP2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="@+id/tView_nPlaca"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP1" />
+
+    <TextView
+        android:id="@+id/tViewTP3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="@+id/tView_conductor"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP2" />
+
+    <TextView
+        android:id="@+id/tViewTP4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="@+id/tView_ruta"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP3" />
+
+    <TextView
+        android:id="@+id/tViewTP5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="@+id/tView_hInicio"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP4" />
+
+    <TextView
+        android:id="@+id/tViewTP7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP6"
+        app:layout_constraintTop_toTopOf="@+id/tView_nPasajeros" />
+
+    <TextView
+        android:id="@+id/tViewTP8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP7"
+        app:layout_constraintTop_toTopOf="@+id/tView_porCapacidad" />
+
+    <TextView
+        android:id="@+id/tViewProveedor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP1"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP1" />
+
+    <TextView
+        android:id="@+id/tViewPlaca"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewProveedor"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP2"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP2" />
+
+    <TextView
+        android:id="@+id/tViewConductor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewPlaca"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP3"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP3" />
+
+    <TextView
+        android:id="@+id/tViewRuta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewConductor"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP4"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP4" />
+
+    <TextView
+        android:id="@+id/tViewHInicio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewRuta"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP5"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP5" />
+
+    <TextView
+        android:id="@+id/tViewNPasajeros"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewHFin"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP7"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP7" />
+
+    <TextView
+        android:id="@+id/tViewPorCapacidad"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewNPasajeros"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP8"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP8" />
+
+    <TextView
+        android:id="@+id/tView_horaFin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora Fin"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tView_hInicio"
+        app:layout_constraintTop_toBottomOf="@+id/tViewHInicio" />
+
+    <TextView
+        android:id="@+id/tViewTP6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="@+id/tView_horaFin"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP5" />
+
+    <TextView
+        android:id="@+id/tViewHFin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/tViewHInicio"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP6"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP6" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fAButtonReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:backgroundTint="@color/primaryLight"
+            app:layout_constraintBottom_toTopOf="@+id/fAButtonUpload"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@color/icons"
+            app:srcCompat="@drawable/ic_remove_red_eye_black_24dp"
+            tools:ignore="MissingConstraints" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fAButtonUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="invisible"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:backgroundTint="@color/primary"
+            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="@+id/fAButtonReview"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            app:srcCompat="@drawable/ic_backup_black_24dp" />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fAButtonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:backgroundTint="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/fAButtonUpload"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:srcCompat="@drawable/ic_delete_sweep_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+
+            android:id="@+id/fAButtonRestriccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:backgroundTint="#FF8922"
+            app:srcCompat="@drawable/ic_warning_white_24dp"
+
+
+            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="@+id/fAButtonReview"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text=" "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <android.support.design.widget.FloatingActionButton
+
+            android:id="@+id/fAButtonCheckDirectly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:backgroundTint="@color/customGreen"
+
+
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:srcCompat="@drawable/ic_check_white_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tViewSatusRecibido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Recibido"
+        android:textStyle="bold"
+        android:textColor="@color/customGreen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tViewStatusVerificado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Verificado"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewS1"
+        app:layout_constraintStart_toEndOf="@+id/tViewS1"
+        app:layout_constraintTop_toTopOf="@+id/tViewS1" />
+
+    <TextView
+        android:id="@+id/tViewStatusSincronizado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Sincronizado"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewS2"
+        app:layout_constraintStart_toEndOf="@+id/tViewS2"
+        app:layout_constraintTop_toTopOf="@+id/tViewS2" />
+
+    <TextView
+        android:id="@+id/tViewS1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/slash"
+        android:textColor="@color/primaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewSatusRecibido"
+        app:layout_constraintStart_toEndOf="@+id/tViewSatusRecibido"
+        app:layout_constraintTop_toTopOf="@+id/tViewSatusRecibido" />
+
+    <TextView
+        android:id="@+id/tViewS2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/slash"
+        android:textColor="@color/primaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/tViewStatusVerificado"
+        app:layout_constraintStart_toEndOf="@+id/tViewStatusVerificado"
+        app:layout_constraintTop_toTopOf="@+id/tViewStatusVerificado" />
+    <TextView
+        android:id="@+id/tView_Restricciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restricciones"
+        android:textStyle="bold"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tView_porCapacidad"
+        app:layout_constraintTop_toBottomOf="@+id/tViewPorCapacidad" />
+
+    <TextView
+        android:id="@+id/tViewTP9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintStart_toStartOf="@+id/tViewTP8"
+        app:layout_constraintTop_toTopOf="@+id/tView_Restricciones" />
+
+    <TextView
+        android:id="@+id/tViewRestriccion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tViewPorCapacidad"
+        app:layout_constraintStart_toEndOf="@+id/tViewTP9"
+        app:layout_constraintTop_toTopOf="@+id/tViewTP9" />
+
+
+</android.support.constraint.ConstraintLayout>

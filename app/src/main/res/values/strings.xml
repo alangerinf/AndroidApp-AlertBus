@@ -38,6 +38,7 @@
     <string name="texthint_escribecomentario">Escribe tu comentario</string>
     <string name="listo">Listo</string>
     <string name="item_1">Item 1</string>
+    <string name="title_activity_pasajeros_list">PasajerosListActivity</string>
 
 
 </resources>
