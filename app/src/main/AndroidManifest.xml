@@ -15,9 +15,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
+
+
 
     <application
         android:name=".app.AppController"
@@ -36,12 +35,18 @@
             android:label="@string/title_activity_pasajeros_list">
 
         </activity>
-        <activity android:name=".views.MainConductorActivity">
+        <activity
+            android:name=".views.MapsActivity"
+            android:label="En camino">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".views.MainConductorActivity">
+
+
 
         </activity>
         <activity android:name=".views.RestricionActivity" />
@@ -56,6 +61,12 @@
             android:enabled="true"
             android:exported="true" />
 
+        <service android:name=".services.servicioDisponible">
+            <intent-filter>
+                <action android:name=".servicioDisponible"></action>
+            </intent-filter>
+        </service>
+
         <activity android:name=".views.ActivityPreloader">
 
         </activity>
@@ -63,11 +74,27 @@
         <activity android:name=".views.LoginActivity" />
         <activity android:name=".views.MainSupervisorActivity" />
 
+        <activity
+            android:name=".views.CustomScannerActivity"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:parentActivityName=".views.PasajerosListActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+
+        </activity>
+
+
         <receiver android:name=".services.AutoArranqueBroadcast">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDDjKPueHHCV8wxa8x_Vp9yoKHnndz16IY" />
+
     </application>
 
 </manifest>

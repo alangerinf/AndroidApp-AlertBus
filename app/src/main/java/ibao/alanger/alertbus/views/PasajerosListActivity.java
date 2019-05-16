@@ -2,8 +2,13 @@ package ibao.alanger.alertbus.views;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,7 +20,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa;
@@ -28,19 +38,70 @@ public class PasajerosListActivity extends Activity {
 
     private static FloatingActionButton fAButtonShowDialogMap;
 
-    private static AdapterDialogMapa_ListPasajeros adapterDialogMapa;
+    private static FloatingActionButton fAButtonAddPasajero;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasajeros_list);
 
-        FloatingActionButton fab = findViewById(R.id.fAButtonAddPasajero);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fAButtonAddPasajero = findViewById(R.id.fAButtonAddPasajero);
+        fAButtonAddPasajero.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+                String[] colors = {"DNI", "Lectura QR Unico", "Lectura QR Continuo"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                builder.setTitle("Añadir Pasajero");
+                builder.setItems(colors, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                final Dialog dialogDni = new Dialog(ctx);
+                                dialogDni.setContentView(R.layout.dialog_add_dni);
+                                Button btnAccept = dialogDni.findViewById(R.id.btnAccept);
+                                final EditText eTextDNI =dialogDni.findViewById(R.id.eTextDNI);
+                                btnAccept.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if(eTextDNI.getText().toString().length()!=8){
+                                            Snackbar.make(view, "DNI no válido", Snackbar.LENGTH_LONG)
+                                                     .setAction("Action", null).show();
+                                        }else{
+                                            dialogDni.dismiss();
+                                        }
+
+                                    }
+                                });
+                                dialogDni.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialogDni.show();
+                                break;
+
+                            case 1:
+                                IntentIntegrator intentIntegrator1 =new IntentIntegrator(PasajerosListActivity.this);
+                                intentIntegrator1
+                                        .addExtra("tittle","Lectura Unica")
+                                        .setOrientationLocked(false)
+                                        .setCaptureActivity(CustomScannerActivity.class)
+                                        .initiateScan();
+                                break;
+
+                            case 2:
+                                IntentIntegrator intentIntegrator2 =new IntentIntegrator(PasajerosListActivity.this);
+                                intentIntegrator2
+                                        .addExtra("tittle","Lectura Continua")
+                                        .setOrientationLocked(false)
+                                        .setCaptureActivity(CustomScannerActivity.class)
+                                        .initiateScan();
+                                break;
+
+                        }
+                    }
+                });
+                builder.show();
+
             }
         });
 
@@ -120,6 +181,21 @@ public class PasajerosListActivity extends Activity {
             case Surface.ROTATION_90:
             default:
                 return "horizontal";
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+               // toast = "Cancelled from fragment";
+            } else {
+             //   toast = "Scanned from fragment: " + result.getContents();
+            }
+
+            // At this point we may or may not have a reference to the activity
+          ///  displayToast();
         }
     }
 }
