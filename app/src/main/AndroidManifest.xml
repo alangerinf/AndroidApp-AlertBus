@@ -15,9 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDDjKPueHHCV8wxa8x_Vp9yoKHnndz16IY" />
 
     <application
         android:name=".app.AppController"
@@ -62,6 +59,12 @@
             android:enabled="true"
             android:exported="true" />
 
+        <service android:name=".services.servicioDisponible">
+            <intent-filter>
+                <action android:name=".servicioDisponible"></action>
+            </intent-filter>
+        </service>
+
         <activity android:name=".views.ActivityPreloader">
 
         </activity>
@@ -85,6 +88,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDDjKPueHHCV8wxa8x_Vp9yoKHnndz16IY" />
+
     </application>
 
 </manifest>
