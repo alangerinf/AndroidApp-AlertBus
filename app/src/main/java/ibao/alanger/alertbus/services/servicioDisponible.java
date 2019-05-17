@@ -51,7 +51,7 @@ public class servicioDisponible extends Service {
 
 
    static public double lat =-8.1395615, lng=-79.0386577;
-    static public float bearing;
+    static public float bearing,speed;
 
 
 
@@ -105,12 +105,12 @@ public class servicioDisponible extends Service {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return 0;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
 
         Intent intent = new Intent(this, MapsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.mipmap.ic_launcher_round, "go", pendingIntent).build();
+        NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.mipmap.ic_launcher_round, "ver recorrido", pendingIntent).build();
 
         //Notification
         createNotificationChannel();
@@ -159,8 +159,8 @@ public class servicioDisponible extends Service {
                     lat = location.getLatitude();
                     lng = location.getLongitude();
                     bearing = location.getBearing();
-
-                    Log.d("hola",location.toString());
+                    speed = location.getSpeed();
+                    Log.d("hola",location.toString()+" spedd :"+location.getSpeed());
                 }catch (Exception e){
                     //algo salio mal
                 }
@@ -168,7 +168,13 @@ public class servicioDisponible extends Service {
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+
+
+
+
+        }
 
         @Override
         public void onProviderEnabled(String provider) {

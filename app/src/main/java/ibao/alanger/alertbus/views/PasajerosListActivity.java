@@ -40,10 +40,24 @@ public class PasajerosListActivity extends Activity {
 
     private static FloatingActionButton fAButtonAddPasajero;
 
+    private static Button btnNext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasajeros_list);
+
+        btnNext = findViewById(R.id.btnNext);
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(),MapsActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 
         fAButtonAddPasajero = findViewById(R.id.fAButtonAddPasajero);
         fAButtonAddPasajero.setOnClickListener(new View.OnClickListener() {
