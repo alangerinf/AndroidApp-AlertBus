@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -284,15 +284,15 @@
         app:layout_constraintStart_toEndOf="@+id/tViewTP6"
         app:layout_constraintTop_toTopOf="@+id/tViewTP6" />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fAButtonReview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -303,6 +303,7 @@
             app:backgroundTint="@color/primaryLight"
             app:layout_constraintBottom_toTopOf="@+id/fAButtonUpload"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:rippleColor="@color/icons"
             app:srcCompat="@drawable/ic_remove_red_eye_black_24dp"
@@ -314,9 +315,9 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
-            android:visibility="invisible"
             android:scaleX="0.7"
             android:scaleY="0.7"
+            android:visibility="invisible"
             app:backgroundTint="@color/primary"
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="@+id/fAButtonReview"
@@ -324,7 +325,7 @@
             app:srcCompat="@drawable/ic_backup_black_24dp" />
 
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fAButtonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -338,7 +339,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView6"
             app:srcCompat="@drawable/ic_delete_sweep_white_24dp" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
 
             android:id="@+id/fAButtonRestriccion"
             android:layout_width="wrap_content"
@@ -348,13 +349,12 @@
             android:scaleX="0.7"
             android:scaleY="0.7"
             app:backgroundTint="#FF8922"
-            app:srcCompat="@drawable/ic_warning_white_24dp"
-
-
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
+
+
             app:layout_constraintEnd_toEndOf="@+id/fAButtonReview"
             app:layout_constraintTop_toBottomOf="@+id/textView5"
-            />
+            app:srcCompat="@drawable/ic_warning_white_24dp" />
 
         <TextView
             android:id="@+id/textView4"
@@ -391,7 +391,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
 
             android:id="@+id/fAButtonCheckDirectly"
             android:layout_width="wrap_content"
@@ -409,7 +409,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4"
             app:srcCompat="@drawable/ic_check_white_24dp" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tViewSatusRecibido"
@@ -490,7 +490,7 @@
     <TextView
         android:id="@+id/tViewRestriccion"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="21dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/prueba_texto_corto"
@@ -502,4 +502,4 @@
         app:layout_constraintTop_toTopOf="@+id/tViewTP9" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,11 @@
 package ibao.alanger.alertbus.views;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -12,8 +13,6 @@ import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListPasajeros;
 import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListRestricciones;
 import ibao.alanger.alertbus.models.dao.RestriccionDAO;
-import ibao.alanger.alertbus.models.dao.ViajeDAO;
-import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.RestriccionVO;
 
 public class RestricionActivity extends AppCompatActivity {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +11,8 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.LoginHelper;

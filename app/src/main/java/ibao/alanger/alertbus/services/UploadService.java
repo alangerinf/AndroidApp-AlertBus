@@ -9,11 +9,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import java.util.List;
 
-import ibao.alanger.alertbus.helpers.DownloadNewViajes;
 import ibao.alanger.alertbus.helpers.UploadMaster;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
