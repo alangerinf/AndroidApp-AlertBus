@@ -9,15 +9,17 @@ import android.widget.Toast;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_LOGINDATA;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_PASAJERO;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_RESTRICCION;
+import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_TRACKING;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_VIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_LOGINDATA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_RESTRICCION;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_TRACKING;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper{
 
-    public static int VERSION_DB = 1;
+    public static int VERSION_DB = 4;
     private Context ctx;
     public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -31,7 +33,10 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
         /**
          * DATA DE LOGUEO
          */
+        Log.d(TAG,TAG+"-> cnCreate");
+
         db.execSQL(CREATE_TABLE_LOGINDATA);//0
+        db.execSQL(CREATE_TABLE_TRACKING);//1
 
         /**
          * DATA
@@ -49,6 +54,8 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
         /**
          * DATA DE LOGUEO
          */
+
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_TRACKING);//0
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_LOGINDATA);//0
 
         /**

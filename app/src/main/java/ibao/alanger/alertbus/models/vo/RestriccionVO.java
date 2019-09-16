@@ -7,6 +7,9 @@ public class RestriccionVO {
 
     private int idViaje;
     public RestriccionVO(){
+        this.id=0;
+        this.name="";
+        this.desc="";
     }
 
     public int getId() {

@@ -3,6 +3,7 @@ package ibao.alanger.alertbus.helpers;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.vo.LoginDataVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
+import ibao.alanger.alertbus.views.MainConductorActivity;
 import ibao.alanger.alertbus.views.MainSupervisorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_AUTENTIFICATION;
@@ -36,6 +38,7 @@ public class LoginHelper {
 
     private String data_id = "id";
     private String data_name = "name";
+    private String data_typeUser = "typeUser";
 
     static String TAG = "login Helper";
 
@@ -81,6 +84,7 @@ public class LoginHelper {
                                     loginDataVO.setUser(user);
                                     loginDataVO.setPassword(pass);
 
+                                    loginDataVO.setTypeUser(temp.getInt(data_typeUser));
 
                                     loginDataVO.setLastName("");
                                     /***
@@ -93,7 +97,13 @@ public class LoginHelper {
                                         LoginDataVO u = verificarLogueo();
                                         if(u!=null){
                                             startServices();
-                                            Intent intent = new Intent(ctx, MainSupervisorActivity.class);
+                                            Intent intent;
+                                            if(u.getTypeUser()==0){//si  es conductor
+                                                intent = new Intent(ctx, MainConductorActivity.class);//para hacer testing cambiar segun requiera
+                                            }else {// si es supervisor
+                                                intent = new Intent(ctx, MainSupervisorActivity.class);//para hacer testing cambiar segun requiera
+                                            }
+
                                             ctx.startActivity(intent);
                                         }else {
                                             Toast.makeText(ctx,"Error de Base de Datos Interna",Toast.LENGTH_LONG).show();
@@ -141,10 +151,20 @@ public class LoginHelper {
     }
     void  startServices(){
         Intent intent = new Intent(ctx, SearchViajesService.class);
-        ctx.startService(intent);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ctx.startForegroundService(intent);
+        }else {
+            ctx.startService(intent);
+        }
 
         intent = new Intent(ctx, UploadService.class);
-        ctx.startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ctx.startForegroundService(intent);
+        }else {
+            ctx.startService(intent);
+        }
     }
 
 }

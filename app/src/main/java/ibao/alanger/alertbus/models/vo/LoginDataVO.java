@@ -11,7 +11,21 @@ public class LoginDataVO {
     private String name;
     private String lastName;
 
+    private int typeUser; // 0: conductor, 1: supervisor
 
+
+    private int idViaje;
+
+    public LoginDataVO() {
+        this.id=0;
+        this.codigo="";
+        this.user="";
+        this.password="";
+        this.name="";
+        this.lastName="";
+        this.idViaje=0;
+        this.typeUser=0;
+    }
 
     public int getId() {
         return id;
@@ -62,4 +76,19 @@ public class LoginDataVO {
         this.lastName = lastName;
     }
 
+    public int getIdViaje() {
+        return idViaje;
+    }
+
+    public void setIdViaje(int idViaje) {
+        this.idViaje = idViaje;
+    }
+
+    public int getTypeUser() {
+        return typeUser;
+    }
+
+    public void setTypeUser(int typeUser) {
+        this.typeUser = typeUser;
+    }
 }

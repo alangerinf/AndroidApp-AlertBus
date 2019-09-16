@@ -117,7 +117,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_supervisor, menu);
         return true;
     }
 
@@ -146,7 +146,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
                 Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }else {
-               // Toast.makeText(getBaseContext(), "Cerrando Sesión...", Toast.LENGTH_LONG).show();
+
                 new LoginDataDAO(getBaseContext()).borrarTable();
                 new ViajeDAO(getBaseContext()).clearTableUpload();
                 Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);

@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ibao.alanger.alertbus.R;
-import ibao.alanger.alertbus.services.servicioDisponible;
+import ibao.alanger.alertbus.services.LocationService;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.CancelableCallback {
@@ -282,9 +282,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Runnable runnableMap = new Runnable() {
         @Override
         public void run() {
-            lat = servicioDisponible.lat;
-            lng = servicioDisponible.lng;
-            bearing = servicioDisponible.bearing;
+            lat = LocationService.lat;
+            lng = LocationService.lng;
+            bearing = LocationService.bearing;
 
             posicionarMarker();
 
@@ -292,7 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 h.post(new Runnable() {
                     @Override
                     public void run() {
-                      tViewSpeed.setText(String.valueOf(parseSpeed((float) (servicioDisponible.speed*3.6f)))+" km/h");
+                      tViewSpeed.setText(String.valueOf(parseSpeed((float) (LocationService.speed*3.6f)))+" km/h");
                     }
                 });
 
@@ -328,7 +328,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         posicionarMarker();
 
 
-                        Intent sv = new Intent(ctx, servicioDisponible.class);
+                        Intent sv = new Intent(ctx, LocationService.class);
                         sv.putExtra("lat",lat);
                         sv.putExtra("lng",lng);
                         startService(sv);

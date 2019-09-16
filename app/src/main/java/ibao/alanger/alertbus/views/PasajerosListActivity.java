@@ -28,7 +28,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import ibao.alanger.alertbus.R;
-import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa;
 import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa_ListPasajeros;
 
 public class PasajerosListActivity extends Activity {

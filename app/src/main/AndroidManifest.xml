@@ -40,8 +40,8 @@
 
         <activity android:name=".views.MainConductorActivity">
 
-
         </activity>
+
         <activity android:name=".views.RestricionActivity" />
 
         <service
@@ -54,7 +54,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <service android:name=".services.servicioDisponible">
+        <service android:name=".services.LocationService">
             <intent-filter>
                 <action android:name=".servicioDisponible"></action>
             </intent-filter>
@@ -63,7 +63,6 @@
         <activity android:name=".views.ActivityPreloader">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -82,6 +81,16 @@
 
         </activity>
 
+
+        <activity
+            android:name=".viajeEnCurso.ActivityViaje"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:parentActivityName=".views.MainConductorActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+
+        </activity>
 
         <receiver android:name=".services.AutoArranqueBroadcast">
             <intent-filter>

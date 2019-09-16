@@ -193,7 +193,7 @@ public class ViajeDAO {
         SQLiteDatabase db = c.getReadableDatabase();
         ViajeVO temp = null;
         try{
-            temp = new ViajeVO();
+
             Cursor cursor = db.rawQuery(
                     "SELECT " +
                             "V."+TABLE_VIAJE_COL_ID+", " +//0
@@ -214,18 +214,7 @@ public class ViajeDAO {
                             "V."+TABLE_VIAJE_COL_ID+" = "+String.valueOf(id)
                     ,null);
             cursor.moveToFirst();
-                    temp.setId(cursor.getInt(0));
-                    temp.setProveedor(cursor.getString(1));
-                    temp.setPlaca(cursor.getString(2));
-                    temp.setConductor(cursor.getString(3));
-                    temp.setRuta(cursor.getString(4));
-                    temp.sethInicio(cursor.getString(5));
-                    temp.sethFin(cursor.getString(6));
-                    temp.setNumPasajeros(cursor.getInt(7));
-                    temp.setCapacidad(cursor.getInt(8));
-                    temp.setComentario(cursor.getString(9));
-                    temp.setStatus(cursor.getInt(10));
-                    temp.sethConfirmado(cursor.getString(11));
+                    temp = getAtributtes(cursor);
             cursor.close();
         }catch (Exception e){
             Toast.makeText(ctx,e.toString(), Toast.LENGTH_SHORT);
@@ -261,19 +250,7 @@ public class ViajeDAO {
                                 TABLE_VIAJE+" as V"
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = new ViajeVO();
-                    temp.setId(cursor.getInt(0));
-                    temp.setProveedor(cursor.getString(1));
-                    temp.setPlaca(cursor.getString(2));
-                    temp.setConductor(cursor.getString(3));
-                    temp.setRuta(cursor.getString(4));
-                    temp.sethInicio(cursor.getString(5));
-                    temp.sethFin(cursor.getString(6));
-                    temp.setNumPasajeros(cursor.getInt(7));
-                    temp.setCapacidad(cursor.getInt(8));
-                    temp.setComentario(cursor.getString(9));
-                    temp.setStatus(cursor.getInt(10));
-                    temp.sethConfirmado(cursor.getString(11));
+                ViajeVO temp = getAtributtes(cursor);
 
                 Cursor cursor2 = db.rawQuery(
                         "SELECT " +
@@ -385,19 +362,7 @@ public class ViajeDAO {
                             "V."+TABLE_VIAJE_COL_STATUS+" = "+1
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = new ViajeVO();
-                temp.setId(cursor.getInt(0));
-                temp.setProveedor(cursor.getString(1));
-                temp.setPlaca(cursor.getString(2));
-                temp.setConductor(cursor.getString(3));
-                temp.setRuta(cursor.getString(4));
-                temp.sethInicio(cursor.getString(5));
-                temp.sethFin(cursor.getString(6));
-                temp.setNumPasajeros(cursor.getInt(7));
-                temp.setCapacidad(cursor.getInt(8));
-                temp.setComentario(cursor.getString(9));
-                temp.setStatus(cursor.getInt(10));
-                temp.sethConfirmado(cursor.getString(11));
+                ViajeVO temp = getAtributtes(cursor);
                 Log.d("listar ViajeDAO s1 : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -439,19 +404,7 @@ public class ViajeDAO {
                             "V."+TABLE_VIAJE_COL_STATUS+" != "+2
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = new ViajeVO();
-                temp.setId(cursor.getInt(0));
-                temp.setProveedor(cursor.getString(1));
-                temp.setPlaca(cursor.getString(2));
-                temp.setConductor(cursor.getString(3));
-                temp.setRuta(cursor.getString(4));
-                temp.sethInicio(cursor.getString(5));
-                temp.sethFin(cursor.getString(6));
-                temp.setNumPasajeros(cursor.getInt(7));
-                temp.setCapacidad(cursor.getInt(8));
-                temp.setComentario(cursor.getString(9));
-                temp.setStatus(cursor.getInt(10));
-                temp.sethConfirmado(cursor.getString(11));
+                ViajeVO temp = getAtributtes(cursor);
                 Log.d("listar ViajeDAO s1 : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -465,5 +418,64 @@ public class ViajeDAO {
         }
         return ViajeVOList;
 
+    }
+
+    /*
+    ViajeVO getAtributes (Cursor cursor){
+
+    }
+    */
+
+    private ViajeVO getAtributtes(Cursor cursor){
+        ViajeVO salidaVO = new ViajeVO();
+        String[] columnNames = cursor.getColumnNames();
+        for(String name : columnNames){
+            switch (name){
+                case TABLE_VIAJE_COL_ID:
+                    salidaVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_PROVEEDOR:
+                    salidaVO.setProveedor(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_PLACA:
+                    salidaVO.setPlaca(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_CONDUCTOR:
+                    salidaVO.setConductor(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+
+                case TABLE_VIAJE_COL_CAPACIDAD:
+                    salidaVO.setCapacidad(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_NUMPASAJEROS:
+                    salidaVO.setNumPasajeros(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_HORAINICIO:
+                    salidaVO.sethInicio(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+
+                case TABLE_VIAJE_COL_HORAFIN:
+                    salidaVO.sethFin(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+
+                case TABLE_VIAJE_COL_RUTA:
+                    salidaVO.setRuta(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_COMENTARIO:
+                    salidaVO.setComentario(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_STATUS:
+                    salidaVO.setStatus(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_HORACONFIRMADO:
+                    salidaVO.sethConfirmado(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                default:
+                    Toast.makeText(ctx,TAG+"getAtributes error no se encuentra campo "+name,Toast.LENGTH_LONG).show();
+                    Log.d(TAG," getAtributes error no se encuentra campo "+name);
+                    break;
+            }
+        }
+        return salidaVO;
     }
 }

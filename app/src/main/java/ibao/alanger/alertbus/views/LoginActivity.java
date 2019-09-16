@@ -2,6 +2,7 @@ package ibao.alanger.alertbus.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -11,11 +12,16 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.LoginHelper;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.vo.LoginDataVO;
+import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.services.UploadService;
 
 public class LoginActivity extends Activity {
 
@@ -50,12 +56,37 @@ public class LoginActivity extends Activity {
                                 //Intent intent = new Intent(getBaseContext(),ActivityPostloader.class);
                                 //startActivity(intent);
 
+                                LoginDataVO loginDataVO = new LoginDataVO();
+                                loginDataVO.setId(1);
+                                loginDataVO.setName("Alan");
+                                loginDataVO.setUser("AlanGer");
+                                loginDataVO.setPassword("123456");
+
+                                new LoginDataDAO(ctx).guardarUsuarioNuevo(loginDataVO);
+                                LoginDataVO logueo = new LoginDataDAO(ctx).verficarLogueo();
+                                if( logueo != null){
+                                    Intent intent = new Intent(ctx, SearchViajesService.class);
+                                    ctx.startService(intent);
+
+                                    intent = new Intent(ctx, UploadService.class);
+                                    ctx.startService(intent);
+
+                                    intent = new Intent(ctx, MainConductorActivity.class);//para hacer testing cambiar segun requiera
+                                    ctx.startActivity(intent);
+                                }else {
+                                    Toast.makeText(ctx,"Error de Base de Datos Interna",Toast.LENGTH_LONG).show();
+                                }
+
+
+
+                                /* todo : descomentar para habilitar la  autentificacion con el servidor
                                 Log.d("autentification","intentando");
                                 LoginHelper loginHelper = new LoginHelper(ctx);
                                 loginHelper.intentoLogueo(
                                         eTextUser.getText().toString(),
                                         eTextPassword.getText().toString()
                                 );
+                                */
 
                             }
                         },200

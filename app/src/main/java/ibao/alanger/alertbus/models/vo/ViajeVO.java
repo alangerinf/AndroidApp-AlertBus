@@ -1,5 +1,8 @@
 package ibao.alanger.alertbus.models.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ViajeVO {
     private int id;
     private String hInicio;
@@ -12,8 +15,26 @@ public class ViajeVO {
     private String comentario;
     private int status;
     private String conductor;
-
     private int numRestricciones;
+    List<PasajeroVO> pasajeroVOList;
+
+    public ViajeVO(){
+        id=0;
+        hInicio="";
+        hFin="";
+        placa="";
+        ruta="";
+        numPasajeros=0;
+        capacidad=0;
+        proveedor="";
+        comentario="";
+        status=0;
+        conductor="";
+        numRestricciones=0;
+        pasajeroVOList = new ArrayList<>();
+
+
+    }
 
     public int getNumRestricciones() {
         return numRestricciones;
@@ -25,8 +46,6 @@ public class ViajeVO {
 
     private String hConfirmado;
 
-    public ViajeVO(){
-    }
 
     public String getConductor() {
         return conductor;
@@ -126,4 +145,11 @@ public class ViajeVO {
     }
 
 
+    public List<PasajeroVO> getPasajeroVOList() {
+        return pasajeroVOList;
+    }
+
+    public void setPasajeroVOList(List<PasajeroVO> pasajeroVOList) {
+        this.pasajeroVOList = pasajeroVOList;
+    }
 }

@@ -123,13 +123,7 @@ public class PasajeroDAO {
             Cursor cursor= db.query(TABLE_PASAJERO,campos,TABLE_PASAJERO_COL_IDVIAJE+"=?",arg,null,null,TABLE_PASAJERO_COL_NAME+" COLLATE UNICODE ASC");
             while(cursor.moveToNext()){
 
-                PasajeroVO temp = new PasajeroVO();
-                    temp.setId(cursor.getInt(0));
-                    temp.setName(cursor.getString(1));
-                    temp.setDni(cursor.getString(2));
-                    temp.setIdViaje(cursor.getInt(3));
-                    temp.sethSubida(cursor.getString(4));
-                    temp.setObservacion(cursor.getString(5));
+                PasajeroVO temp = getAtributtes(cursor);
                 categoriaVOList.add(temp);
 
             }
@@ -186,6 +180,38 @@ public class PasajeroDAO {
     }
 */
 
+    private PasajeroVO getAtributtes(Cursor cursor){
+        PasajeroVO salidaVO = new PasajeroVO();
+        String[] columnNames = cursor.getColumnNames();
+        for(String name : columnNames){
+            switch (name){
+                case TABLE_PASAJERO_COL_ID:
+                    salidaVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_PASAJERO_COL_DNI:
+                    salidaVO.setDni(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_PASAJERO_COL_NAME:
+                    salidaVO.setName(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_PASAJERO_COL_IDVIAJE:
+                    salidaVO.setIdViaje(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
 
+                case TABLE_PASAJERO_COL_HORASUBIDA:
+                    salidaVO.sethSubida(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_PASAJERO_COL_OBSERVACION:
+                    salidaVO.setObservacion(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+
+                default:
+                    Toast.makeText(ctx,TAG+"getAtributes error no se encuentra campo "+name,Toast.LENGTH_LONG).show();
+                    Log.d(TAG," getAtributes error no se encuentra campo "+name);
+                    break;
+            }
+        }
+        return salidaVO;
+    }
 
 }

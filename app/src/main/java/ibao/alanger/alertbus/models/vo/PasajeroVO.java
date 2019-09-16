@@ -9,6 +9,12 @@ public class PasajeroVO {
     private String observacion;
 
     public PasajeroVO(){
+        this.id=0;
+        this.name="";
+        this.dni="";
+        this.idViaje=0;
+        this.hSubida="";
+        this.observacion="";
     }
 
     public String gethSubida() {

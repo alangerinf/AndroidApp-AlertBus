@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,10 +26,13 @@ import java.util.List;
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajesConductor;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.LocationService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
+import ibao.alanger.alertbus.viajeEnCurso.ActivityViaje;
 
 import static ibao.alanger.alertbus.services.SearchViajesService.statusActualizar;
 
@@ -154,6 +158,20 @@ public class MainConductorActivity extends AppCompatActivity {
 
         if(id == R.id.limpiar) {
             startActivity(new Intent(ctx,PasajerosListActivity.class));
+        }
+
+        if(id == R.id.simviaje) {
+
+            new LoginDataDAO(ctx).uploadIdViaje(1);
+            Intent intent = new Intent(ctx,LocationService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getBaseContext().startForegroundService(intent);
+            }else {
+                startService(intent);
+            }
+
+            startActivity(new Intent(ctx, ActivityViaje.class));
+
         }
 
         if(id == R.id.version) {

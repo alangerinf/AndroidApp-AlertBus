@@ -67,7 +67,7 @@ public class SearchViajesService extends Service {
         handler.removeCallbacks(runnable);
     }
 
-    private static int timeMilis=1000*5;
+    private static int timeMilis=1000*10;
 
     public void setTimeMilis(int timeMilis) {
         SearchViajesService.timeMilis = timeMilis;

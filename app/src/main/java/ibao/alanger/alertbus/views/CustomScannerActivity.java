@@ -16,6 +16,7 @@ import com.journeyapps.barcodescanner.ViewfinderView;
 import java.util.Random;
 
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa_ListPasajeros;
 
 /**
  * Custom Scannner Activity extending from Activity to display a custom layout form scanner view.
@@ -32,6 +33,7 @@ public class CustomScannerActivity extends AppCompatActivity implements
 
     private static boolean statusLight;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +43,9 @@ public class CustomScannerActivity extends AppCompatActivity implements
         statusLight=false;
         fAButtonLinterna = findViewById(R.id.fAButtonLinterna);
 
-        Bundle b = getIntent().getExtras();
+      //  Bundle b = getIntent().getExtras();
 
-        setTitle(b.getString("tittle"));
+//        setTitle(b.getString("tittle"));
 
 
 
@@ -82,6 +84,14 @@ public class CustomScannerActivity extends AppCompatActivity implements
         capture.decode();
 
         changeMaskColor(null);
+
+
+
+
+
+
+
+
     }
 
     @Override

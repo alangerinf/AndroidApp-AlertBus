@@ -14,7 +14,12 @@ import androidx.core.app.NotificationCompat;
 import java.util.List;
 
 import ibao.alanger.alertbus.helpers.UploadMaster;
+import ibao.alanger.alertbus.helpers.UploadTracking;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.dao.TrackingDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
+import ibao.alanger.alertbus.models.vo.LoginDataVO;
+import ibao.alanger.alertbus.models.vo.TrackingVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 
 public class UploadService extends Service {
@@ -72,7 +77,7 @@ public class UploadService extends Service {
         handler.removeCallbacks(runnable);
     }
 
-    private static int timeMilis=1000*2;
+    private static int timeMilis=1000*10;
 
     public void setTimeMilis(int timeMilis) {
         UploadService.timeMilis = timeMilis;
@@ -84,12 +89,19 @@ public class UploadService extends Service {
 
     Runnable runnable = new Runnable() {
         public void run() {
+            //sincronizacion automatica
             List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listByStatus1();
-            new UploadMaster(ctx).UploadViaje(viajeVOList);
+            if(viajeVOList.size()>0){
+                new UploadMaster(ctx).UploadViaje(viajeVOList);
+            }
+            //subida de Traking
+            List<TrackingVO> trackingVOList = new TrackingDAO(ctx).getNoUpdates();
+            if(trackingVOList.size()>0 && (new LoginDataDAO(ctx).verficarLogueo().getIdViaje()!=0)){ //si la lista de tracking esta llena y el hay un viaje en curso
+                new UploadTracking(ctx).upload(trackingVOList);
+            }
             handler.postDelayed(runnable, timeMilis);
         }
     };
-
 
     @Override
     public IBinder onBind(Intent intent) {

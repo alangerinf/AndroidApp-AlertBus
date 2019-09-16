@@ -21,24 +21,25 @@ import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.models.dao.TrackingDAO;
 import ibao.alanger.alertbus.views.MapsActivity;
 
 /**
  * Created by Administrador on 28/08/2017.
  */
-public class servicioDisponible extends Service {
+public class LocationService extends Service {
 
     final Handler handler = new Handler();
     Notification notification;
     NotificationManager notificationManager;
     Context ctx;
 
-    static String TAG = servicioDisponible.class.getSimpleName();
+    static String TAG = LocationService.class.getSimpleName();
 
 
    static public double lat =-8.1395615, lng=-79.0386577;
-    static public float bearing,speed;
-
+   static public float bearing,speed;
+   static public Location location;
 
 
     LocationManager locationManager;
@@ -82,16 +83,58 @@ public class servicioDisponible extends Service {
 
         //handler.removeCallbacks(runnable);
         Bundle extras = i.getExtras();
-        lat = extras.getDouble("lat");
-        lng = extras.getDouble("lng");
+        if( extras != null){
+            lat = extras.getDouble("lat");
+            lng = extras.getDouble("lng");
+        }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
         MyLocationListener mlocListener = new MyLocationListener();
         mlocListener.setMainActivity(this);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return 0;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
+
+        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        // getting network status
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            // no network provider is enabled
+        } else {
+            // First get location from Network Provider
+            if (isNetworkEnabled) {
+                locationManager.requestLocationUpdates( LocationManager.NETWORK_PROVIDER,  1000,  0, mlocListener);
+                Log.d("Network", "Network");
+                if (locationManager != null) {
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (location != null) {
+                        lat = location.getLatitude();
+                        lng = location.getLongitude();
+                    }
+                }
+            }
+            //get the location by gps
+            if (isGPSEnabled) {
+                if (location == null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0, mlocListener);
+                    Log.d("GPS Enabled", "GPS Enabled");
+                    if (locationManager != null) {location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
+                            lat = location.getLatitude();
+                            lng = location.getLongitude();
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 
         Intent intent = new Intent(this, MapsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -127,15 +170,14 @@ public class servicioDisponible extends Service {
     }
 
 
-
     /////////////gps/////////////////////
     public class MyLocationListener implements LocationListener {
-        servicioDisponible servicioDisponible;
-        public servicioDisponible getMainActivity() {
-            return servicioDisponible;
+        LocationService LocationService;
+        public LocationService getMainActivity() {
+            return LocationService;
         }
-        public void setMainActivity(servicioDisponible mainActivity) {
-            this.servicioDisponible = mainActivity;
+        public void setMainActivity(LocationService mainActivity) {
+            this.LocationService = mainActivity;
         }
 
         @Override
@@ -147,6 +189,9 @@ public class servicioDisponible extends Service {
                     bearing = location.getBearing();
                     speed = location.getSpeed();
                     Log.d("hola",location.toString()+" spedd :"+location.getSpeed());
+                    new TrackingDAO(ctx).saveNewLocation(String.valueOf(lat),String.valueOf(lng),String.valueOf(bearing),String.valueOf(speed));
+
+
                 }catch (Exception e){
                     //algo salio mal
                 }
@@ -155,9 +200,6 @@ public class servicioDisponible extends Service {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
-
-
 
 
         }

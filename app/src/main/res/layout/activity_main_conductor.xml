@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".views.MainConductorActivity">
 
-
     <TextView
         android:id="@+id/tViewDesc"
         android:layout_width="wrap_content"

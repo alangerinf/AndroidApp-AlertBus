@@ -9,11 +9,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/simviaje"
-        android:title="Simular Viaje"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/logout"
         android:title="Cerrar Sesión"
         app:showAsAction="never" />
@@ -21,5 +16,11 @@
         android:id="@+id/version"
         android:title="Versión"
         android:icon="@drawable/ic_info_outline_white_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/qr"
+        android:title="Versión"
+        android:icon="@drawable/ic_qr_scanner"
         app:showAsAction="ifRoom" />
 </menu>

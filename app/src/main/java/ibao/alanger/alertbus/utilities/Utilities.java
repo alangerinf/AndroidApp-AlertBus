@@ -10,6 +10,7 @@ public class Utilities {
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
 
     public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertDataFromMovil.php";
+    public static final String URL_UPLOAD_TRACKING=URL_ROOT+"uploadTracking.php";
 
     public static final String DATABASE_NAME="data";
 
@@ -23,7 +24,25 @@ public class Utilities {
             TABLE_LOGINDATA_COL_NAME            ="name",
             TABLE_LOGINDATA_TYPECOL_NAME        ="varchar(50)",
             TABLE_LOGINDATA_COL_LASTNAME        ="lastname",
-            TABLE_LOGINDATA_TYPECOL_LASTNAME    ="varchar(50)";
+            TABLE_LOGINDATA_TYPECOL_LASTNAME    ="varchar(50)",
+            TABLE_LOGINDATA_COL_IDVIAJE         ="idViaje",
+            TABLE_LOGINDATA_TYPECOL_IDVIAJE     ="INTEGER",
+            TABLE_LOGINDATA_COL_TYPEUSER        ="typeUser",
+            TABLE_LOGINDATA_TYPECOL_TYPEUSER    ="INTEGER";
+
+    public static final String TABLE_TRACKING   ="tracking",
+            TABLE_TRACKING_COL_ISUPDATE         ="isUpdate",
+            TABLE_TRACKING_TYPECOL_ISUPDATE     ="BOOLEAN",
+            TABLE_TRACKING_COL_LAT              ="latitud",
+            TABLE_TRACKING_TYPECOL_LAT          ="VARCHAR(50)",
+            TABLE_TRACKING_COL_LON              ="longitud",
+            TABLE_TRACKING_TYPECOL_LON          ="VARCHAR(50)",
+            TABLE_TRACKING_COL_BEARING          ="bearing",
+            TABLE_TRACKING_TYPECOL_BEARING      ="VARCHAR(50)",
+            TABLE_TRACKING_COL_SPEED            ="speed",
+            TABLE_TRACKING_TYPECOL_SPEED        ="VARCHAR(50)",
+            TABLE_TRACKING_COL_DATETIME         ="datetime",
+            TABLE_TRACKING_TYPECOL_DATETIME     ="DATETIME";
     
     public static final String TABLE_PASAJERO   ="pasajero",
             TABLE_PASAJERO_COL_ID               ="idUser",
@@ -75,6 +94,9 @@ public class Utilities {
             TABLE_VIAJE_COL_HORACONFIRMADO      ="horaOk", // HORA EN LA  Q SE  VERIFICO
             TABLE_VIAJE_TYPECOL_HORACONFIRMADO  ="DATETIME";
 
+
+
+
     //SCRIPTS SQL CREATE TABLES
     public static final String CREATE_TABLE_VIAJE =
             " CREATE TABLE IF NOT EXISTS "+ TABLE_VIAJE +" ("+
@@ -114,7 +136,24 @@ public class Utilities {
                     TABLE_LOGINDATA_COL_USER    +" "+TABLE_LOGINDATA_TYPECOL_USER+"," +
                     TABLE_LOGINDATA_COL_PASSWORD+" "+TABLE_LOGINDATA_TYPECOL_PASSWORD+"," +
                     TABLE_LOGINDATA_COL_NAME    +" "+TABLE_LOGINDATA_TYPECOL_NAME+","+
-                    TABLE_LOGINDATA_COL_LASTNAME+" "+TABLE_LOGINDATA_TYPECOL_LASTNAME+" "+
+                    TABLE_LOGINDATA_COL_LASTNAME+" "+TABLE_LOGINDATA_TYPECOL_LASTNAME+", "+
+                    TABLE_LOGINDATA_COL_IDVIAJE+" "+TABLE_LOGINDATA_TYPECOL_IDVIAJE+", "+//ID DEL VIAJE ACTUAL
+                    TABLE_LOGINDATA_COL_TYPEUSER+" "+TABLE_LOGINDATA_TYPECOL_TYPEUSER+" "+
+                    ")";
+
+
+
+
+
+
+    public static final String CREATE_TABLE_TRACKING =
+            " CREATE TABLE IF NOT EXISTS "+TABLE_TRACKING+" (" +
+                    TABLE_TRACKING_COL_ISUPDATE+" "+TABLE_TRACKING_TYPECOL_ISUPDATE+","+
+                    TABLE_TRACKING_COL_LAT +" "+TABLE_TRACKING_TYPECOL_LAT+" NOT NULL," +
+                    TABLE_TRACKING_COL_LON +" "+TABLE_TRACKING_TYPECOL_LON+" NOT NULL," +
+                    TABLE_TRACKING_COL_BEARING +" "+TABLE_TRACKING_TYPECOL_BEARING+" NOT NULL," +
+                    TABLE_TRACKING_COL_SPEED +" "+TABLE_TRACKING_TYPECOL_SPEED+" NOT NULL," +
+                    TABLE_TRACKING_COL_DATETIME +" "+TABLE_TRACKING_TYPECOL_DATETIME +" DEFAULT (datetime('now','localtime')) "+
                     ")";
 
 }

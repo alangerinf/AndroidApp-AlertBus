@@ -24,13 +24,22 @@ public class AutoArranqueBroadcast extends BroadcastReceiver{
 
             Intent service1 = new Intent(context, SearchViajesService.class);
             Intent service2 = new Intent(context, UploadService.class);
+            Intent serviceLocation = new Intent(context, LocationService.class);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService (service1);
                 context.startForegroundService (service2);
+                if(new LoginDataDAO(context).verficarLogueo().getIdViaje()>0){
+                    context.startForegroundService(serviceLocation);
+                }
 
             }else {
                 context.startService (service1);
                 context.startService (service2);
+
+                if(new LoginDataDAO(context).verficarLogueo().getIdViaje()>0){
+                    context.startService(serviceLocation);
+                }
             }
 
         }

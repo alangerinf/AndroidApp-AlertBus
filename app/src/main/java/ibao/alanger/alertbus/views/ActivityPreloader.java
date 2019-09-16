@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
@@ -72,18 +73,31 @@ public class ActivityPreloader extends Activity {
 
 
     }
-
-    void  startServices(){
+    void startServices(){
         Intent intent = new Intent(this, SearchViajesService.class);
-        startService(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getBaseContext().startForegroundService(intent);
+        }else {
+            startService(intent);
+        }
 
         intent = new Intent(this, UploadService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getBaseContext().startForegroundService(intent);
+        }else {
+            startService(intent);
+        }
     }
 
 
     void  openMain(){
-        Intent intent = new Intent(this, MainSupervisorActivity.class);
+        Intent intent;
+        if(new LoginDataDAO(this).verficarLogueo().getTypeUser()==0){//si  es conductor
+            intent = new Intent(this, MainConductorActivity.class);//para hacer testing cambiar segun requiera
+        }else {// si es supervisor
+            intent = new Intent(this, MainSupervisorActivity.class);//para hacer testing cambiar segun requiera
+        }
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
