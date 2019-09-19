@@ -8,9 +8,10 @@ public class Utilities {
     public static final String URL_ROOT="http://35.167.15.182/AlertBus/EcoSac/Requests/";
     public static final String URL_AUTENTIFICATION=URL_ROOT+"autenticar.php";
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
+    public static final String URL_BUSCARTRABAJADOR=URL_ROOT+"getTrabajador.php";
 
     public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertDataFromMovil.php";
-    public static final String URL_UPLOAD_TRACKING=URL_ROOT+"uploadTracking.php";
+    public static final String URL_UPLOAD_TRACKING=URL_ROOT+"insertTracking.php";
 
     public static final String DATABASE_NAME="data";
 

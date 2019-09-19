@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.core.app.NotificationCompat;
 
 import java.util.List;
@@ -18,7 +21,6 @@ import ibao.alanger.alertbus.helpers.UploadTracking;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.TrackingDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
-import ibao.alanger.alertbus.models.vo.LoginDataVO;
 import ibao.alanger.alertbus.models.vo.TrackingVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 
@@ -27,6 +29,8 @@ public class UploadService extends Service {
 
     final Handler handler = new Handler();
     Context ctx;
+
+    final String TAG = UploadService.class.getSimpleName();
 
     public static boolean statusUpload = false;
 
@@ -90,13 +94,37 @@ public class UploadService extends Service {
     Runnable runnable = new Runnable() {
         public void run() {
             //sincronizacion automatica
-            List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listByStatus1();
+            List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listByStatusWaitingAtUpload();
             if(viajeVOList.size()>0){
                 new UploadMaster(ctx).UploadViaje(viajeVOList);
             }
+
+            if(new LoginDataDAO(ctx).verficarLogueo().getIdViaje()>0 ){
+
+                if(!LocationService.isEnable){
+                    Intent intent = new Intent(ctx,LocationService.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+                        getBaseContext().startForegroundService(intent);
+                    }else {
+                        startService(intent);
+                    }
+                    Log.d(TAG,"*****gpsActivado");
+                }
+
+                Log.d(TAG,"gpsActivado");
+            }else {
+                if(LocationService.isEnable){
+                    Intent intent = new Intent(ctx,LocationService.class);
+                    stopService(intent);
+                    Log.d(TAG,"*****gpsDisable");
+                }
+                Log.d(TAG,"gpsDisable");
+            }
+
+
             //subida de Traking
             List<TrackingVO> trackingVOList = new TrackingDAO(ctx).getNoUpdates();
-            if(trackingVOList.size()>0 && (new LoginDataDAO(ctx).verficarLogueo().getIdViaje()!=0)){ //si la lista de tracking esta llena y el hay un viaje en curso
+            if(trackingVOList.size()>0){ //si la lista de tracking esta llena y el hay un viaje en curso
                 new UploadTracking(ctx).upload(trackingVOList);
             }
             handler.postDelayed(runnable, timeMilis);

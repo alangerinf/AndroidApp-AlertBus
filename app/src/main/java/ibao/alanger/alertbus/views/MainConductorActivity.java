@@ -21,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
+import java.util.Objects;
 
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
@@ -58,7 +61,12 @@ public class MainConductorActivity extends AppCompatActivity {
 
         ctx = MainConductorActivity.this;
 
-        startService(new Intent(ctx, SearchViajesService.class));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(ctx, SearchViajesService.class));
+        }else {
+            startService(new Intent(ctx, SearchViajesService.class));
+        }
 
         viajeVOList = new ViajeDAO(ctx).listAll();
         rViewViajes = findViewById(R.id.rViewViajes);
@@ -108,7 +116,6 @@ public class MainConductorActivity extends AppCompatActivity {
             if(statusActualizar){
                 statusActualizar = false;
                 tViewSinViajes.setVisibility(View.VISIBLE);
-
                 actualizarData();
             }
             if(UploadService.statusUpload){
@@ -157,21 +164,8 @@ public class MainConductorActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
 
         if(id == R.id.limpiar) {
-            startActivity(new Intent(ctx,PasajerosListActivity.class));
-        }
-
-        if(id == R.id.simviaje) {
-
-            new LoginDataDAO(ctx).uploadIdViaje(1);
-            Intent intent = new Intent(ctx,LocationService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                getBaseContext().startForegroundService(intent);
-            }else {
-                startService(intent);
-            }
-
-            startActivity(new Intent(ctx, ActivityViaje.class));
-
+            new ViajeDAO(ctx).deleteByStatusSicronized();
+            actualizarData();
         }
 
         if(id == R.id.version) {
@@ -179,6 +173,22 @@ public class MainConductorActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext(),"Versión "+ BuildConfig.VERSION_NAME+" code."+BuildConfig.VERSION_CODE,Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(getBaseContext(),e.toString(),Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (id == R.id.logout) {
+            if(new ViajeDAO(ctx).listByStatusNoFinished().size()>0){//si faltan sincronizar
+                Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }else {
+
+                new LoginDataDAO(getBaseContext()).borrarTable();
+                new ViajeDAO(getBaseContext()).clearTableUpload();
+                Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
+                startActivity(intent);
+                stopService(new Intent(getBaseContext(),SearchViajesService.class));
+                stopService(new Intent(getBaseContext(),UploadService.class));
+                finish();
             }
         }
 

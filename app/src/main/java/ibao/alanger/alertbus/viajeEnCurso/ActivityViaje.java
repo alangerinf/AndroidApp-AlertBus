@@ -79,12 +79,16 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private static boolean statusLight;
 
+    public static final String EXTRA_VIAJE = "extra_VIAJE";
 
     private PageViewModelViaje pageViewModel;
 
     private static View root ;
 
     private Context ctx;
+
+    private ViajeVO VIAJEVO;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +99,26 @@ public class ActivityViaje extends AppCompatActivity implements
 
         root = findViewById(R.id.root);
 
-        cargarData();
+        PageViewModelViaje.init();
 
+        //obteniendo bundle
+
+        Bundle b = getIntent().getExtras();
+
+
+        assert b != null;
+
+        ViajeVO viajeVO = (ViajeVO) b.getSerializable(EXTRA_VIAJE);
+        VIAJEVO  = viajeVO;
+
+        PageViewModelViaje.set(viajeVO);
 
         statusLight = false;
         fAButtonLinterna = findViewById(R.id.fAButtonLinterna);
 
         //      Bundle b = getIntent().getExtras();
 
-          setTitle("Lima - Trujillo");
+          setTitle(viajeVO.getRuta());
 
 
 
@@ -186,32 +201,6 @@ public class ActivityViaje extends AppCompatActivity implements
 
     RViewAdapterListPasajerosOnViaje adapter = null;
 
-
-
-
-    private void cargarData() {
-
-        PageViewModelViaje.init();
-
-        ViajeVO viajeVO = new ViajeVO();
-        viajeVO.setId(1);
-        viajeVO.sethInicio("12:29");
-        viajeVO.sethFin("12:30");
-        viajeVO.setPlaca("123-ACV");
-        viajeVO.setRuta("Trujillo - Lima");
-        viajeVO.setNumPasajeros(23);
-        viajeVO.setCapacidad(55);
-        viajeVO.setProveedor("Proveedor 1");
-        viajeVO.setStatus(1);
-        viajeVO.setConductor("Conductor1");
-
-        PageViewModelViaje.set(viajeVO);
-
-    }
-
-
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -290,7 +279,10 @@ public class ActivityViaje extends AppCompatActivity implements
 
         if(id == R.id.terminar) {
             //Toast.makeText(ctx,""+pageViewModel.get().getValue().getPasajeroVOList().size(),Toast.LENGTH_LONG).show();
-            new LoginDataDAO(ctx).uploadIdViaje(0);
+
+            new ViajeDAO(ctx).toStatus2(VIAJEVO.getId());
+            new LoginDataDAO(ctx).uploadIdViaje(0); // esto desac el gps
+
             onBackPressed();
         }
 
@@ -320,6 +312,15 @@ public class ActivityViaje extends AppCompatActivity implements
 
                 pasajeroVO.sethSubida(formatter.format(date));
                 pasajeroVO.setDni(resultado);
+
+
+                new PasajeroDAO(ctx).insertar(
+                        pasajeroVO.getDni(),
+                        pasajeroVO.getName(),
+                        VIAJEVO.getId(),
+                        pasajeroVO.gethSubida(),
+                        ""
+                );
 
                 PageViewModelViaje.addPasajero(pasajeroVO);
 
@@ -373,6 +374,9 @@ public class ActivityViaje extends AppCompatActivity implements
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             final int index = viewHolder.getAdapterPosition();//esto tiene q ir arriba porq la programacion reaccitva elimina de inmediato en el recycler view sin actualizar
             final PasajeroVO item = PageViewModelViaje.removePasajero(viewHolder.getAdapterPosition());
+
+            new PasajeroDAO(ctx).deleteByIdViajeDNI(VIAJEVO.getId(),item.getDni());
+
             Snackbar snackbar = Snackbar.make(root,"Se Borró un Pasajero"+index,Snackbar.LENGTH_LONG);
             snackbar.setAction("Deshacer", new View.OnClickListener() {
                 @Override
@@ -380,7 +384,16 @@ public class ActivityViaje extends AppCompatActivity implements
                     if(verifiarDuplicado(item.getDni())){//si esta duplicador
                         Toast.makeText(ctx,"DNI ya agregado",Toast.LENGTH_LONG).show();
                     }else {
-                        PageViewModelViaje.addPasajero(index,item);
+
+                        if(new PasajeroDAO(ctx).insertar(
+                                item
+                        )){
+                            PageViewModelViaje.addPasajero(index,item);
+                        }else {
+                            Toast.makeText(ctx,"No se pudo Reinsertar",Toast.LENGTH_LONG).show();
+                        }
+
+
                     }
 
                 }

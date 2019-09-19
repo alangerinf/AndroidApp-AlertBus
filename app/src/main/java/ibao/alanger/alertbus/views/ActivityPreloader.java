@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.services.LocationService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
 
@@ -80,6 +81,15 @@ public class ActivityPreloader extends Activity {
             getBaseContext().startForegroundService(intent);
         }else {
             startService(intent);
+        }
+
+        if(new LoginDataDAO(this).verficarLogueo().getIdViaje()>0){//si  es conductor
+            intent = new Intent(this, LocationService.class);//para hacer testing cambiar segun requiera
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getBaseContext().startForegroundService(intent);
+            }else {
+                startService(intent);
+            }
         }
 
         intent = new Intent(this, UploadService.class);

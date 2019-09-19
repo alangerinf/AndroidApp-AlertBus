@@ -57,26 +57,21 @@ public class UploadTracking {
                         status=2;
 
                         if(!response.isEmpty()){
-                            try {
-                                JSONObject main = new JSONObject(response);
                                 Log.d(TAG,"flag1");
-                                if(main.getBoolean("hasSuccess")){
+                                if(response.equals("1")){
                                     Log.d(TAG,"flag2");
                                     for(TrackingVO track: trackingVOList){
+                                        Log.d(TAG,"borrnado");
                                         new TrackingDAO(ctx).setUploadStatus(track.getDateTime());
                                     }
                                     UploadService.statusUpload=true;
                                     status=3;
                                 }else {
-                                    Toast.makeText(ctx,main.getString("errors"),Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ctx,"error al subir",Toast.LENGTH_LONG).show();
                                 }
                                 status=3;//SE TERMINO SIN FOTOS
 
-                            } catch (JSONException e) {
-                                Toast.makeText(ctx, "Puede que no se hallan sincronizar sus datos JSON, por favor de aviso al administrador de la  aplicación", Toast.LENGTH_LONG).show();
-                                Log.d(TAG, e.toString());
-                                status = -1;
-                            }
+
                         }else{
                             Toast.makeText(ctx, "No se recibio respuesta del Servidor", Toast.LENGTH_LONG).show();
                             status=-1;

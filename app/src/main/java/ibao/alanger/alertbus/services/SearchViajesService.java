@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 
 import ibao.alanger.alertbus.helpers.DownloadNewViajes;
@@ -18,6 +20,8 @@ public class SearchViajesService extends Service {
 
     final Handler handler = new Handler();
     Context ctx;
+
+    private static String TAG  = SearchViajesService.class.getSimpleName();
 
     public static boolean statusActualizar = false;
     String CHANNEL_NOTIFICATION = "my cga";
@@ -79,7 +83,7 @@ public class SearchViajesService extends Service {
 
     Runnable runnable = new Runnable() {
         public void run() {
-
+            Log.d(TAG,"buscando viajes");
             new DownloadNewViajes(ctx).SearchNews();
             handler.postDelayed(runnable, timeMilis);
         }

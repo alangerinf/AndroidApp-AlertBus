@@ -1,6 +1,8 @@
 package ibao.alanger.alertbus.models.vo;
 
-public class PasajeroVO {
+import java.io.Serializable;
+
+public class PasajeroVO implements Serializable {
     private int id;
     private String name;
     private String dni;

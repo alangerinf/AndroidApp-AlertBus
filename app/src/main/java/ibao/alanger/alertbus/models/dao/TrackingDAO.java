@@ -54,7 +54,8 @@ public class TrackingDAO {
             values.put(TABLE_TRACKING_COL_LON,lon);
             values.put(TABLE_TRACKING_COL_BEARING,bearing);
             values.put(TABLE_TRACKING_COL_SPEED,speed);
-            db.insert(TABLE_TRACKING, null, values);
+            values.put(TABLE_TRACKING_COL_ISUPDATE,false);
+        db.insert(TABLE_TRACKING, null, values);
         db.close();
         c.close();
 
@@ -75,7 +76,6 @@ public class TrackingDAO {
                             dateTime
                 }
         );
-        db.insert(TABLE_TRACKING, null, values);
         db.close();
         c.close();
 
@@ -97,7 +97,9 @@ public class TrackingDAO {
                             "LD."+TABLE_TRACKING_COL_BEARING+", "+//4
                             "LD."+TABLE_TRACKING_COL_SPEED+" "+//5
                             " FROM "+
-                            TABLE_TRACKING+" as LD "
+                            TABLE_TRACKING+" as LD " +
+                            " WHERE " +
+                            "LD."+TABLE_TRACKING_COL_ISUPDATE+ " = 0"
                     ,null);
             while (cursor.moveToNext()){
                 TrackingVO temp = new TrackingVO();
@@ -123,7 +125,7 @@ public class TrackingDAO {
         Gson gson = new Gson();
         String trakingJson = gson.toJson(trackingVOList);
         Log.d(TAG,"getNoUpdate-> tracking:"+trakingJson);
-        Toast.makeText(ctx,trakingJson,Toast.LENGTH_LONG).show();
+     //   Toast.makeText(ctx,trakingJson,Toast.LENGTH_LONG).show();
 
         return trackingVOList;
     }

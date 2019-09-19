@@ -85,27 +85,37 @@ public class DownloadNewViajes {
                                         JSONObject viaje = new JSONObject(dataViajes.get(i).toString());
                                         /***
                                          * {
-                                         *             "id": "1",
+                                         *            "id": "1",
+                                         *             "horaInicio": "2019-09-18 20:20:00",
+                                         *             "empresa": "IBAO PERU",
                                          *             "proveedor": "Transporte El Sol",
-                                         *             "ruta": "TRUJILLO - CHAO",
                                          *             "conductor": "QUIROZ NUNEZ, DORITA",
+                                         *             "tipoVehiculo": "Bus",
                                          *             "placa": "XYZ-123",
-                                         *             "capacidadTeorica": 45,
-                                         *             "totalTrabajadores": 4,
-                                         *             "horaInicio": "2019-05-03 10:00:00",
-                                         *             "horaFin": "2019-05-03 12:00:00"
+                                         *             "ruta": "TRUJILLO - CHAO",
+                                         *             "tipoTarifa": "UNICA",
+                                         *             "capacidad": 45,
+                                         *             "restricciones": "LICENCIA VENCIDA EL 18/09/2019,SOAT VENCIDO EL 18/09/2019"
                                          *         }
                                           */
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
+                                        viajeVO.sethInicio(viaje.getString("horaInicio"));
                                         viajeVO.setProveedor(viaje.getString("proveedor"));
-                                        viajeVO.setRuta(viaje.getString("ruta"));
                                         viajeVO.setConductor(viaje.getString("conductor"));
                                         viajeVO.setPlaca(viaje.getString("placa"));
-                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
-                                        viajeVO.setCapacidad(viaje.getInt("capacidadTeorica"));
-                                        viajeVO.sethInicio(viaje.getString("horaInicio"));
-                                        viajeVO.sethFin(viaje.getString("horaFin"));
+                                        viajeVO.setRuta(viaje.getString("ruta"));
+                                        viajeVO.setCapacidad(viaje.getInt("capacidad"));
+
+                                        String restStr = viaje.getString("restricciones");
+                                        String [] restList = restStr.split(",");
+                                        for(String r : restList){
+                                            new RestriccionDAO(ctx).insertar(r,"",viajeVO.getId());
+                                        }
+
+//                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
+
+//                                        viajeVO.sethFin(viaje.getString("horaFin"));
 
                                         new ViajeDAO(ctx).insertar(
                                                 viajeVO.getId(),
@@ -140,19 +150,11 @@ public class DownloadNewViajes {
                                         notificationManager.notify(COUNT_NOTIFICATION, builder.build());
                                         COUNT_NOTIFICATION++;
                                     }
+                                    /*
                                     JSONArray dataPasajeros = main.getJSONArray("pasajeros");
                                     for(int i=0;i<dataPasajeros.length();i++){
                                         JSONObject pasajero = new JSONObject(dataPasajeros.get(i).toString());
-                                        /***
-                                         *{
-                                         *             "id": "1",
-                                         *             "idViaje": "1",
-                                         *             "nroDocumento": "19201830",
-                                         *             "trabajador": "QUIROZ ASTACIO, LUIS",
-                                         *             "inicioLectura": "2019-05-03 10:01:00",
-                                         *             "observacion": "DESCANSO VACACIONAL"
-                                         *}
-                                         */
+
                                         PasajeroVO pasajeroVO = new PasajeroVO();
                                         pasajeroVO.setIdViaje(pasajero.getInt("idViaje"));
                                         pasajeroVO.setName(pasajero.getString("trabajador"));
@@ -168,14 +170,12 @@ public class DownloadNewViajes {
                                                 pasajeroVO.getObservacion()
                                         );
                                     }
+                                */
+                                    /*
                                     JSONArray dataRestrinccion = main.getJSONArray("restricciones");
                                     for(int i=0;i<dataRestrinccion.length();i++){
                                         JSONObject restriccion = new JSONObject(dataRestrinccion.get(i).toString());
-                                        /***
-                                         *{"id":"2",
-                                         * "nombre":"Persona",
-                                         * "descripcion":"LICENCIA VENCIDA"}
-                                         */
+
                                         RestriccionVO restriccionVO = new RestriccionVO();
                                         restriccionVO.setName(restriccion.getString("nombre"));
                                         restriccionVO.setDesc(restriccion.getString("descripcion"));
@@ -187,6 +187,7 @@ public class DownloadNewViajes {
                                                 restriccionVO.getIdViaje()
                                         );
                                     }
+                                */
                                     status=3;
                                 }
                                 status=3;//SE TERMINO SIN FOTOS

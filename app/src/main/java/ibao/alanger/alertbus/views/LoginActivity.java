@@ -56,38 +56,18 @@ public class LoginActivity extends Activity {
                                 //Intent intent = new Intent(getBaseContext(),ActivityPostloader.class);
                                 //startActivity(intent);
 
-                                LoginDataVO loginDataVO = new LoginDataVO();
-                                loginDataVO.setId(1);
-                                loginDataVO.setName("Alan");
-                                loginDataVO.setUser("AlanGer");
-                                loginDataVO.setPassword("123456");
-
-                                new LoginDataDAO(ctx).guardarUsuarioNuevo(loginDataVO);
-                                LoginDataVO logueo = new LoginDataDAO(ctx).verficarLogueo();
-                                if( logueo != null){
-                                    Intent intent = new Intent(ctx, SearchViajesService.class);
-                                    ctx.startService(intent);
-
-                                    intent = new Intent(ctx, UploadService.class);
-                                    ctx.startService(intent);
-
-                                    intent = new Intent(ctx, MainConductorActivity.class);//para hacer testing cambiar segun requiera
-                                    ctx.startActivity(intent);
-                                }else {
-                                    Toast.makeText(ctx,"Error de Base de Datos Interna",Toast.LENGTH_LONG).show();
-                                }
-
-
-
-                                /* todo : descomentar para habilitar la  autentificacion con el servidor
-                                Log.d("autentification","intentando");
                                 LoginHelper loginHelper = new LoginHelper(ctx);
-                                loginHelper.intentoLogueo(
-                                        eTextUser.getText().toString(),
-                                        eTextPassword.getText().toString()
-                                );
-                                */
 
+                                if(eTextUser.getText().toString().equals("")){
+                                    Toast.makeText(ctx,"Ingrese  USUARIO",Toast.LENGTH_SHORT).show();
+                                }else {
+                                    if(eTextPassword.getText().toString().equals("")){
+                                        Toast.makeText(ctx,"Ingrese  USUARIO",Toast.LENGTH_SHORT).show();
+
+                                    }else {
+                                        loginHelper.intentoLogueo(eTextUser.getText().toString(),eTextPassword.getText().toString());
+                                    }
+                                }
                             }
                         },200
                 );

@@ -36,7 +36,7 @@ public class LoginHelper {
     public static String POST_PASS = "password";
 
 
-    private String data_id = "id";
+    private String data_id = "idSupervisor";
     private String data_name = "name";
     private String data_typeUser = "typeUser";
 
@@ -84,7 +84,12 @@ public class LoginHelper {
                                     loginDataVO.setUser(user);
                                     loginDataVO.setPassword(pass);
 
-                                    loginDataVO.setTypeUser(temp.getInt(data_typeUser));
+                                    if(temp.getString(data_typeUser).equals("C")){
+                                        loginDataVO.setTypeUser(0);// seteadoc omo conductor
+                                    }else {// seteadoc omo Vigitante .---> bota letra "V"
+                                        loginDataVO.setTypeUser(1);
+                                    }
+
 
                                     loginDataVO.setLastName("");
                                     /***

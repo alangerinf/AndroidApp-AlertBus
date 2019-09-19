@@ -1,6 +1,8 @@
 package ibao.alanger.alertbus.models.vo;
 
-public class RestriccionVO {
+import java.io.Serializable;
+
+public class RestriccionVO implements Serializable {
     private int id;
     private String name;
     private String desc;

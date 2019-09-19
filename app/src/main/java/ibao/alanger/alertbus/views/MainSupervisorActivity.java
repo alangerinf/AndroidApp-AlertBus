@@ -55,15 +55,8 @@ public class MainSupervisorActivity extends AppCompatActivity {
 
 
         rViewAdapterListViajesSupervisor = new RViewAdapterListViajesSupervisor(ctx,viajeVOList,rViewViajes);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext()) {
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                super.onLayoutChildren(recycler, state);
-                //  initSpruce();
-            }
-        };
 
-        rViewViajes.setLayoutManager(linearLayoutManager);
+
         rViewViajes.setAdapter(rViewAdapterListViajesSupervisor);
 
         tViewSinViajes = findViewById(R.id.tViewSinViajes);
@@ -121,6 +114,11 @@ public class MainSupervisorActivity extends AppCompatActivity {
         return true;
     }
 
+    public void goToScanner(){
+        Intent i = new Intent(ctx, CustomScannerActivity.class);
+       // i.putExtra(ActivityViaje.EXTRA_VIAJE,viajeVO);
+        ctx.startActivity(i);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -129,9 +127,13 @@ public class MainSupervisorActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
 
         if(id == R.id.limpiar) {
-            new ViajeDAO(ctx).deleteByStatus2();
+            new ViajeDAO(ctx).deleteByStatusSicronized();
             actualizarData();
 
+        }
+
+        if(id == R.id.qr) {
+            goToScanner();
         }
 
         if(id == R.id.version) {
@@ -142,7 +144,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
             }
         }
         if (id == R.id.logout) {
-            if(new ViajeDAO(ctx).listByStatusNo2().size()>0){//si faltan sincronizar
+            if(new ViajeDAO(ctx).listByStatusNoFinished().size()>0){//si faltan sincronizar
                 Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }else {

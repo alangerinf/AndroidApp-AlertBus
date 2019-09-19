@@ -1,9 +1,12 @@
 package ibao.alanger.alertbus.models.vo;
 
+import com.google.gson.Gson;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViajeVO {
+public class ViajeVO implements Serializable {
     private int id;
     private String hInicio;
     private String hFin;
@@ -17,6 +20,7 @@ public class ViajeVO {
     private String conductor;
     private int numRestricciones;
     List<PasajeroVO> pasajeroVOList;
+    List<RestriccionVO> restriccionVOList;
 
     public ViajeVO(){
         id=0;
@@ -32,7 +36,7 @@ public class ViajeVO {
         conductor="";
         numRestricciones=0;
         pasajeroVOList = new ArrayList<>();
-
+        restriccionVOList = new ArrayList<>();
 
     }
 
@@ -151,5 +155,17 @@ public class ViajeVO {
 
     public void setPasajeroVOList(List<PasajeroVO> pasajeroVOList) {
         this.pasajeroVOList = pasajeroVOList;
+    }
+
+    public List<RestriccionVO> getRestriccionVOList() {
+        return restriccionVOList;
+    }
+
+    public void setRestriccionVOList(List<RestriccionVO> restriccionVOList) {
+        this.restriccionVOList = restriccionVOList;
+    }
+
+    public String toString(){
+        return new Gson().toJson(this);
     }
 }

@@ -58,7 +58,7 @@ public class LoginDataDAO {
             values.put(TABLE_LOGINDATA_COL_NAME,loginDataVO.getName());
             values.put(TABLE_LOGINDATA_COL_LASTNAME,loginDataVO.getLastName());
             values.put(TABLE_LOGINDATA_COL_IDVIAJE,loginDataVO.getIdViaje());
-            values.put(TABLE_LOGINDATA_COL_TYPEUSER,loginDataVO.getIdViaje());
+            values.put(TABLE_LOGINDATA_COL_TYPEUSER,loginDataVO.getTypeUser());
             int id = (int)db.insert(TABLE_LOGINDATA, TABLE_LOGINDATA_COL_IDUSER, values);
         db.close();
         c.close();

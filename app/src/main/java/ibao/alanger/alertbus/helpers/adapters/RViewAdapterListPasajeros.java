@@ -2,18 +2,43 @@ package ibao.alanger.alertbus.helpers.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.app.AppController;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.dao.PasajeroDAO;
+import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
+import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.UploadService;
+
+import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARTRABAJADOR;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
 
 public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapterListPasajeros.ViewHolder>  {
 
@@ -43,7 +68,7 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
     @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int pos) {
-        final PasajeroVO pasajeroVO = pasajeroVOList.get(pos);
+        PasajeroVO pasajeroVO = pasajeroVOList.get(pos);
 
         //fin labels
         holder.tViewName.setText(""+pasajeroVO.getName());
@@ -54,6 +79,8 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
         if(pasajeroVO.getObservacion().isEmpty()){
             holder.tViewObservacion.setHeight(0);
         }
+
+
     }
 
     public float getFloatFormateado(float n){
@@ -85,7 +112,6 @@ public class RViewAdapterListPasajeros extends RecyclerView.Adapter<RViewAdapter
 
         }
     }
-
 
 
 

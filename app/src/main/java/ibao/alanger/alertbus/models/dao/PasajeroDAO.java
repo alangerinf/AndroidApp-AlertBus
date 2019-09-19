@@ -69,6 +69,56 @@ public class PasajeroDAO {
 
         return false;
     }
+
+
+    public boolean editar(PasajeroVO pasajeroVO){
+
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = conn.getWritableDatabase();
+        try {
+            String[] args = {
+                    String.valueOf(pasajeroVO.getId())
+            };
+
+
+            ContentValues values = new ContentValues();
+            values.put(TABLE_PASAJERO_COL_NAME,pasajeroVO.getName());
+            values.put(TABLE_PASAJERO_COL_OBSERVACION,pasajeroVO.getObservacion());
+            long temp = db.update(TABLE_PASAJERO,values,TABLE_PASAJERO_COL_ID+"=?",args);
+            db.close();
+            conn.close();
+            return (temp>0);
+        }catch (Exception e){
+            Log.d(TAG,e.toString());
+        }
+
+        return false;
+    }
+
+    public boolean insertar(PasajeroVO pasajeroVO){
+
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = conn.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(TABLE_PASAJERO_COL_ID,pasajeroVO.getId());
+            values.put(TABLE_PASAJERO_COL_DNI,pasajeroVO.getDni());
+            values.put(TABLE_PASAJERO_COL_NAME,pasajeroVO.getName());
+            values.put(TABLE_PASAJERO_COL_IDVIAJE,pasajeroVO.getIdViaje());
+            values.put(TABLE_PASAJERO_COL_HORASUBIDA,pasajeroVO.gethSubida());
+            values.put(TABLE_PASAJERO_COL_OBSERVACION,pasajeroVO.getObservacion());
+
+            Long temp = db.insert(TABLE_PASAJERO,TABLE_PASAJERO_COL_ID,values);
+            db.close();
+            conn.close();
+            return (temp>0);
+        }catch (Exception e){
+            Toast.makeText(ctx,"insertar->"+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d(TAG,e.toString());
+        }
+
+        return false;
+    }
 /*
     public PasajeroVO consultarByid(int id){
         ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
@@ -120,7 +170,7 @@ public class PasajeroDAO {
                     TABLE_PASAJERO_COL_OBSERVACION
             };
             String[] arg = {String.valueOf(idViaje)};
-            Cursor cursor= db.query(TABLE_PASAJERO,campos,TABLE_PASAJERO_COL_IDVIAJE+"=?",arg,null,null,TABLE_PASAJERO_COL_NAME+" COLLATE UNICODE ASC");
+            Cursor cursor= db.query(TABLE_PASAJERO,campos,TABLE_PASAJERO_COL_IDVIAJE+"=?",arg,null,null,TABLE_PASAJERO_COL_ID+" DESC"/*TABLE_PASAJERO_COL_NAME+" COLLATE UNICODE ASC"*/);
             while(cursor.moveToNext()){
 
                 PasajeroVO temp = getAtributtes(cursor);
@@ -141,8 +191,29 @@ public class PasajeroDAO {
 
 
 
-    public int deleteByIdViaje(int idViaje){
+    public int deleteByIdViajeDNI(int idViaje,String DNI){
 
+
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx, DATABASE_NAME,null,VERSION_DB);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        String[] parametros = {
+                String.valueOf(idViaje),
+                DNI
+        };
+
+        int res = db.delete(
+                TABLE_PASAJERO,
+                TABLE_PASAJERO_COL_IDVIAJE+"=? AND "+TABLE_PASAJERO_COL_DNI+"=?",
+                parametros);
+
+        Log.d("borrando",String.valueOf(res));
+
+        db.close();
+        conn.close();
+        return res;
+    }
+    public int deleteByIdViaje(int idViaje){
 
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx, DATABASE_NAME,null,VERSION_DB);
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -162,7 +233,6 @@ public class PasajeroDAO {
         conn.close();
         return res;
     }
-
 
 /*
     public int borrarById(int id){

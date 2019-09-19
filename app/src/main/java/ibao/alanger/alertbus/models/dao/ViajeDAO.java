@@ -58,13 +58,22 @@ public class ViajeDAO {
         return flag;
     }
 
-    public boolean deleteByStatus2(){
+    public boolean deleteByStatusSicronized(){
         boolean flag = false;
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
-        String[] args = {
-                "2"
-        };
+        String[] args ;
+
+        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
+            args = new String[]{
+                    "3"
+            };
+        }else {//si es vigilante osea  ==1
+            args = new String[]{
+                    "2"
+            };
+        }
+
         int res = db.delete(TABLE_VIAJE,TABLE_VIAJE_COL_STATUS+"=?",args);
         if(res>0){
             flag=true;
@@ -159,6 +168,26 @@ public class ViajeDAO {
                 };
         ContentValues values = new ContentValues();
         values.put(TABLE_VIAJE_COL_STATUS,2);
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        c.close();
+        return  flag;
+    }
+
+    public boolean toStatus3(int id) {
+
+        boolean flag = false;
+        ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
+        SQLiteDatabase db = c.getWritableDatabase();
+        String[] parametros =
+                {
+                        String.valueOf(id),
+                };
+        ContentValues values = new ContentValues();
+        values.put(TABLE_VIAJE_COL_STATUS,3);
         int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
         if(res>0){
             flag=true;
@@ -336,30 +365,51 @@ public class ViajeDAO {
         return flag;
     }
 
-    public List<ViajeVO> listByStatus1() {
+    public List<ViajeVO> listByStatusWaitingAtUpload() {
         ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = c.getReadableDatabase();
         List<ViajeVO> ViajeVOList = new  ArrayList<>();
         try{
+            //si es condctor
+            String sql ="SELECT " +
+                    "V."+TABLE_VIAJE_COL_ID+", " +//0
+                    "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                    "V."+TABLE_VIAJE_COL_PLACA+", "+//2
+                    "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
+                    "V."+TABLE_VIAJE_COL_RUTA+", "+//4
+                    "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
+                    "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
+                    "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
+                    "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
+                    "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
+                    "V."+TABLE_VIAJE_COL_STATUS+", "+//10
+                    "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                    " FROM "+
+                    TABLE_VIAJE+" as V"+" "+
+                    " WHERE "+
+                    "V."+TABLE_VIAJE_COL_STATUS+" = "+2;
+            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//so es suopervisor
+                sql ="SELECT " +
+                        "V."+TABLE_VIAJE_COL_ID+", " +//0
+                        "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                        "V."+TABLE_VIAJE_COL_PLACA+", "+//2
+                        "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
+                        "V."+TABLE_VIAJE_COL_RUTA+", "+//4
+                        "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
+                        "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
+                        "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
+                        "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
+                        "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
+                        "V."+TABLE_VIAJE_COL_STATUS+", "+//10
+                        "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                        " FROM "+
+                        TABLE_VIAJE+" as V"+" "+
+                        " WHERE "+
+                        "V."+TABLE_VIAJE_COL_STATUS+" = "+1;
+            }
 
             Cursor cursor = db.rawQuery(
-                    "SELECT " +
-                            "V."+TABLE_VIAJE_COL_ID+", " +//0
-                            "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                            "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                            "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                            "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                            "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                            "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                            "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                            "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                            "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                            "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                            "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
-                            " FROM "+
-                            TABLE_VIAJE+" as V"+" "+
-                            " WHERE "+
-                            "V."+TABLE_VIAJE_COL_STATUS+" = "+1
+                    sql
                     ,null);
             while(cursor.moveToNext()){
                 ViajeVO temp = getAtributtes(cursor);
@@ -378,30 +428,52 @@ public class ViajeDAO {
 
     }
 
-    public List<ViajeVO> listByStatusNo2() {
+    public List<ViajeVO> listByStatusNoFinished() {
         ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = c.getReadableDatabase();
         List<ViajeVO> ViajeVOList = new  ArrayList<>();
         try{
+            //si es conductor
+            String sql = "SELECT " +
+                    "V."+TABLE_VIAJE_COL_ID+", " +//0
+                    "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                    "V."+TABLE_VIAJE_COL_PLACA+", "+//2
+                    "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
+                    "V."+TABLE_VIAJE_COL_RUTA+", "+//4
+                    "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
+                    "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
+                    "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
+                    "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
+                    "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
+                    "V."+TABLE_VIAJE_COL_STATUS+", "+//10
+                    "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                    " FROM "+
+                    TABLE_VIAJE+" as V"+" "+
+                    " WHERE "+
+                    "V."+TABLE_VIAJE_COL_STATUS+" != "+3;
+            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//si es suopervisor
+                sql="SELECT " +
+                        "V."+TABLE_VIAJE_COL_ID+", " +//0
+                        "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                        "V."+TABLE_VIAJE_COL_PLACA+", "+//2
+                        "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
+                        "V."+TABLE_VIAJE_COL_RUTA+", "+//4
+                        "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
+                        "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
+                        "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
+                        "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
+                        "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
+                        "V."+TABLE_VIAJE_COL_STATUS+", "+//10
+                        "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                        " FROM "+
+                        TABLE_VIAJE+" as V"+" "+
+                        " WHERE "+
+                        "V."+TABLE_VIAJE_COL_STATUS+" != "+2;
+            }
+
 
             Cursor cursor = db.rawQuery(
-                    "SELECT " +
-                            "V."+TABLE_VIAJE_COL_ID+", " +//0
-                            "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                            "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                            "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                            "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                            "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                            "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                            "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                            "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                            "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                            "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                            "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
-                            " FROM "+
-                            TABLE_VIAJE+" as V"+" "+
-                            " WHERE "+
-                            "V."+TABLE_VIAJE_COL_STATUS+" != "+2
+                    sql
                     ,null);
             while(cursor.moveToNext()){
                 ViajeVO temp = getAtributtes(cursor);
@@ -427,55 +499,59 @@ public class ViajeDAO {
     */
 
     private ViajeVO getAtributtes(Cursor cursor){
-        ViajeVO salidaVO = new ViajeVO();
+        ViajeVO viajeVO = new ViajeVO();
         String[] columnNames = cursor.getColumnNames();
         for(String name : columnNames){
             switch (name){
                 case TABLE_VIAJE_COL_ID:
-                    salidaVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
+                    viajeVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_PROVEEDOR:
-                    salidaVO.setProveedor(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.setProveedor(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_PLACA:
-                    salidaVO.setPlaca(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.setPlaca(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_CONDUCTOR:
-                    salidaVO.setConductor(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.setConductor(cursor.getString(cursor.getColumnIndex(name)));
                     break;
 
                 case TABLE_VIAJE_COL_CAPACIDAD:
-                    salidaVO.setCapacidad(cursor.getInt(cursor.getColumnIndex(name)));
+                    viajeVO.setCapacidad(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_NUMPASAJEROS:
-                    salidaVO.setNumPasajeros(cursor.getInt(cursor.getColumnIndex(name)));
+                    viajeVO.setNumPasajeros(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_HORAINICIO:
-                    salidaVO.sethInicio(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.sethInicio(cursor.getString(cursor.getColumnIndex(name)));
                     break;
 
                 case TABLE_VIAJE_COL_HORAFIN:
-                    salidaVO.sethFin(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.sethFin(cursor.getString(cursor.getColumnIndex(name)));
                     break;
 
                 case TABLE_VIAJE_COL_RUTA:
-                    salidaVO.setRuta(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.setRuta(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_COMENTARIO:
-                    salidaVO.setComentario(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.setComentario(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_STATUS:
-                    salidaVO.setStatus(cursor.getInt(cursor.getColumnIndex(name)));
+                    viajeVO.setStatus(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_HORACONFIRMADO:
-                    salidaVO.sethConfirmado(cursor.getString(cursor.getColumnIndex(name)));
+                    viajeVO.sethConfirmado(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 default:
                     Toast.makeText(ctx,TAG+"getAtributes error no se encuentra campo "+name,Toast.LENGTH_LONG).show();
                     Log.d(TAG," getAtributes error no se encuentra campo "+name);
                     break;
             }
+
+            viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
+
+
         }
-        return salidaVO;
+        return viajeVO;
     }
 }

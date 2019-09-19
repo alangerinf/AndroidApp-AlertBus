@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="12:00"
+            android:text="Sin Hora"
             android:textColor="@color/primaryText"
             android:textSize="@dimen/textsize_tittle"
             android:textStyle="bold"
@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="02/03/1888"
+            android:text="No Finalizado"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tViewHDesembarque" />

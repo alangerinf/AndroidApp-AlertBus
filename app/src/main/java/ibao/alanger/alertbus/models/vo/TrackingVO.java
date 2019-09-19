@@ -1,7 +1,5 @@
 package ibao.alanger.alertbus.models.vo;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrackingVO {
     private String latitud;
