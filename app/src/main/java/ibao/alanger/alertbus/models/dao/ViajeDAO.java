@@ -26,6 +26,7 @@ import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORACONF
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORAFIN;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORAINICIO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_ID;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_IDWEB;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_NUMPASAJEROS;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_PLACA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_CAPACIDAD;
@@ -62,22 +63,15 @@ public class ViajeDAO {
         boolean flag = false;
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
-        String[] args ;
 
-        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
-            args = new String[]{
-                    "3"
-            };
-        }else {//si es vigilante osea  ==1
-            args = new String[]{
-                    "2"
-            };
+        List<ViajeVO>  viajeVOList = listByStatusSyncronized();
+
+        for (ViajeVO v : viajeVOList){
+
+            deleteById(v.getId());
+
         }
 
-        int res = db.delete(TABLE_VIAJE,TABLE_VIAJE_COL_STATUS+"=?",args);
-        if(res>0){
-            flag=true;
-        }
         db.close();
         conn.close();
         return flag;
@@ -177,7 +171,9 @@ public class ViajeDAO {
         return  flag;
     }
 
-    public boolean toStatus3(int id) {
+
+
+    public boolean toStatus3(int id,int idWeb) {
 
         boolean flag = false;
         ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
@@ -188,6 +184,7 @@ public class ViajeDAO {
                 };
         ContentValues values = new ContentValues();
         values.put(TABLE_VIAJE_COL_STATUS,3);
+        values.put(TABLE_VIAJE_COL_IDWEB,idWeb);
         int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
         if(res>0){
             flag=true;
@@ -225,18 +222,7 @@ public class ViajeDAO {
 
             Cursor cursor = db.rawQuery(
                     "SELECT " +
-                            "V."+TABLE_VIAJE_COL_ID+", " +//0
-                            "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                            "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                            "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                            "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                            "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                            "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                            "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                            "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                            "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                            "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                            "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                            "*"+
                         " FROM "+
                             TABLE_VIAJE+" as V"+
                         " WHERE "+
@@ -263,18 +249,7 @@ public class ViajeDAO {
         try{
             Cursor cursor = db.rawQuery(
                     "SELECT " +
-                            "V."+TABLE_VIAJE_COL_ID+", " +//0
-                            "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                            "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                            "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                            "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                            "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                            "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                            "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                            "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                            "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                            "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                            "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                            "*"+
                             " FROM "+
                                 TABLE_VIAJE+" as V"
                     ,null);
@@ -359,10 +334,57 @@ public class ViajeDAO {
         int res = db.delete(TABLE_VIAJE,TABLE_VIAJE_COL_ID+"=?",parametros);
         if(res>0){
             flag=true;
+
+            new PasajeroDAO(ctx).deleteByIdViaje(id);
+            new RestriccionDAO(ctx).deleteByIdViaje(id);
+
         }
         db.close();
         conn.close();
         return flag;
+    }
+
+
+
+    public List<ViajeVO> listByStatusSyncronized() {
+        ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = c.getReadableDatabase();
+        List<ViajeVO> ViajeVOList = new  ArrayList<>();
+        try{
+            //si es condctor
+            String sql ="SELECT " +
+                    "*"+
+                    " FROM "+
+                    TABLE_VIAJE+" as V"+" "+
+                    " WHERE "+
+                    "V."+TABLE_VIAJE_COL_STATUS+" = "+3;
+            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//so es suopervisor
+                sql ="SELECT " +
+                        "*"+
+                        " FROM "+
+                        TABLE_VIAJE+" as V"+" "+
+                        " WHERE "+
+                        "V."+TABLE_VIAJE_COL_STATUS+" = "+2;
+            }
+
+            Cursor cursor = db.rawQuery(
+                    sql
+                    ,null);
+            while(cursor.moveToNext()){
+                ViajeVO temp = getAtributtes(cursor);
+                Log.d("listar ViajeDAO s1 : ",""+temp.getId());
+                ViajeVOList.add(temp);
+                // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
+            }
+            cursor.close();
+        }catch (Exception e){
+            Toast.makeText(ctx,e.toString(),Toast.LENGTH_SHORT).show();
+        }finally {
+            db.close();
+            c.close();
+        }
+        return ViajeVOList;
+
     }
 
     public List<ViajeVO> listByStatusWaitingAtUpload() {
@@ -372,18 +394,7 @@ public class ViajeDAO {
         try{
             //si es condctor
             String sql ="SELECT " +
-                    "V."+TABLE_VIAJE_COL_ID+", " +//0
-                    "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                    "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                    "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                    "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                    "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                    "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                    "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                    "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                    "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                    "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                    "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                    "*"+
                     " FROM "+
                     TABLE_VIAJE+" as V"+" "+
                     " WHERE "+
@@ -435,42 +446,19 @@ public class ViajeDAO {
         try{
             //si es conductor
             String sql = "SELECT " +
-                    "V."+TABLE_VIAJE_COL_ID+", " +//0
-                    "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                    "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                    "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                    "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                    "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                    "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                    "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                    "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                    "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                    "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                    "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                    "*"+
                     " FROM "+
                     TABLE_VIAJE+" as V"+" "+
                     " WHERE "+
                     "V."+TABLE_VIAJE_COL_STATUS+" != "+3;
             if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//si es suopervisor
                 sql="SELECT " +
-                        "V."+TABLE_VIAJE_COL_ID+", " +//0
-                        "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
-                        "V."+TABLE_VIAJE_COL_PLACA+", "+//2
-                        "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
-                        "V."+TABLE_VIAJE_COL_RUTA+", "+//4
-                        "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
-                        "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                        "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
-                        "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
-                        "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
-                        "V."+TABLE_VIAJE_COL_STATUS+", "+//10
-                        "V."+TABLE_VIAJE_COL_HORACONFIRMADO+" "+
+                        "*"+
                         " FROM "+
                         TABLE_VIAJE+" as V"+" "+
                         " WHERE "+
                         "V."+TABLE_VIAJE_COL_STATUS+" != "+2;
             }
-
 
             Cursor cursor = db.rawQuery(
                     sql
@@ -549,8 +537,7 @@ public class ViajeDAO {
             }
 
             viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
-
-
+            viajeVO.setRestriccionVOList(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
         }
         return viajeVO;
     }

@@ -44,17 +44,14 @@ public class ActivityPreloader extends Activity {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {// si tiene internet
-
                     if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
                         startServices();
                         openMain();
                         finish();
                     } else {
-
                         openLogin();
                         finish();
                     }
-
                 } else {// sino  tiene internet
                     if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
                         startServices();
@@ -64,42 +61,36 @@ public class ActivityPreloader extends Activity {
                         Toast.makeText(getBaseContext(),"Conectese a internet porfavor",Toast.LENGTH_LONG).show();
                         finish();
                     }
-
                 }
 
             }
         }, 500);
-
-
-
-
     }
+
     void startServices(){
-        Intent intent = new Intent(this, SearchViajesService.class);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getBaseContext().startForegroundService(intent);
-        }else {
-            startService(intent);
-        }
+        Context context = getBaseContext();
+        Intent service1 = new Intent(context, SearchViajesService.class);
+        Intent service2 = new Intent(context, UploadService.class);
 
-        if(new LoginDataDAO(this).verficarLogueo().getIdViaje()>0){//si  es conductor
-            intent = new Intent(this, LocationService.class);//para hacer testing cambiar segun requiera
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                getBaseContext().startForegroundService(intent);
-            }else {
-                startService(intent);
+        if (new LoginDataDAO(context).verficarLogueo()!=null) {//si esta logueado
+            if(new LoginDataDAO(context).verficarLogueo().getTypeUser()==0){// si es conductor
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService (service1);
+                    context.startForegroundService (service2);
+                }else {
+                    context.startService (service1);
+                    context.startService (service2);
+                }
+            }else {// si es supervisor ==1
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService (service2);// upload
+                }else {
+                    context.startService (service2);//upload
+                }
             }
         }
-
-        intent = new Intent(this, UploadService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getBaseContext().startForegroundService(intent);
-        }else {
-            startService(intent);
-        }
     }
-
 
     void  openMain(){
         Intent intent;

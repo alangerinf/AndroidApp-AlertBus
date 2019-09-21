@@ -153,7 +153,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
                 new ViajeDAO(getBaseContext()).clearTableUpload();
                 Intent intent = new Intent(getBaseContext(), ActivityPreloader.class);
                 startActivity(intent);
-                stopService(new Intent(getBaseContext(),SearchViajesService.class));
+                //stopService(new Intent(getBaseContext(),SearchViajesService.class));
                 stopService(new Intent(getBaseContext(),UploadService.class));
                 finish();
             }

@@ -155,20 +155,31 @@ public class LoginHelper {
         AppController.getInstance().addToRequestQueue(sr);
     }
     void  startServices(){
-        Intent intent = new Intent(ctx, SearchViajesService.class);
+        Intent service1 = new Intent(ctx, SearchViajesService.class);
+        Intent service2 = new Intent(ctx, UploadService.class);
 
+        if (new LoginDataDAO(ctx).verficarLogueo()!=null) {//si esta logueado
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ctx.startForegroundService(intent);
-        }else {
-            ctx.startService(intent);
-        }
+            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
 
-        intent = new Intent(ctx, UploadService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ctx.startForegroundService(intent);
-        }else {
-            ctx.startService(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ctx.startForegroundService (service1);
+                    ctx.startForegroundService (service2);
+
+                }else {
+                    ctx.startService (service1);
+                    ctx.startService (service2);
+
+                }
+            }else {// si es supervisor ==1
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ctx.startForegroundService (service2);// upload
+
+                }else {
+                    ctx.startService (service2);//upload
+                }
+            }
+
         }
     }
 

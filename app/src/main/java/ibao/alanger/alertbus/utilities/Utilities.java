@@ -10,7 +10,7 @@ public class Utilities {
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
     public static final String URL_BUSCARTRABAJADOR=URL_ROOT+"getTrabajador.php";
 
-    public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertDataFromMovil.php";
+    public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertViajes.php";
     public static final String URL_UPLOAD_TRACKING=URL_ROOT+"insertTracking.php";
 
     public static final String DATABASE_NAME="data";
@@ -56,6 +56,8 @@ public class Utilities {
             TABLE_PASAJERO_TYPECOL_IDVIAJE      ="INTEGER",
             TABLE_PASAJERO_COL_HORASUBIDA       ="hSubida",
             TABLE_PASAJERO_TYPECOL_HORASUBIDA   ="VARCHAR(100)",
+            TABLE_PASAJERO_COL_HORABAJADA       ="hBajada",
+            TABLE_PASAJERO_TYPECOL_HORABAJADA   ="VARCHAR(100)",
             TABLE_PASAJERO_COL_OBSERVACION      ="observacion",
             TABLE_PASAJERO_TYPECOL_OBSERVACION  ="VARCHAR(100)";
 
@@ -72,6 +74,8 @@ public class Utilities {
     public static final String TABLE_VIAJE ="viaje",
             TABLE_VIAJE_COL_ID                  ="id",
             TABLE_VIAJE_TYPECOL_ID              ="INTEGER",
+            TABLE_VIAJE_COL_IDWEB               ="idWeb",
+            TABLE_VIAJE_TYPECOL_IDWEB           ="INTEGER",
             TABLE_VIAJE_COL_PROVEEDOR           ="proveedor",
             TABLE_VIAJE_TYPECOL_PROVEEDOR       ="VARCHAR(50)",
             TABLE_VIAJE_COL_PLACA               ="placa",
@@ -102,6 +106,7 @@ public class Utilities {
     public static final String CREATE_TABLE_VIAJE =
             " CREATE TABLE IF NOT EXISTS "+ TABLE_VIAJE +" ("+
                     TABLE_VIAJE_COL_ID              +" "+TABLE_VIAJE_TYPECOL_ID +" PRIMARY KEY , "+
+                    TABLE_VIAJE_COL_IDWEB           +" "+TABLE_VIAJE_TYPECOL_IDWEB +" , "+
                     TABLE_VIAJE_COL_PROVEEDOR       +" "+TABLE_VIAJE_TYPECOL_PROVEEDOR +" , "+
                     TABLE_VIAJE_COL_PLACA           +" "+TABLE_VIAJE_TYPECOL_PLACA +" , "+
                     TABLE_VIAJE_COL_CONDUCTOR       +" "+TABLE_VIAJE_TYPECOL_CONDUCTOR +", "+
@@ -122,6 +127,7 @@ public class Utilities {
                     TABLE_PASAJERO_COL_NAME         +" "+TABLE_PASAJERO_TYPECOL_NAME+"," +
                     TABLE_PASAJERO_COL_IDVIAJE      +" "+ TABLE_PASAJERO_TYPECOL_IDVIAJE +", "+
                     TABLE_PASAJERO_COL_HORASUBIDA   +" "+ TABLE_PASAJERO_TYPECOL_HORASUBIDA +", "+
+                    TABLE_PASAJERO_COL_HORABAJADA   +" "+ TABLE_PASAJERO_TYPECOL_HORABAJADA +", "+
                     TABLE_PASAJERO_COL_OBSERVACION  +" "+ TABLE_PASAJERO_TYPECOL_OBSERVACION +" "+
                     ")";
     public static final String CREATE_TABLE_RESTRICCION =

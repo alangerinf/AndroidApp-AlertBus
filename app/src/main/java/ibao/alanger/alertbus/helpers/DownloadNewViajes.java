@@ -140,7 +140,7 @@ public class DownloadNewViajes {
                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_NOTIFICATION)
                                                 .setSmallIcon(R.drawable.ic_comment_white_24dp)
                                                 .setContentTitle("Nuevo viaje de "+viajeVO.getProveedor())
-                                                .setContentText("Ruta: "+viajeVO.getRuta()+", llego con "+viajeVO.getNumPasajeros()+" pasajeros!")
+                                                .setContentText("Ruta: "+viajeVO.getRuta()+", llego con "+viajeVO.gethInicio()+" pasajeros!")
                                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                                 // Set the intent that will fire when the user taps the notification
                                                 .setContentIntent(pendingIntent)

@@ -101,7 +101,7 @@ public class LocationService extends Service {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        int time = 1000*20;// 20 sec
+        int time = 1000*180;// 180 sec
 
         mlocListener = new MyLocationListener();
         mlocListener.setMainActivity(this);
@@ -133,7 +133,7 @@ public class LocationService extends Service {
             //get the location by gps
             if (isGPSEnabled) {
                 if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mlocListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0, mlocListener);
                     Log.d("GPS Enabled", "GPS Enabled");
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);

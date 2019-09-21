@@ -22,11 +22,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,6 +41,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.helpers.LoginHelper;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
@@ -52,10 +57,12 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
     final private String TAG = RViewAdapterListViajesConductor.class.getSimpleName();
 
     public RViewAdapterListViajesConductor(Context ctx, List<ViajeVO> viajeVOList, RecyclerView recyclerView) {
+
         this.ctx = ctx;
         this.viajeVOList = viajeVOList;
         this.recyclerView = recyclerView;
         this.dialogAlert = new Dialog(ctx);
+
     }
 
     @NonNull
@@ -143,15 +150,19 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                         break;
 
                     case 2:// si ya finalizo
+                        /*
                         dialogAlert.setContentView(R.layout.dialog_show_qr);
+
+
+
                         Button btnDialogClose2 = (Button) dialogAlert.findViewById(R.id.buton_close);
                         Button btnDialogAcept2 = (Button) dialogAlert.findViewById(R.id.buton_acept);
                         ImageView iViewDialogClose2 = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
                         ImageView iViewQR = (ImageView) dialogAlert.findViewById(R.id.iViewQR);
 
-                        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-
                         try {
+
+                            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                             BitMatrix bitMatrix = multiFormatWriter.encode(viajeVO.toString(), BarcodeFormat.QR_CODE,400,400);
                             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                             Bitmap bitmap =  barcodeEncoder.createBitmap(bitMatrix);
@@ -185,7 +196,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                                 public void onClick(View v) {
 
                                     ViajeDAO viajeDAO = new ViajeDAO(ctx);
-                                    boolean x=(viajeDAO.toStatus3(viajeVO.getId()));
+                                   // boolean x=(viajeDAO.toStatus3(viajeVO.getId()));
 
                                     viajeVO.setStatus(3);/// cambiando estado a en curso
                                     recyclerView.getAdapter().notifyDataSetChanged();
@@ -202,12 +213,53 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                             Toast.makeText(ctx,e.toString(),Toast.LENGTH_LONG).show();
                             Log.d(TAG,e.toString());
                         }
+*/
                         break;
 
                     case 3:
 
 
+                        dialogAlert.setContentView(R.layout.dialog_show_qr);
+                        Button btnDialogClose3 = (Button) dialogAlert.findViewById(R.id.buton_close);
+                        Button btnDialogAcept3 = (Button) dialogAlert.findViewById(R.id.buton_acept);
+                        ImageView iViewDialogClose3 = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
+                        ImageView iViewQR3 = (ImageView) dialogAlert.findViewById(R.id.iViewQR);
+
+                   try {
+                            MultiFormatWriter multiFormatWriter3 = new MultiFormatWriter();
+                            BitMatrix bitMatrix = multiFormatWriter3.encode(new Gson().toJson(viajeVO.toString()), BarcodeFormat.QR_CODE,400,400);
+                            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                            Bitmap bitmap =  barcodeEncoder.createBitmap(bitMatrix);
+                            iViewQR3.setImageBitmap(bitmap);
+                        }catch (WriterException e){
+                            e.printStackTrace();
+                        }
+
+
+                        TextView mensaje3 = (TextView) dialogAlert.findViewById(R.id.tViewRecomendacion);
+
+                        try{
+
+                            iViewDialogClose3.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogAlert.dismiss();
+                                }
+                            });
+
+                            mensaje3.setText("Viaje ya sincronizado");
+                            btnDialogClose3.setVisibility(View.GONE);
+                            btnDialogAcept3.setVisibility(View.GONE);
+
+                            dialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialogAlert.show();
+
+                        }catch (Exception e){
+                            Toast.makeText(ctx,e.toString(),Toast.LENGTH_LONG).show();
+                            Log.d(TAG,e.toString());
+                        }
                         break;
+
                 }
 
 
@@ -243,15 +295,15 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                 holder.tViewStatusEnCurso.setTextColor(colorDisable);
                 holder.tViewStatusFinalizado.setTextColor(colorEnable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
-                holder.btnEnter.setText("Sincronizar");
+                holder.btnEnter.setText("Finalizado");
+                holder.btnEnter.setBackgroundColor(colorDisable);
                 break;
 
             case 3:
                 holder.tViewStatusEnCurso.setTextColor(colorDisable);
                 holder.tViewStatusFinalizado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorEnable);
-                holder.btnEnter.setText("Sincronizado");
-                holder.btnEnter.setBackgroundColor(colorDisable);
+                holder.btnEnter.setText("Ver QR");
 
                 break;
         }

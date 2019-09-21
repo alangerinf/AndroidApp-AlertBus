@@ -19,7 +19,7 @@ import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper{
 
-    public static int VERSION_DB = 16;
+    public static int VERSION_DB = 20;
     private Context ctx;
     public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

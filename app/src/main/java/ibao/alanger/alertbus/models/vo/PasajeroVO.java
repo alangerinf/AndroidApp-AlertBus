@@ -8,6 +8,7 @@ public class PasajeroVO implements Serializable {
     private String dni;
     private int idViaje;
     private String hSubida;
+    private String hBajada;
     private String observacion;
 
     public PasajeroVO(){
@@ -16,6 +17,7 @@ public class PasajeroVO implements Serializable {
         this.dni="";
         this.idViaje=0;
         this.hSubida="";
+        this.hBajada="";
         this.observacion="";
     }
 
@@ -65,5 +67,13 @@ public class PasajeroVO implements Serializable {
 
     public void setIdViaje(int idViaje) {
         this.idViaje = idViaje;
+    }
+
+    public String gethBajada() {
+        return hBajada;
+    }
+
+    public void sethBajada(String hBajada) {
+        this.hBajada = hBajada;
     }
 }

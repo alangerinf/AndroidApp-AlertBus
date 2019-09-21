@@ -62,11 +62,6 @@ public class MainConductorActivity extends AppCompatActivity {
         ctx = MainConductorActivity.this;
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(new Intent(ctx, SearchViajesService.class));
-        }else {
-            startService(new Intent(ctx, SearchViajesService.class));
-        }
 
         viajeVOList = new ViajeDAO(ctx).listAll();
         rViewViajes = findViewById(R.id.rViewViajes);

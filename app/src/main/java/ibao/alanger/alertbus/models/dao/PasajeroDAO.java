@@ -18,6 +18,7 @@ import static ibao.alanger.alertbus.ConexionSQLiteHelper.VERSION_DB;
 import static ibao.alanger.alertbus.utilities.Utilities.DATABASE_NAME;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_DNI;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_HORABAJADA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_HORASUBIDA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_ID;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_PASAJERO_COL_IDVIAJE;
@@ -106,6 +107,7 @@ public class PasajeroDAO {
             values.put(TABLE_PASAJERO_COL_NAME,pasajeroVO.getName());
             values.put(TABLE_PASAJERO_COL_IDVIAJE,pasajeroVO.getIdViaje());
             values.put(TABLE_PASAJERO_COL_HORASUBIDA,pasajeroVO.gethSubida());
+            values.put(TABLE_PASAJERO_COL_HORABAJADA,pasajeroVO.gethBajada());
             values.put(TABLE_PASAJERO_COL_OBSERVACION,pasajeroVO.getObservacion());
 
             Long temp = db.insert(TABLE_PASAJERO,TABLE_PASAJERO_COL_ID,values);
@@ -167,6 +169,7 @@ public class PasajeroDAO {
                     TABLE_PASAJERO_COL_DNI,
                     TABLE_PASAJERO_COL_IDVIAJE,
                     TABLE_PASAJERO_COL_HORASUBIDA,
+                    TABLE_PASAJERO_COL_HORABAJADA,
                     TABLE_PASAJERO_COL_OBSERVACION
             };
             String[] arg = {String.valueOf(idViaje)};
@@ -251,37 +254,39 @@ public class PasajeroDAO {
 */
 
     private PasajeroVO getAtributtes(Cursor cursor){
-        PasajeroVO salidaVO = new PasajeroVO();
+        PasajeroVO pasajeroVO = new PasajeroVO();
         String[] columnNames = cursor.getColumnNames();
         for(String name : columnNames){
             switch (name){
                 case TABLE_PASAJERO_COL_ID:
-                    salidaVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
+                    pasajeroVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_PASAJERO_COL_DNI:
-                    salidaVO.setDni(cursor.getString(cursor.getColumnIndex(name)));
+                    pasajeroVO.setDni(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_PASAJERO_COL_NAME:
-                    salidaVO.setName(cursor.getString(cursor.getColumnIndex(name)));
+                    pasajeroVO.setName(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_PASAJERO_COL_IDVIAJE:
-                    salidaVO.setIdViaje(cursor.getInt(cursor.getColumnIndex(name)));
+                    pasajeroVO.setIdViaje(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
-
                 case TABLE_PASAJERO_COL_HORASUBIDA:
-                    salidaVO.sethSubida(cursor.getString(cursor.getColumnIndex(name)));
+                    pasajeroVO.sethSubida(cursor.getString(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_PASAJERO_COL_HORABAJADA:
+                    pasajeroVO.sethBajada(cursor.getString(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_PASAJERO_COL_OBSERVACION:
-                    salidaVO.setObservacion(cursor.getString(cursor.getColumnIndex(name)));
+                    pasajeroVO.setObservacion(cursor.getString(cursor.getColumnIndex(name)));
                     break;
-
                 default:
                     Toast.makeText(ctx,TAG+"getAtributes error no se encuentra campo "+name,Toast.LENGTH_LONG).show();
                     Log.d(TAG," getAtributes error no se encuentra campo "+name);
                     break;
             }
         }
-        return salidaVO;
+        return pasajeroVO;
+
     }
 
 }

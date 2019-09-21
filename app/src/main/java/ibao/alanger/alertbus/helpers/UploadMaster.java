@@ -11,8 +11,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,9 +47,16 @@ public class UploadMaster {
 
     public void UploadViaje(final List<ViajeVO> viajeVOList){
 
+        String url;
+        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
+            url = URL_UPLOAD_CONFIRMARVIAJE;//sincronizar viaje
+        }else {//si es supervisor ==1
+            url = URL_UPLOAD_CONFIRMARVIAJE;//confirmar viaje por supervisor
+        }
+
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
-                URL_UPLOAD_CONFIRMARVIAJE,
+                url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -59,16 +68,23 @@ public class UploadMaster {
                             try {
                                 JSONObject main = new JSONObject(response);
                                 Log.d(TAG,"flag1");
-                                if(main.getBoolean("hasSuccess")){
-                                    Log.d(TAG,"flag2");
-                                    for(ViajeVO vi: viajeVOList){
-                                        //new ViajeDAO(ctx).clearTableUpload(vi.getId());
-                                        new ViajeDAO(ctx).toStatus2(vi.getId());
+                                if(main.getInt("success")==1){
+
+                                    JSONArray datos = main.getJSONArray("data");
+
+                                    for(int i=0;i<datos.length();i++){
+
+                                        JSONObject viaje = datos.getJSONObject(i);
+
+                                        int idPlanificacion = viaje.getInt("idPlanificacion");
+                                        int idViaje = viaje.getInt("idViaje");
+
+                                        new ViajeDAO(ctx).toStatus3(idViaje,idPlanificacion);// este es el estado final para el conductor
+
                                     }
+
                                     UploadService.statusUpload=true;
                                     status=3;
-                                }else {
-                                    Toast.makeText(ctx,main.getString("errors"),Toast.LENGTH_LONG).show();
                                 }
                                 status=3;//SE TERMINO SIN FOTOS
 

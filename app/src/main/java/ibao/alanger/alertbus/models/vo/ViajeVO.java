@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViajeVO implements Serializable {
-    private int id;
+    private int id;//idPlanificion
+    private int idWeb;//idViaje
     private String hInicio;
     private String hFin;
     private String placa;
@@ -24,6 +25,7 @@ public class ViajeVO implements Serializable {
 
     public ViajeVO(){
         id=0;
+        idWeb=0;
         hInicio="";
         hFin="";
         placa="";
@@ -163,6 +165,14 @@ public class ViajeVO implements Serializable {
 
     public void setRestriccionVOList(List<RestriccionVO> restriccionVOList) {
         this.restriccionVOList = restriccionVOList;
+    }
+
+    public int getIdWeb() {
+        return idWeb;
+    }
+
+    public void setIdWeb(int idWeb) {
+        this.idWeb = idWeb;
     }
 
     public String toString(){
