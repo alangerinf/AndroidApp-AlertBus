@@ -19,7 +19,7 @@ import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper{
 
-    public static int VERSION_DB = 20;
+    public static int VERSION_DB = 50;
     private Context ctx;
     public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -29,7 +29,6 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
     String TAG = "CREATE_TABLE";
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         /**
          * DATA DE LOGUEO
          */
@@ -37,14 +36,12 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
 
         db.execSQL(CREATE_TABLE_LOGINDATA);//0
         db.execSQL(CREATE_TABLE_TRACKING);//1
-
         /**
          * DATA
          */
         db.execSQL(CREATE_TABLE_VIAJE);//1
         db.execSQL(CREATE_TABLE_PASAJERO);//2
         db.execSQL(CREATE_TABLE_RESTRICCION);//2
-
 
     }
 

@@ -84,6 +84,7 @@ public class LoginDataDAO {
 
 
     public LoginDataVO verficarLogueo(){
+        Log.d(TAG,"verficarLogueo()");
         ConexionSQLiteHelper c= new ConexionSQLiteHelper(ctx, DATABASE_NAME,null,VERSION_DB );
         SQLiteDatabase db = c.getReadableDatabase();
       //  Log.d(TAG,"INTENTANDO LOGUEO");

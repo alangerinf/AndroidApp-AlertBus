@@ -290,18 +290,17 @@ public class RViewAdapterListViajesSupervisor extends RecyclerView.Adapter<RView
         holder.tViewRuta.setText(""+viajeVO.getRuta());
         holder.tViewHInicio.setText(""+viajeVO.gethInicio());
         holder.tViewHFin.setText(""+viajeVO.gethFin());
-        holder.tViewNPasajeros.setText(""+viajeVO.getNumPasajeros());
+        holder.tViewNPasajeros.setText(""+viajeVO.getNumPasajerosRegistrados());
         Log.d(TAG,"tViewCapacidad: "+viajeVO.getCapacidad());
-        float porc = (float) (((1.0)*(viajeVO.getNumPasajeros())/viajeVO.getCapacidad())*100);
+        float porc = (float) (((1.0)*(viajeVO.getNumPasajerosRegistrados())/viajeVO.getCapacidad())*100);
         holder.tViewPorCapacidad.setText(""+getFloatFormateado(porc)+"%");
 
-
-        if(viajeVO.getNumRestricciones()==0){
+        if(viajeVO.getNumRestriccionesRegistradas()==0){
             holder.tViewRestriccion.setText("SIN RESTRICCIONES");
             holder.fAButtonRestriccion.setClickable(false);
             holder.fAButtonRestriccion.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
         }else {
-            holder.tViewRestriccion.setText(""+viajeVO.getNumRestricciones()+" RESTRICCIONES");
+            holder.tViewRestriccion.setText(""+viajeVO.getNumRestriccionesRegistradas()+" RESTRICCIONES");
             holder.tViewRestriccion.setTextColor(colorRed);
 
             holder.fAButtonRestriccion.setOnClickListener(new View.OnClickListener() {

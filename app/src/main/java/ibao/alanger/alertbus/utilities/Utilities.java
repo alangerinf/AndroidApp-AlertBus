@@ -10,7 +10,8 @@ public class Utilities {
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
     public static final String URL_BUSCARTRABAJADOR=URL_ROOT+"getTrabajador.php";
 
-    public static final String URL_UPLOAD_CONFIRMARVIAJE=URL_ROOT+"insertViajes.php";
+    public static final String URL_UPLOAD_VIAJE =URL_ROOT+"insertViajes.php";
+    public static final String URL_CHECK_VIAJE =URL_ROOT+"checkViajes.php";
     public static final String URL_UPLOAD_TRACKING=URL_ROOT+"insertTracking.php";
 
     public static final String DATABASE_NAME="data";
@@ -84,10 +85,10 @@ public class Utilities {
             TABLE_VIAJE_TYPECOL_CONDUCTOR       ="varchar(50)",
             TABLE_VIAJE_COL_CAPACIDAD           ="capacidad",
             TABLE_VIAJE_TYPECOL_CAPACIDAD       ="INTEGER",
-            TABLE_VIAJE_COL_NUMPASAJEROS        ="numPasajeros",
-            TABLE_VIAJE_TYPECOL_NUMPASAJEROS    ="INTEGER",
             TABLE_VIAJE_COL_RUTA                ="ruta",
             TABLE_VIAJE_TYPECOL_RUTA            ="VARCHAR(50)",
+            TABLE_VIAJE_COL_HORAPROGRAMADA      ="horaProgramada",
+            TABLE_VIAJE_TYPECOL_HORAPROGRAMADA  ="VARCHAR(50)",
             TABLE_VIAJE_COL_HORAINICIO          ="horaInicio",
             TABLE_VIAJE_TYPECOL_HORAINICIO      ="VARCHAR(50)",
             TABLE_VIAJE_COL_HORAFIN             ="horaFin",
@@ -97,7 +98,12 @@ public class Utilities {
             TABLE_VIAJE_COL_STATUS              ="status", // 0:recibido, 1:verificado, 2:sincronizado
             TABLE_VIAJE_TYPECOL_STATUS          ="INTEGER",
             TABLE_VIAJE_COL_HORACONFIRMADO      ="horaOk", // HORA EN LA  Q SE  VERIFICO
-            TABLE_VIAJE_TYPECOL_HORACONFIRMADO  ="DATETIME";
+            TABLE_VIAJE_TYPECOL_HORACONFIRMADO  ="DATETIME",
+            TABLE_VIAJE_COL_NUMPASAJEROS        ="numPasajero", // numero de pasajeros guardados al pasar por qr solo tendra esto la parte de supervisor
+            TABLE_VIAJE_TYPECOL_NUMPASAJEROS    ="INTEGER",
+            TABLE_VIAJE_COL_NUMRESTRICCIONES    ="numRestricciones", // numero de pasajeros guardados al pasar por qr solo tendra esto la parte de supervisor
+            TABLE_VIAJE_TYPECOL_NUMRESTRICCIONES="INTEGER"
+                    ;
 
 
 
@@ -111,13 +117,15 @@ public class Utilities {
                     TABLE_VIAJE_COL_PLACA           +" "+TABLE_VIAJE_TYPECOL_PLACA +" , "+
                     TABLE_VIAJE_COL_CONDUCTOR       +" "+TABLE_VIAJE_TYPECOL_CONDUCTOR +", "+
                     TABLE_VIAJE_COL_CAPACIDAD       +" "+ TABLE_VIAJE_TYPECOL_CAPACIDAD +", "+
-                    TABLE_VIAJE_COL_NUMPASAJEROS    +" "+TABLE_VIAJE_TYPECOL_NUMPASAJEROS+", "+
                     TABLE_VIAJE_COL_RUTA            +" "+TABLE_VIAJE_TYPECOL_RUTA+", "+
+                    TABLE_VIAJE_COL_HORAPROGRAMADA  +" "+TABLE_VIAJE_TYPECOL_HORAPROGRAMADA+", "+
                     TABLE_VIAJE_COL_HORAINICIO      +" "+TABLE_VIAJE_TYPECOL_HORAINICIO+", "+
                     TABLE_VIAJE_COL_HORAFIN         +" "+TABLE_VIAJE_TYPECOL_HORAFIN+", "+
                     TABLE_VIAJE_COL_COMENTARIO      +" "+TABLE_VIAJE_TYPECOL_COMENTARIO+", "+
                     TABLE_VIAJE_COL_STATUS          +" "+TABLE_VIAJE_TYPECOL_STATUS+", "+
-                    TABLE_VIAJE_COL_HORACONFIRMADO +" "+ TABLE_VIAJE_TYPECOL_HORACONFIRMADO +" "+
+                    TABLE_VIAJE_COL_NUMPASAJEROS    +" "+TABLE_VIAJE_TYPECOL_NUMPASAJEROS+", "+
+                    TABLE_VIAJE_COL_NUMRESTRICCIONES    +" "+TABLE_VIAJE_TYPECOL_NUMRESTRICCIONES+", "+
+                    TABLE_VIAJE_COL_HORACONFIRMADO  +" "+ TABLE_VIAJE_TYPECOL_HORACONFIRMADO +" "+
                     ")";
 
     public static final String CREATE_TABLE_PASAJERO =

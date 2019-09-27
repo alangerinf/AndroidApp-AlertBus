@@ -24,20 +24,25 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.List;
 
 import ibao.alanger.alertbus.R;
@@ -45,7 +50,10 @@ import ibao.alanger.alertbus.helpers.LoginHelper;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.utilities.Utils;
 import ibao.alanger.alertbus.viajeEnCurso.ActivityViaje;
+
+import static android.graphics.Color.BLACK;
 
 public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewAdapterListViajesConductor.ViewHolder>  {
 
@@ -128,6 +136,9 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                                     new LoginDataDAO(ctx).uploadIdViaje(viajeVO.getId());
 
                                     viajeVO.setStatus(1);/// cambiando estado a en curso
+                                    viajeVO.sethInicio(Utils.getFecha());
+                                    new ViajeDAO(ctx).updateHoraInicio(viajeVO.getId(),viajeVO.gethInicio());
+
                                     recyclerView.getAdapter().notifyDataSetChanged();
 
                                     dialogAlert.dismiss();
@@ -224,14 +235,25 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                         Button btnDialogAcept3 = (Button) dialogAlert.findViewById(R.id.buton_acept);
                         ImageView iViewDialogClose3 = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
                         ImageView iViewQR3 = (ImageView) dialogAlert.findViewById(R.id.iViewQR);
-
+ /*
                    try {
+
                             MultiFormatWriter multiFormatWriter3 = new MultiFormatWriter();
-                            BitMatrix bitMatrix = multiFormatWriter3.encode(new Gson().toJson(viajeVO.toString()), BarcodeFormat.QR_CODE,400,400);
+                            Log.d(TAG,viajeVO.toString());
+                            Log.d(TAG,"tamaño"+viajeVO.toString().length());
+
+                           BitMatrix bitMatrix = multiFormatWriter3.encode(viajeVO.toString(), BarcodeFormat.QR_CODE,512,512);
+                       int width = bitMatrix.getWidth();
+                       int height = bitMatrix.getHeight();
                             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                             Bitmap bitmap =  barcodeEncoder.createBitmap(bitMatrix);
-                            iViewQR3.setImageBitmap(bitmap);
-                        }catch (WriterException e){
+                            */
+
+                        try {
+                                Log.d(TAG,"qr data:"+viajeVO.toStringQR());
+
+                                    iViewQR3.setImageBitmap(Utils.createQRCode(viajeVO.toStringQR(),2048));
+                        } catch (WriterException e) {
                             e.printStackTrace();
                         }
 
@@ -313,18 +335,49 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
         holder.tViewPlaca.setText(""+viajeVO.getPlaca());
         holder.tViewConductor.setText(""+viajeVO.getConductor());
         holder.tViewRuta.setText(""+viajeVO.getRuta());
-        holder.tViewHEmbarque.setText(""+getHour(viajeVO.gethInicio()));
-        if(!viajeVO.gethFin().equals("")){
+
+        if(viajeVO.gethInicio()==null ||viajeVO.gethInicio().equals("")){// si la hora de inicio esta seteada
+            holder.tViewHEmbarque.setText(""+getHour(viajeVO.gethProgramada()));
+            holder.tViewDateEmbarque.setText(""+getDate(viajeVO.gethProgramada()));
+        }else {
+            holder.tViewHEmbarque.setText(""+getHour(viajeVO.gethInicio()));
+            holder.tViewDateEmbarque.setText(""+getDate(viajeVO.gethInicio()));
+        }
+
+        if(viajeVO.gethFin()== null || viajeVO.gethFin().equals("")){ // si no tiene hora fin
+            Log.d(TAG,"sin hora fin");
+        }else{
             holder.tViewHDesembarque.setText(""+getHour(viajeVO.gethFin()));
             holder.tViewDateDesembarque.setText(""+getDate(viajeVO.gethFin()));
+
         }
 
         holder.tViewCapacidad.setText(""+viajeVO.getCapacidad());
 
-        holder.tViewDateEmbarque.setText(""+getDate(viajeVO.gethInicio()));
+    }
 
 
-
+    public static Bitmap generateQrCode(String myCodeText) throws WriterException {
+        Bitmap bmp = null;
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(myCodeText, BarcodeFormat.QR_CODE, 1024, 1024);
+            int width = 1024;
+            int height = 1024;
+            bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (bitMatrix.get(x, y))
+                        bmp.setPixel(x, y, Color.BLACK);
+                    else
+                        bmp.setPixel(x, y, Color.WHITE);
+                }
+            }
+            Log.d("RViewAdapterList","lco");
+        } catch (WriterException e) {
+            Log.e("QR ERROR", ""+e.toString());
+        }
+        return bmp;
     }
 
     String getDate(String dateTime){

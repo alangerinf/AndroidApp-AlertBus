@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,8 +30,11 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.journeyapps.barcodescanner.ViewfinderView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +50,7 @@ import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.RestriccionVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.utilities.Utils;
 import ibao.alanger.alertbus.viajeEnCurso.ActivityViaje;
 import ibao.alanger.alertbus.viajeEnCurso.PageViewModelViaje;
 
@@ -159,55 +164,38 @@ public class CustomScannerActivity extends AppCompatActivity implements
         @Override
         public void barcodeResult(BarcodeResult result) {
 
-            String resultado = result.getText().toString();
-            Log.d(TAG, "tamaño " + resultado.length());
+            String resultadoSTR = result.getText();
 
-            if (resultado == null) {//si s e rechazo
+
+            Log.d(TAG, "tamaño " + resultadoSTR.length());
+
+            if (resultadoSTR == null) {//si s e rechazo
                 // Prevent duplicate scans
-                Log.d(TAG, resultado + "qr nulo");
-
+                Log.d(TAG, resultadoSTR + "qr nulo");
                 return;
+
             } else {
                 try {
-                    Log.d(TAG,"añadiendo"+resultado);
+                    Log.d(TAG,"añadiendo"+resultadoSTR);
 
-                    Gson g = new Gson();
-                    ViajeVO viajeVO = g.fromJson(resultado, ViajeVO.class);
+                    Log.d(TAG,"flag1");
+                    ViajeVO viajeVO = new Gson().fromJson(resultadoSTR, ViajeVO.class);
 
-                    new ViajeDAO(ctx).insertar(
-                            viajeVO.getId(),
-                            viajeVO.getProveedor(),
-                            viajeVO.getPlaca(),
-                            viajeVO.getConductor(),
-                            viajeVO.getRuta(),
-                            viajeVO.gethInicio(),
-                            viajeVO.gethFin(),
-                            viajeVO.getNumPasajeros(),
-                            viajeVO.getCapacidad()
+                    Log.d(TAG,"flag2");
+                    new ViajeDAO(ctx).insertarBYQR(
+                            viajeVO
                     );
 
-                    for(PasajeroVO p : viajeVO.getPasajeroVOList()){
-                        new PasajeroDAO(ctx).insertar(
-                                p.getDni(),
-                                p.getName(),
-                                p.getIdViaje(),
-                                p.gethSubida(),
-                                p.getObservacion()
-                        );
-                    }
 
-                    for(RestriccionVO r : viajeVO.getRestriccionVOList()){
-                        new RestriccionDAO(ctx).insertar(r.getName(),r.getDesc(),r.getIdViaje());
-                    }
-
-                    Log.d(TAG, resultado + "ingresado");
+                    Log.d(TAG,"flag5");
+                    Log.d(TAG, resultadoSTR + "ingresado");
 
                     barcodeScannerView.setStatusText(result.getText());
                     beepManager.setVibrateEnabled(true);
                     beepManager.playBeepSoundAndVibrate();
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
 
@@ -215,7 +203,8 @@ public class CustomScannerActivity extends AppCompatActivity implements
 
                     onBackPressed();
                 }catch (Exception e){
-                    Toast.makeText(ctx,e.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx,TAG+"->"+e.toString(),Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,e.toString());
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException x) {

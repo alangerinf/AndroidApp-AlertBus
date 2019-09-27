@@ -12,9 +12,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +20,10 @@ import java.util.Map;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.TrackingDAO;
-import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.TrackingVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.UploadService;
 
-import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
 import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_TRACKING;
 
 public class UploadTracking {
@@ -45,6 +40,7 @@ public class UploadTracking {
     }
 
     public void upload(final List<TrackingVO> trackingVOList){
+        Log.d(TAG,"upload()");
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,

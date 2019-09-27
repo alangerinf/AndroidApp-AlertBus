@@ -93,9 +93,11 @@ public class UploadService extends Service { // tracking y sincronizacioin de vi
 
     Runnable runnable = new Runnable() {
         public void run() {
+            Log.d(TAG,"runnable()");
             //sincronizacion automatica
             List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listByStatusWaitingAtUpload();
             if(viajeVOList.size()>0){
+                Log.d(TAG,"subiendo "+viajeVOList.size()+" viajes");
                 new UploadMaster(ctx).UploadViaje(viajeVOList);
             }
 

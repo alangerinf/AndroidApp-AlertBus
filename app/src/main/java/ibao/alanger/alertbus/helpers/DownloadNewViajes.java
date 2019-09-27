@@ -56,6 +56,7 @@ public class DownloadNewViajes {
     }
 
     public void SearchNews(){
+        Log.d(TAG,"SearchNews()");
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
@@ -100,7 +101,7 @@ public class DownloadNewViajes {
                                           */
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
-                                        viajeVO.sethInicio(viaje.getString("horaInicio"));
+                                        viajeVO.sethProgramada(viaje.getString("horaInicio"));//hora programada
                                         viajeVO.setProveedor(viaje.getString("proveedor"));
                                         viajeVO.setConductor(viaje.getString("conductor"));
                                         viajeVO.setPlaca(viaje.getString("placa"));
@@ -108,26 +109,25 @@ public class DownloadNewViajes {
                                         viajeVO.setCapacidad(viaje.getInt("capacidad"));
 
                                         String restStr = viaje.getString("restricciones");
-                                        String [] restList = restStr.split(",");
-                                        for(String r : restList){
-                                            new RestriccionDAO(ctx).insertar(r,"",viajeVO.getId());
+
+                                        if(!(restStr==null ||restStr.equalsIgnoreCase("null") || restStr.equals(""))){
+                                            String [] restList = restStr.split(",");
+                                            Log.d(TAG,"restircciones:"+restStr);
+                                            for(String r : restList){
+                                                Log.d(TAG,r);
+                                                new RestriccionDAO(ctx).insertar(r,"",viajeVO.getId());
+                                            }
+                                            viajeVO.getRestriccionVOList().addAll(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
                                         }
+
 
 //                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
 
 //                                        viajeVO.sethFin(viaje.getString("horaFin"));
 
                                         new ViajeDAO(ctx).insertar(
-                                                viajeVO.getId(),
-                                                viajeVO.getProveedor(),
-                                                viajeVO.getPlaca(),
-                                                viajeVO.getConductor(),
-                                                viajeVO.getRuta(),
-                                                viajeVO.gethInicio(),
-                                                viajeVO.gethFin(),
-                                                viajeVO.getNumPasajeros(),
-                                                viajeVO.getCapacidad()
-                                                );
+                                                viajeVO
+                                        );
 
                                         //Notification
                                         // Create an explicit intent for an Activity in your app

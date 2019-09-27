@@ -10,12 +10,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ import ibao.alanger.alertbus.models.dao.TrackingDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.utilities.Utils;
 
 import static java.security.AccessController.getContext;
 
@@ -121,8 +124,6 @@ public class ActivityViaje extends AppCompatActivity implements
           setTitle(viajeVO.getRuta());
 
 
-
-
         fAButtonLinterna.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,8 +189,6 @@ public class ActivityViaje extends AppCompatActivity implements
                 TextView cs_tView_Num_Pasajeros = findViewById(R.id.cs_tView_Num_Pasajeros);
 
                 cs_tView_Num_Pasajeros.setText(""+viajeVO.getPasajeroVOList().size());
-
-
                 adapter = new RViewAdapterListPasajerosOnViaje(getBaseContext(),viajeVO.getPasajeroVOList());
                 new ItemTouchHelper(itemTouchHelperCallBack).attachToRecyclerView(av_rViewPasajeros);
                 av_rViewPasajeros.setAdapter(adapter);
@@ -283,6 +282,18 @@ public class ActivityViaje extends AppCompatActivity implements
             new ViajeDAO(ctx).toStatus2(VIAJEVO.getId());
             new LoginDataDAO(ctx).uploadIdViaje(0); // esto desac el gps
 
+            for(PasajeroVO pa : pageViewModel.get().getValue().getPasajeroVOList()){
+
+                if(pa.gethBajada()==null || pa.gethBajada().equals("")){//si solo tiene hora de subida
+                    pa.sethBajada(getFecha());
+                    new PasajeroDAO(ctx).updatehBajada(pa);
+                }else {// si ya tiene hora de bajada
+
+
+                }
+            }
+            new ViajeDAO(ctx).updateHoraFin(VIAJEVO.getId(), getFecha());
+
             onBackPressed();
         }
 
@@ -290,50 +301,119 @@ public class ActivityViaje extends AppCompatActivity implements
     }
 
     private BeepManager beepManager;
+    Handler handler = new Handler();
+    static int count = 0;
 
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
 
+            ProgressBar progress_circular = findViewById(R.id.progress_circular);
+
             String resultado = result.getText().toString();
             Log.d(TAG, "tamaño " + resultado.length());
 
-            if (resultado == null || verifiarDuplicado(resultado) || resultado.length() != 8) {//si s e rechazo
+            if (resultado == null  || resultado.length() != 8) {//si s e rechazo
                 // Prevent duplicate scans
                 Log.d(TAG, resultado + "DUPLICADO");
 
                 return;
             } else {
-                Log.d(TAG,"añadiendo"+resultado);
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date date = new Date();
 
-                PasajeroVO pasajeroVO = new PasajeroVO();
+                progress_circular.setVisibility(View.VISIBLE);
+                barcodeScannerView.pause();
 
-                pasajeroVO.sethSubida(formatter.format(date));
-                pasajeroVO.setDni(resultado);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
 
 
-                new PasajeroDAO(ctx).insertar(
-                        pasajeroVO.getDni(),
-                        pasajeroVO.getName(),
-                        VIAJEVO.getId(),
-                        pasajeroVO.gethSubida(),
-                        ""
-                );
+                        beepManager.setVibrateEnabled(true);
+                        beepManager.setBeepEnabled(true);
 
-                PageViewModelViaje.addPasajero(pasajeroVO);
 
-                Log.d(TAG, resultado + "ingresado");
+                        Log.d(TAG,""+count++);
 
-                barcodeScannerView.setStatusText(result.getText());
-                beepManager.setVibrateEnabled(true);
-                beepManager.playBeepSoundAndVibrate();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                        if(verifiarDuplicado(resultado)){//si ya se ingreso
+
+                            PasajeroVO pasajeroVO  = getPasajeroDuplicado(resultado);
+
+                            if(pasajeroVO.gethBajada()==null || pasajeroVO.gethBajada().equals("")){//si no tiene hora de bajada
+
+
+                                pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);
+                                pasajeroVO.sethBajada(getFecha());
+                                PageViewModelViaje.addPasajero(0,pasajeroVO);
+                                Log.d(TAG, resultado + "registrando salida");
+
+                                new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                            }else {// is no tiene hora de bajada
+
+                                Toast.makeText(ctx,"registrado hora de bajada hora de bajada",Toast.LENGTH_SHORT).show();
+
+                                Snackbar snackbar = Snackbar.make(root,"Trabajador ya bajo, ¿Desea Actualizar la hora de bajada?",Snackbar.LENGTH_LONG);
+                                snackbar.setAction("Actualizar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);
+                                        pasajeroVO.sethBajada(getFecha());
+                                        PageViewModelViaje.addPasajero(0,pasajeroVO);
+
+                                        new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                                    }
+                                });
+
+                                snackbar.show();
+                            }
+
+                        }else {// si es un nuevo ingreso
+
+                            Log.d(TAG,"añadiendo"+resultado);
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date = new Date();
+
+                            PasajeroVO pasajeroVO = new PasajeroVO();
+
+                            pasajeroVO.sethSubida(formatter.format(date));
+                            pasajeroVO.setDni(resultado);
+
+
+                            new PasajeroDAO(ctx).insertar(
+                                    pasajeroVO.getDni(),
+                                    pasajeroVO.getName(),
+                                    VIAJEVO.getId(),
+                                    pasajeroVO.gethSubida(),
+                                    "",
+                                    ""
+                            );
+
+                            PageViewModelViaje.addPasajero(pasajeroVO);
+
+                            Log.d(TAG, resultado + "registrando entrada");
+
+                        }
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                barcodeScannerView.setStatusText(result.getText());
+
+                                beepManager.playBeepSoundAndVibrate();
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                progress_circular.setVisibility(View.GONE);
+                                barcodeScannerView.resume();
+                            }
+                        });
+                    }
+                });
+
+
             }
         }
 
@@ -348,20 +428,36 @@ public class ActivityViaje extends AppCompatActivity implements
 
 
     boolean verifiarDuplicado(String DNI){
-     boolean flag = false;
+        boolean flag = false;
 
 
-     List<PasajeroVO> pasajeroVOList = pageViewModel.get().getValue().getPasajeroVOList();
+        List<PasajeroVO> pasajeroVOList = pageViewModel.get().getValue().getPasajeroVOList();
 
-     for (PasajeroVO pasajeroVO : pasajeroVOList){
-         if(pasajeroVO.getDni().equals(DNI)){
-             flag=true;
-             break;
-         }
-     }
+        for (PasajeroVO pasajeroVO : pasajeroVOList){
+            if(pasajeroVO.getDni().equals(DNI)){
+                flag=true;
+                break;
+            }
+        }
 
 
-     return flag;
+        return flag;
+    }
+
+
+    PasajeroVO getPasajeroDuplicado(String DNI){
+        PasajeroVO pasajeroVO = null;
+
+        List<PasajeroVO> pasajeroVOList = pageViewModel.get().getValue().getPasajeroVOList();
+
+        for (PasajeroVO pas : pasajeroVOList){
+            if(pas.getDni().equals(DNI)){
+                pasajeroVO = pas;
+                break;
+            }
+        }
+        return pasajeroVO;
+
     }
 
     private ItemTouchHelper.SimpleCallback itemTouchHelperCallBack = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
@@ -378,6 +474,7 @@ public class ActivityViaje extends AppCompatActivity implements
             new PasajeroDAO(ctx).deleteByIdViajeDNI(VIAJEVO.getId(),item.getDni());
 
             Snackbar snackbar = Snackbar.make(root,"Se Borró un Pasajero"+index,Snackbar.LENGTH_LONG);
+            /*
             snackbar.setAction("Deshacer", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -398,6 +495,7 @@ public class ActivityViaje extends AppCompatActivity implements
 
                 }
             });
+            */
             snackbar.show();
         }
     };
@@ -456,6 +554,9 @@ public class ActivityViaje extends AppCompatActivity implements
                 });
         alertOpciones.show();
     }
-
+    public String getFecha(){
+        DateFormat df = new DateFormat();
+        return df.format("yyyy-MM-dd kk:mm:ss", new Date()).toString();
+    }
 
 }

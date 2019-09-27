@@ -48,7 +48,7 @@ public class PasajeroDAO {
         return flag;
     }
 
-    public boolean insertar(String dni, String name,int idViaje, String hSubida, String observacion){
+    public boolean insertar(String dni, String name,int idViaje, String hSubida,String hBajada ,String observacion){
 
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -58,6 +58,7 @@ public class PasajeroDAO {
             values.put(TABLE_PASAJERO_COL_NAME,name);
             values.put(TABLE_PASAJERO_COL_IDVIAJE,idViaje);
             values.put(TABLE_PASAJERO_COL_HORASUBIDA,hSubida);
+            values.put(TABLE_PASAJERO_COL_HORABAJADA,hBajada);
             values.put(TABLE_PASAJERO_COL_OBSERVACION,observacion);
 
             Long temp = db.insert(TABLE_PASAJERO,TABLE_PASAJERO_COL_ID,values);
@@ -65,27 +66,52 @@ public class PasajeroDAO {
             conn.close();
             return (temp>0);
         }catch (Exception e){
-            Log.d("ZonaDAO",e.toString());
+            Log.d(TAG,"insertar "+e.toString());
+            Toast.makeText(ctx,TAG+" insertar "+e.toString(),Toast.LENGTH_LONG).show();
         }
 
         return false;
     }
 
+    public boolean updatehBajada(PasajeroVO pasajeroVO){
 
-    public boolean editar(PasajeroVO pasajeroVO){
+
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = conn.getWritableDatabase();
+        try {
+
+            String[] args = {
+                    pasajeroVO.getDni(),
+                    String.valueOf(pasajeroVO.getIdViaje())
+            };
+            ContentValues values = new ContentValues();
+            values.put(TABLE_PASAJERO_COL_HORABAJADA,pasajeroVO.gethBajada());
+            long temp = db.update(TABLE_PASAJERO,values,TABLE_PASAJERO_COL_DNI+"=? AND "+TABLE_PASAJERO_COL_IDVIAJE+"=?",args);
+            db.close();
+            conn.close();
+            return (temp>0);
+        }catch (Exception e){
+            Log.d(TAG,e.toString());
+            Toast.makeText(ctx,"updatehBajada "+e.toString(),Toast.LENGTH_LONG).show();
+        }
+
+        return false;
+    }
+
+    public boolean updateNameObservacion(PasajeroVO pasajeroVO){
 
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
         try {
             String[] args = {
-                    String.valueOf(pasajeroVO.getId())
+                    pasajeroVO.getDni(),
+                    String.valueOf(pasajeroVO.getIdViaje())
             };
-
 
             ContentValues values = new ContentValues();
             values.put(TABLE_PASAJERO_COL_NAME,pasajeroVO.getName());
             values.put(TABLE_PASAJERO_COL_OBSERVACION,pasajeroVO.getObservacion());
-            long temp = db.update(TABLE_PASAJERO,values,TABLE_PASAJERO_COL_ID+"=?",args);
+            long temp = db.update(TABLE_PASAJERO,values,TABLE_PASAJERO_COL_DNI+"=? and "+TABLE_PASAJERO_COL_IDVIAJE+"=?",args);
             db.close();
             conn.close();
             return (temp>0);

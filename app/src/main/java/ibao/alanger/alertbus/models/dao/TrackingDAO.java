@@ -71,11 +71,12 @@ public class TrackingDAO {
         db.update(
                 TABLE_TRACKING,
                 values,
-                TABLE_TRACKING_COL_ISUPDATE+"=?",
+                TABLE_TRACKING_COL_DATETIME+"=?",
                 new String[]{
                             dateTime
                 }
         );
+
         db.close();
         c.close();
 

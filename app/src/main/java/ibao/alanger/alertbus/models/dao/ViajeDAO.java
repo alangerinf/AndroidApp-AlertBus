@@ -25,9 +25,11 @@ import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_CONDUCTO
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORACONFIRMADO;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORAFIN;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORAINICIO;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_HORAPROGRAMADA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_ID;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_IDWEB;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_NUMPASAJEROS;
+import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_NUMRESTRICCIONES;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_PLACA;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_CAPACIDAD;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE_COL_PROVEEDOR;
@@ -77,16 +79,8 @@ public class ViajeDAO {
         return flag;
     }
 
-    public boolean insertar(int id,
-                            String proveedor,
-                            String placa,
-                            String conductor,
-                            String ruta,
-                            String hInicio,
-                            String hFin,
-                            int numpasajeros,
-                            int capacidad
-                            ){
+    public boolean insertar(ViajeVO viajeVO
+    ){
 
         long temp=0;
 
@@ -94,17 +88,49 @@ public class ViajeDAO {
         SQLiteDatabase db = conn.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
-                values.put(TABLE_VIAJE_COL_ID,id);
-                values.put(TABLE_VIAJE_COL_PROVEEDOR,proveedor);
-                values.put(TABLE_VIAJE_COL_PLACA,placa);
-                values.put(TABLE_VIAJE_COL_CONDUCTOR,conductor);
-                values.put(TABLE_VIAJE_COL_RUTA,ruta);
-                values.put(TABLE_VIAJE_COL_HORAINICIO,hInicio);
-                values.put(TABLE_VIAJE_COL_HORAFIN,hFin);
-                values.put(TABLE_VIAJE_COL_NUMPASAJEROS,numpasajeros);
-                values.put(TABLE_VIAJE_COL_CAPACIDAD,capacidad);
-                values.put(TABLE_VIAJE_COL_COMENTARIO,"");
-                values.put(TABLE_VIAJE_COL_STATUS,0);
+            values.put(TABLE_VIAJE_COL_ID,viajeVO.getId());
+            values.put(TABLE_VIAJE_COL_PROVEEDOR,viajeVO.getProveedor());
+            values.put(TABLE_VIAJE_COL_PLACA,viajeVO.getPlaca());
+            values.put(TABLE_VIAJE_COL_CONDUCTOR,viajeVO.getConductor());
+            values.put(TABLE_VIAJE_COL_RUTA,viajeVO.getRuta());
+            values.put(TABLE_VIAJE_COL_HORAPROGRAMADA,viajeVO.gethProgramada());
+            values.put(TABLE_VIAJE_COL_HORAINICIO,viajeVO.gethInicio());
+            values.put(TABLE_VIAJE_COL_HORAFIN,viajeVO.gethFin());
+            values.put(TABLE_VIAJE_COL_CAPACIDAD,viajeVO.getCapacidad());
+            values.put(TABLE_VIAJE_COL_COMENTARIO,viajeVO.getComentario());
+            values.put(TABLE_VIAJE_COL_STATUS,viajeVO.getStatus());
+            temp = db.insert(TABLE_VIAJE,TABLE_VIAJE_COL_ID,values);
+            db.close();
+            conn.close();
+
+        }catch (Exception e){
+            Log.d("ViajeDAO ins : ",e.toString());
+        }
+        return (temp>0);
+    }
+
+    public boolean insertarBYQR(ViajeVO viajeVO
+    ){
+
+        long temp=0;
+
+        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
+        SQLiteDatabase db = conn.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(TABLE_VIAJE_COL_ID,viajeVO.getId());
+            values.put(TABLE_VIAJE_COL_PROVEEDOR,viajeVO.getProveedor());
+            values.put(TABLE_VIAJE_COL_PLACA,viajeVO.getPlaca());
+            values.put(TABLE_VIAJE_COL_NUMPASAJEROS,viajeVO.getNumPasajerosRegistrados());
+            values.put(TABLE_VIAJE_COL_NUMRESTRICCIONES,viajeVO.getNumRestriccionesRegistradas());
+            values.put(TABLE_VIAJE_COL_CONDUCTOR,viajeVO.getConductor());
+            values.put(TABLE_VIAJE_COL_RUTA,viajeVO.getRuta());
+            values.put(TABLE_VIAJE_COL_HORAPROGRAMADA,viajeVO.gethProgramada());
+            values.put(TABLE_VIAJE_COL_HORAINICIO,viajeVO.gethInicio());
+            values.put(TABLE_VIAJE_COL_HORAFIN,viajeVO.gethFin());
+            values.put(TABLE_VIAJE_COL_CAPACIDAD,viajeVO.getCapacidad());
+            values.put(TABLE_VIAJE_COL_COMENTARIO,viajeVO.getComentario());
+            values.put(TABLE_VIAJE_COL_STATUS,viajeVO.getStatus());
             temp = db.insert(TABLE_VIAJE,TABLE_VIAJE_COL_ID,values);
             db.close();
             conn.close();
@@ -172,7 +198,6 @@ public class ViajeDAO {
     }
 
 
-
     public boolean toStatus3(int id,int idWeb) {
 
         boolean flag = false;
@@ -204,6 +229,43 @@ public class ViajeDAO {
                 };
         ContentValues values = new ContentValues();
         values.put(TABLE_VIAJE_COL_COMENTARIO,comentario);
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        c.close();
+        return  flag;
+    }
+    public boolean updateHoraInicio(int id, String hinicio) {
+        boolean flag = false;
+        ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
+        SQLiteDatabase db = c.getWritableDatabase();
+        String[] parametros =
+                {
+                        String.valueOf(id),
+                };
+        ContentValues values = new ContentValues();
+        values.put(TABLE_VIAJE_COL_HORAINICIO,hinicio);
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        c.close();
+        return  flag;
+    }
+
+    public boolean updateHoraFin(int id, String hFin) {
+        boolean flag = false;
+        ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
+        SQLiteDatabase db = c.getWritableDatabase();
+        String[] parametros =
+                {
+                        String.valueOf(id),
+                };
+        ContentValues values = new ContentValues();
+        values.put(TABLE_VIAJE_COL_HORAFIN,hFin);
         int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
         if(res>0){
             flag=true;
@@ -264,13 +326,10 @@ public class ViajeDAO {
                                 " WHERE "+
                                 TABLE_RESTRICCION_COL_IDVIAJE+" = "+temp.getId()
                         ,null);
-                    if(cursor2.getCount()>0){
-                        cursor2.moveToFirst();
-                        temp.setNumRestricciones(cursor2.getInt(0));
-                    }
 
 
-                Log.d("listar ViajeDAO : ",""+temp.getId());
+
+                Log.d(TAG,""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
             }
@@ -399,16 +458,16 @@ public class ViajeDAO {
                     TABLE_VIAJE+" as V"+" "+
                     " WHERE "+
                     "V."+TABLE_VIAJE_COL_STATUS+" = "+2;
-            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//so es suopervisor
+            if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==1){//si es suopervisor
                 sql ="SELECT " +
                         "V."+TABLE_VIAJE_COL_ID+", " +//0
                         "V."+TABLE_VIAJE_COL_PROVEEDOR+", "+//1
+                        "V."+TABLE_VIAJE_COL_IDWEB+", "+
                         "V."+TABLE_VIAJE_COL_PLACA+", "+//2
                         "V."+TABLE_VIAJE_COL_CONDUCTOR+", "+//3
                         "V."+TABLE_VIAJE_COL_RUTA+", "+//4
                         "V."+TABLE_VIAJE_COL_HORAINICIO+", "+//5
                         "V."+TABLE_VIAJE_COL_HORAFIN+", "+//6
-                        "V."+TABLE_VIAJE_COL_NUMPASAJEROS+", "+//7
                         "V."+ TABLE_VIAJE_COL_CAPACIDAD +", "+//8
                         "V."+TABLE_VIAJE_COL_COMENTARIO+", "+//9
                         "V."+TABLE_VIAJE_COL_STATUS+", "+//10
@@ -494,8 +553,16 @@ public class ViajeDAO {
                 case TABLE_VIAJE_COL_ID:
                     viajeVO.setId(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
+                case TABLE_VIAJE_COL_IDWEB:
+                    viajeVO.setIdWeb(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
                 case TABLE_VIAJE_COL_PROVEEDOR:
                     viajeVO.setProveedor(cursor.getString(cursor.getColumnIndex(name)));
+
+                    break;
+                case TABLE_VIAJE_COL_HORAPROGRAMADA:
+                    viajeVO.sethProgramada(cursor.getString(cursor.getColumnIndex(name)));
+
                     break;
                 case TABLE_VIAJE_COL_PLACA:
                     viajeVO.setPlaca(cursor.getString(cursor.getColumnIndex(name)));
@@ -506,9 +573,6 @@ public class ViajeDAO {
 
                 case TABLE_VIAJE_COL_CAPACIDAD:
                     viajeVO.setCapacidad(cursor.getInt(cursor.getColumnIndex(name)));
-                    break;
-                case TABLE_VIAJE_COL_NUMPASAJEROS:
-                    viajeVO.setNumPasajeros(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_HORAINICIO:
                     viajeVO.sethInicio(cursor.getString(cursor.getColumnIndex(name)));
@@ -526,6 +590,12 @@ public class ViajeDAO {
                     break;
                 case TABLE_VIAJE_COL_STATUS:
                     viajeVO.setStatus(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_NUMPASAJEROS:
+                    viajeVO.setNumPasajerosRegistrados(cursor.getInt(cursor.getColumnIndex(name)));
+                    break;
+                case TABLE_VIAJE_COL_NUMRESTRICCIONES:
+                    viajeVO.setNumRestriccionesRegistradas(cursor.getInt(cursor.getColumnIndex(name)));
                     break;
                 case TABLE_VIAJE_COL_HORACONFIRMADO:
                     viajeVO.sethConfirmado(cursor.getString(cursor.getColumnIndex(name)));

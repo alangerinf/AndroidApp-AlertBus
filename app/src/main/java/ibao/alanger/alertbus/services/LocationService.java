@@ -101,7 +101,7 @@ public class LocationService extends Service {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        int time = 1000*180;// 180 sec
+        int time = 1000*20;// 180 sec
 
         mlocListener = new MyLocationListener();
         mlocListener.setMainActivity(this);

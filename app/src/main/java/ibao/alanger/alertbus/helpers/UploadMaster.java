@@ -11,7 +11,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -30,7 +29,8 @@ import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.UploadService;
 
 
-import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_CONFIRMARVIAJE;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_CHECK_VIAJE;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_VIAJE;
 
 public class UploadMaster {
 
@@ -46,12 +46,13 @@ public class UploadMaster {
     }
 
     public void UploadViaje(final List<ViajeVO> viajeVOList){
+        Log.d(TAG,"UploadViaje()");
 
         String url;
         if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
-            url = URL_UPLOAD_CONFIRMARVIAJE;//sincronizar viaje
+            url = URL_UPLOAD_VIAJE;//sincronizar viaje
         }else {//si es supervisor ==1
-            url = URL_UPLOAD_CONFIRMARVIAJE;//confirmar viaje por supervisor
+            url = URL_CHECK_VIAJE;//confirmar viaje por supervisor
         }
 
         status=1;
@@ -76,10 +77,16 @@ public class UploadMaster {
 
                                         JSONObject viaje = datos.getJSONObject(i);
 
-                                        int idPlanificacion = viaje.getInt("idPlanificacion");
-                                        int idViaje = viaje.getInt("idViaje");
+                                        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
 
-                                        new ViajeDAO(ctx).toStatus3(idViaje,idPlanificacion);// este es el estado final para el conductor
+                                            int idPlanificacion = viaje.getInt("idPlanificacion");
+                                            int idWeb = viaje.getInt("idViaje");
+                                            new ViajeDAO(ctx).toStatus3(idPlanificacion,idWeb);// este es el estado final para el conductor
+                                        }else {// si es supervosor =1
+                                            int idViaje = viaje.getInt("id");
+                                            new ViajeDAO(ctx).toStatus2(idViaje);
+                                        }
+
 
                                     }
 

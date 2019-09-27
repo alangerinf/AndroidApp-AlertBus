@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -30,8 +31,9 @@ import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.PasajeroDAO;
+import ibao.alanger.alertbus.models.dao.RestriccionDAO;
+import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
-import ibao.alanger.alertbus.models.vo.RestriccionVO;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARTRABAJADOR;
 
@@ -68,15 +70,22 @@ public class RViewAdapterListPasajerosOnViaje extends RecyclerView.Adapter<RView
         holder.avi_tViewDNI.setText(""+pasajeroVO.getDni());
         holder.avi_tViewFecha.setText(""+pasajeroVO.gethSubida());
         holder.avi_tViewObservacion.setText(""+pasajeroVO.getObservacion());
+        Log.d(TAG,""+pasajeroVO.gethSubida()+" "+pasajeroVO.gethBajada());
+        if(pasajeroVO.gethBajada()==null || pasajeroVO.gethBajada().equals("")){// si solo tiene hora de subida
+            holder.avi_tViewFecha.setTextColor(ContextCompat.getColor(ctx, R.color.customGreen));
+        }else {// si ya tiene hora de bajada
+            holder.avi_tViewFecha.setText(pasajeroVO.gethBajada());
+            holder.avi_tViewFecha.setTextColor(ContextCompat.getColor(ctx,R.color.red));
 
-        if (pasajeroVO.getName().equals("")){
-            Log.d(TAG,"consultando trabajador");
+        }
+        if (pasajeroVO.getName().equals("")){//si no tiene nombre
+            Log.d(TAG,"consultando trabajador"+pasajeroVO.getName());
             consultarTrabajador(pasajeroVO,holder,pos);
         }else {
             Log.d(TAG,"Trabajador con nombre"+pasajeroVO.getName());
         }
-    }
 
+    }
 
     @Override
     public int getItemCount() {
@@ -123,10 +132,11 @@ public class RViewAdapterListPasajerosOnViaje extends RecyclerView.Adapter<RView
                                     Log.d(TAG,"flag2");
                                     JSONObject trabajadorJson = main.getJSONObject("trabajador");
                                     pasajeroVO.setName(trabajadorJson.getString("TRABAJADOR"));
-                                    if(!trabajadorJson.getString("SUSPENSION").equals("null")){
+                                    if(!trabajadorJson.getString("SUSPENSION").equalsIgnoreCase("null")){
                                         pasajeroVO.setObservacion(trabajadorJson.getString("SUSPENSION"));
+                                        new RestriccionDAO(ctx).insertar(pasajeroVO.getName(),pasajeroVO.getObservacion(),pasajeroVO.getIdViaje());
                                     }
-                                    new PasajeroDAO(ctx).editar(pasajeroVO);
+                                    new PasajeroDAO(ctx).updateNameObservacion(pasajeroVO);
                                     onBindViewHolder(holder,pos);
                                 }else {
                                     pasajeroVO.setName("Sin Nombre");

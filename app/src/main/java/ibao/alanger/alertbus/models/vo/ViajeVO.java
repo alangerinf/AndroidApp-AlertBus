@@ -1,6 +1,7 @@
 package ibao.alanger.alertbus.models.vo;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,44 +14,40 @@ public class ViajeVO implements Serializable {
     private String hFin;
     private String placa;
     private String ruta;
-    private int numPasajeros;
     private int capacidad;
     private String proveedor;
     private String comentario;
     private int status;
     private String conductor;
-    private int numRestricciones;
+    private String hProgramada;
+    private int numPasajerosRegistrados;
+    private int numRestriccionesRegistradas;
+    private String hConfirmado;
+
     List<PasajeroVO> pasajeroVOList;
     List<RestriccionVO> restriccionVOList;
 
     public ViajeVO(){
         id=0;
+        numPasajerosRegistrados=0;
         idWeb=0;
         hInicio="";
         hFin="";
         placa="";
         ruta="";
-        numPasajeros=0;
+
+        hProgramada="";
         capacidad=0;
         proveedor="";
         comentario="";
         status=0;
         conductor="";
-        numRestricciones=0;
         pasajeroVOList = new ArrayList<>();
         restriccionVOList = new ArrayList<>();
 
     }
 
-    public int getNumRestricciones() {
-        return numRestricciones;
-    }
 
-    public void setNumRestricciones(int numRestricciones) {
-        this.numRestricciones = numRestricciones;
-    }
-
-    private String hConfirmado;
 
 
     public String getConductor() {
@@ -101,13 +98,7 @@ public class ViajeVO implements Serializable {
         this.ruta = ruta;
     }
 
-    public int getNumPasajeros() {
-        return numPasajeros;
-    }
 
-    public void setNumPasajeros(int numPasajeros) {
-        this.numPasajeros = numPasajeros;
-    }
 
     public int getCapacidad() {
         return capacidad;
@@ -175,7 +166,59 @@ public class ViajeVO implements Serializable {
         this.idWeb = idWeb;
     }
 
+    public String gethProgramada() {
+        return hProgramada;
+    }
+
+    public void sethProgramada(String hProgramada) {
+        this.hProgramada = hProgramada;
+    }
+
+    public int getNumPasajerosRegistrados() {
+        return numPasajerosRegistrados;
+    }
+
+    public void setNumPasajerosRegistrados(int numPasajerosRegistrados) {
+        this.numPasajerosRegistrados = numPasajerosRegistrados;
+    }
+
+    public int getNumRestriccionesRegistradas() {
+        return numRestriccionesRegistradas;
+    }
+
+    public void setNumRestriccionesRegistradas(int numRestriccionesRegistradas) {
+        this.numRestriccionesRegistradas = numRestriccionesRegistradas;
+    }
+
     public String toString(){
+
+        new Gson().toJson(
+                this,
+                new TypeToken<ViajeVO>() {}.getType());
         return new Gson().toJson(this);
+    }
+
+    public String toStringQR(){
+
+        ViajeVO vo = new ViajeVO();
+
+        vo.setId(this.id);
+        vo.setIdWeb(this.idWeb);
+        vo.sethInicio(this.gethInicio());
+        vo.sethFin(this.gethFin());
+        vo.setPlaca(this.getPlaca());
+        vo.setRuta(this.getRuta());
+        vo.sethProgramada(this.gethProgramada());
+        vo.setCapacidad(this.getCapacidad());
+        vo.setProveedor(this.getProveedor());
+        vo.setConductor(this.getConductor());
+        vo.setNumPasajerosRegistrados(this.getPasajeroVOList().size());
+        vo.setNumRestriccionesRegistradas(this.getRestriccionVOList().size());
+
+        new Gson().toJson(
+                this,
+                new TypeToken<ViajeVO>() {}.getType());
+        return new Gson().toJson(vo);
+
     }
 }
