@@ -35,6 +35,7 @@ import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.RestriccionVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
+import ibao.alanger.alertbus.views.MainConductorActivity;
 import ibao.alanger.alertbus.views.MainSupervisorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
@@ -131,7 +132,9 @@ public class DownloadNewViajes {
 
                                         //Notification
                                         // Create an explicit intent for an Activity in your app
-                                        Intent intent = new Intent(ctx, MainSupervisorActivity.class);
+                                        Intent intent = new Intent(ctx, MainConductorActivity.class);
+
+
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 
@@ -140,7 +143,7 @@ public class DownloadNewViajes {
                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_NOTIFICATION)
                                                 .setSmallIcon(R.drawable.ic_comment_white_24dp)
                                                 .setContentTitle("Nuevo viaje de "+viajeVO.getProveedor())
-                                                .setContentText("Ruta: "+viajeVO.getRuta()+", llego con "+viajeVO.gethInicio()+" pasajeros!")
+                                                .setContentText("Ruta: "+viajeVO.getRuta()+", para las "+viajeVO.gethProgramada()+" Horas!")
                                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                                 // Set the intent that will fire when the user taps the notification
                                                 .setContentIntent(pendingIntent)

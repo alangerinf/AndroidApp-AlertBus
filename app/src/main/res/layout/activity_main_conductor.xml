@@ -39,6 +39,7 @@
         android:id="@+id/tViewSinViajes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="Sin Viajes"
         app:layout_constraintBottom_toBottomOf="@+id/rViewViajes"
         app:layout_constraintEnd_toEndOf="parent"

@@ -65,15 +65,11 @@ public class ViajeDAO {
         boolean flag = false;
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
-
         List<ViajeVO>  viajeVOList = listByStatusSyncronized();
 
         for (ViajeVO v : viajeVOList){
-
             deleteById(v.getId());
-
         }
-
         db.close();
         conn.close();
         return flag;
@@ -119,6 +115,7 @@ public class ViajeDAO {
         try {
             ContentValues values = new ContentValues();
             values.put(TABLE_VIAJE_COL_ID,viajeVO.getId());
+            values.put(TABLE_VIAJE_COL_IDWEB,viajeVO.getIdWeb());
             values.put(TABLE_VIAJE_COL_PROVEEDOR,viajeVO.getProveedor());
             values.put(TABLE_VIAJE_COL_PLACA,viajeVO.getPlaca());
             values.put(TABLE_VIAJE_COL_NUMPASAJEROS,viajeVO.getNumPasajerosRegistrados());

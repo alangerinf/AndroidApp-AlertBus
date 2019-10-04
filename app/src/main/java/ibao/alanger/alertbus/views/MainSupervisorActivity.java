@@ -2,6 +2,7 @@ package ibao.alanger.alertbus.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.Menu;
@@ -46,7 +47,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_supervisor);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ctx = MainSupervisorActivity.this;
 
         viajeVOList = new ViajeDAO(ctx).listAll();
@@ -61,11 +62,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
 
         tViewSinViajes = findViewById(R.id.tViewSinViajes);
 
-        if(viajeVOList.size()>0){
-            tViewSinViajes.setVisibility(View.INVISIBLE);
-        }else {
-            tViewSinViajes.setVisibility(View.VISIBLE);
-        }
+
     }
     @Override
     public void onBackPressed() {
@@ -78,7 +75,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            if(statusActualizar){
+            if(SearchViajesService.statusActualizar){
                 statusActualizar = false;
                 tViewSinViajes.setVisibility(View.VISIBLE);
                 actualizarData();
@@ -87,7 +84,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
                 UploadService.statusUpload = false;
                 actualizarData();
             }
-             handler.postDelayed(runnable, 1000);
+            handler.postDelayed(runnable, 2000);
         }
     };
 
@@ -97,8 +94,13 @@ public class MainSupervisorActivity extends AppCompatActivity {
         tViewSinViajes.setVisibility(View.INVISIBLE);
         rViewAdapterListViajesSupervisor = new RViewAdapterListViajesSupervisor(ctx,viajeVOList,rViewViajes);
         rViewViajes.setAdapter(rViewAdapterListViajesSupervisor);
-    }
 
+        if(viajeVOList.size()>0){
+            tViewSinViajes.setVisibility(View.INVISIBLE);
+        }else {
+            tViewSinViajes.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onResume() {
@@ -106,6 +108,13 @@ public class MainSupervisorActivity extends AppCompatActivity {
         actualizarData();
         handler.post(runnable);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -145,8 +154,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
         }
         if (id == R.id.logout) {
             if(new ViajeDAO(ctx).listByStatusNoFinished().size()>0){//si faltan sincronizar
-                Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(rViewViajes, "Todos los viajes deben estar sincronizados", Snackbar.LENGTH_LONG).show();
             }else {
 
                 new LoginDataDAO(getBaseContext()).borrarTable();

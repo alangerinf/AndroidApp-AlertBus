@@ -10,9 +10,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -96,9 +99,6 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
         holder.btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
                 switch (viajeVO.getStatus()){
 
                     case 0:// si recien llego el viaje
@@ -110,7 +110,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
 
                         try{
 
-                            mensaje0.setText("¿Esta seguro que desea comenzar el Viaje?");
+                            mensaje0.setText(ctx.getString(R.string.pregunta_comenzar_viaje));
                             iViewDialogClose0.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -157,7 +157,16 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                         }
                         break;
                     case 1:// si ya esta en curso
-                        goToViajeEnCurso(viajeVO);
+                        Handler h = new Handler();
+                        h.post(()->{
+                            v.setClickable(false);
+                            v.setFocusable(false);
+                            goToViajeEnCurso(viajeVO);
+                        });
+                        h.postDelayed(()->{
+                            v.setClickable(true);
+                            v.setFocusable(true);
+                        },500);
                         break;
 
                     case 2:// si ya finalizo
@@ -283,9 +292,58 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                         break;
 
                 }
+            }
+        });
+
+
+        holder.fabDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogAlert.setContentView(R.layout.dialog_message);
+                Button btnDialogClose0 = (Button) dialogAlert.findViewById(R.id.buton_close);
+                Button btnDialogAcept0 = (Button) dialogAlert.findViewById(R.id.buton_acept);
+                ImageView iViewDialogClose0 = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
+                TextView mensaje0 = (TextView) dialogAlert.findViewById(R.id.tViewRecomendacion);
+                mensaje0.setText(ctx.getString(R.string.pregunta_eliminar_viaje));
+
+                try {
+
+                    iViewDialogClose0.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogAlert.dismiss();
+                        }
+                    });
+                    btnDialogClose0.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            dialogAlert.dismiss();
+
+                        }
+                    });
+
+                    btnDialogAcept0.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            new ViajeDAO(ctx).deleteById(viajeVO.getId());
+                            viajeVOList.remove(viajeVO);
+                            notifyDataSetChanged();
+                            dialogAlert.dismiss();
+
+
+                        }
+                    });
+
+                    dialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialogAlert.show();
 
 
 
+                }catch (Exception e){
+                    Toast.makeText(ctx,TAG+e.toString(),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -298,19 +356,31 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                 holder.btnEnter.setText("Comenzar Viaje");
                 holder.btnEnter.setClickable(true);
                 holder.btnEnter.setFocusable(true);
-                if(new LoginDataDAO(ctx).verficarLogueo().getIdViaje()>0 && new LoginDataDAO(ctx).verficarLogueo().getIdViaje()!= viajeVO.getId()){
-                    holder.btnEnter.setBackgroundColor(colorDisable);
+                if(new LoginDataDAO(ctx).verficarLogueo().getIdViaje()>0 && new LoginDataDAO(ctx).verficarLogueo().getIdViaje()!= viajeVO.getId()){// si no es el viaje actual
+
+                    holder.btnEnter.setBackgroundResource(R.drawable.shape_disable_br30_b0);
+
                     holder.btnEnter.setClickable(false);
                     holder.btnEnter.setFocusable(false);
-                }else {
+                }else {//si es el viaje actual
                     holder.btnEnter.setBackgroundResource(R.drawable.shape_customgreen_br30_b0);
                 }
+
+                holder.fabDelete.setClickable(false);
+                holder.fabDelete.setFocusable(false);
+                holder.fabDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+              //  holder.fabDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+
                 break;
             case 1:// si ya esta en curso
                 holder.tViewStatusEnCurso.setTextColor(colorEnable);
                 holder.tViewStatusFinalizado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
                 holder.btnEnter.setText("Continuar");
+
+                holder.fabDelete.setClickable(false);
+                holder.fabDelete.setFocusable(false);
+
                 break;
 
             case 2:// si ya finalizo
@@ -318,14 +388,23 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                 holder.tViewStatusFinalizado.setTextColor(colorEnable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
                 holder.btnEnter.setText("Finalizado");
-                holder.btnEnter.setBackgroundColor(colorDisable);
+                holder.btnEnter.setBackgroundResource(R.drawable.shape_disable_br30_b0);
+
+                holder.fabDelete.setClickable(false);
+                holder.fabDelete.setFocusable(false);
+                holder.fabDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
                 break;
 
             case 3:
+                holder.btnEnter.setBackgroundResource(R.drawable.shape_customgreen_br30_b0);
                 holder.tViewStatusEnCurso.setTextColor(colorDisable);
                 holder.tViewStatusFinalizado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorEnable);
                 holder.btnEnter.setText("Ver QR");
+
+                holder.fabDelete.setClickable(true);
+                holder.fabDelete.setFocusable(true);
+                holder.fabDelete.setBackgroundTintList(ColorStateList.valueOf(colorRed));
 
                 break;
         }
@@ -463,6 +542,8 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
         TextView tViewStatusFinalizado;
         TextView tViewStatusSincronizado;
 
+        FloatingActionButton fabDelete;
+
 
         //buttons
         Button btnEnter;
@@ -473,7 +554,6 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
             tViewPlaca = itemView.findViewById(R.id.tViewPlaca);
             tViewConductor = itemView.findViewById(R.id.tViewConductor);
             tViewRuta = itemView.findViewById(R.id.tViewRuta);
-            tViewHEmbarque = itemView.findViewById(R.id.tViewHEmbarque);
             tViewHDesembarque = itemView.findViewById(R.id.tViewHDesembarque);
             tViewCapacidad = itemView.findViewById(R.id.tViewCapacidad);
 
@@ -482,8 +562,11 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
             tViewStatusSincronizado = itemView.findViewById(R.id.tViewStatusSincronizado);
 
             tViewDateEmbarque= itemView.findViewById(R.id.tViewDateEmbarque);
+            tViewHEmbarque = itemView.findViewById(R.id.tViewHEmbarque);
             tViewDateDesembarque= itemView.findViewById(R.id.tViewDateDesembarque);
             btnEnter = (Button) itemView.findViewById(R.id.btnEnter);
+
+            fabDelete = itemView.findViewById(R.id.fabDelete);
         }
     }
 

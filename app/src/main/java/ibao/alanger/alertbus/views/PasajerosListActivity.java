@@ -7,9 +7,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,15 +24,42 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa_ListPasajeros;
+import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.dao.ViajeDAO;
+import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.UploadService;
+
+import static ibao.alanger.alertbus.utilities.Utilities.URL_CHECK_VIAJE;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_UPLOAD_VIAJE;
 
 public class PasajerosListActivity extends Activity {
+
+
+
 
     private static WebView mWebView;
     private static Context ctx ;
@@ -45,7 +74,7 @@ public class PasajerosListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasajeros_list);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btnNext = findViewById(R.id.btnNext);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -211,4 +240,7 @@ public class PasajerosListActivity extends Activity {
           ///  displayToast();
         }
     }
+
+
+
 }

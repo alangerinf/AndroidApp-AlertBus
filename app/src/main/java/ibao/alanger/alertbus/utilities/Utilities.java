@@ -14,6 +14,10 @@ public class Utilities {
     public static final String URL_CHECK_VIAJE =URL_ROOT+"checkViajes.php";
     public static final String URL_UPLOAD_TRACKING=URL_ROOT+"insertTracking.php";
 
+
+    public static final String URL_SELECT_TRABAJADORES=URL_ROOT+"selectTrabajadores.php";
+    public static final String URL_SELECT_RESTRICCIONES=URL_ROOT+"selectRestricciones.php";
+
     public static final String DATABASE_NAME="data";
 
     public static final String TABLE_LOGINDATA="loginData",

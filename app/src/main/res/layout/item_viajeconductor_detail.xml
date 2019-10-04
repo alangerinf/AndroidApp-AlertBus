@@ -72,7 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/shadow_center"
         app:layout_constraintEnd_toStartOf="@+id/textView12"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
         app:layout_constraintTop_toBottomOf="@+id/tViewStatusFinalizado">
@@ -109,7 +108,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/shadow_center"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
@@ -120,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Sin Hora"
+            android:text="--:--"
             android:textColor="@color/primaryText"
             android:textSize="@dimen/textsize_tittle"
             android:textStyle="bold"
@@ -370,7 +368,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/shape_primarydark_br15"
+        android:background="@drawable/shape_customgreen_br30_b0"
         android:clickable="true"
         android:focusable="true"
         android:text="Comenzar Viaje"
@@ -384,7 +382,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fAButtonDelete2"
+        android:id="@+id/fabDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"

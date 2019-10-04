@@ -80,7 +80,7 @@ public class RViewAdapterListViajesSupervisor extends RecyclerView.Adapter<RView
             public void onClick(View v) {
 
 
-                dialogAlert.setContentView(R.layout.dialog_danger);
+                dialogAlert.setContentView(R.layout.dialog_message);
                 Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
                 Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
                 ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
@@ -131,7 +131,7 @@ public class RViewAdapterListViajesSupervisor extends RecyclerView.Adapter<RView
         holder.fAButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogAlert.setContentView(R.layout.dialog_danger);
+                dialogAlert.setContentView(R.layout.dialog_message);
                 Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
                 Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
                 ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);
@@ -189,7 +189,7 @@ public class RViewAdapterListViajesSupervisor extends RecyclerView.Adapter<RView
             @Override
             public void onClick(View v) {
 
-                dialogAlert.setContentView(R.layout.dialog_danger);
+                dialogAlert.setContentView(R.layout.dialog_message);
                 Button btnDialogClose = (Button) dialogAlert.findViewById(R.id.buton_close);
                 Button btnDialogAcept = (Button) dialogAlert.findViewById(R.id.buton_acept);
                 ImageView iViewDialogClose = (ImageView) dialogAlert.findViewById(R.id.iViewDialogClose);

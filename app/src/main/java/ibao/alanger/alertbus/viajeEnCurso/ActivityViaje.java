@@ -3,6 +3,7 @@ package ibao.alanger.alertbus.viajeEnCurso;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -41,10 +42,13 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.journeyapps.barcodescanner.ViewfinderView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -92,12 +96,14 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private ViajeVO VIAJEVO;
 
+    TextView tViewHEmbarque;
+    TextView tViewDateEmbarque;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viaje);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ctx = this;
 
         root = findViewById(R.id.root);
@@ -118,6 +124,17 @@ public class ActivityViaje extends AppCompatActivity implements
 
         statusLight = false;
         fAButtonLinterna = findViewById(R.id.fAButtonLinterna);
+
+
+        tViewDateEmbarque= findViewById(R.id.tViewDateEmbarque);
+        tViewHEmbarque = findViewById(R.id.tViewHEmbarque);
+
+        tViewHEmbarque.setText(""+getHour(viajeVO.gethInicio()));
+        tViewDateEmbarque.setText(""+getDate(viajeVO.gethInicio()));
+
+
+
+
 
         //      Bundle b = getIntent().getExtras();
 
@@ -196,6 +213,47 @@ public class ActivityViaje extends AppCompatActivity implements
         });
 
         validarPermisos();
+    }
+
+
+
+    String getDate(String dateTime){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+// replace with your start date string
+        Date d = null;
+        try {
+            d = df.parse(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar gc = new GregorianCalendar();
+        gc.setTime(d);
+
+        java.text.DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate=dateFormat.format(d);
+        return formattedDate;
+
+    }
+
+    String getHour(String dateTime){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+// replace with your start date string
+        Date d = null;
+        try {
+            d = df.parse(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar gc = new GregorianCalendar();
+        gc.setTime(d);
+
+        java.text.DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        String formattedDate=dateFormat.format(d);
+        return formattedDate;
+
+
     }
 
     RViewAdapterListPasajerosOnViaje adapter = null;
@@ -277,24 +335,45 @@ public class ActivityViaje extends AppCompatActivity implements
         int id = item.getItemId();
 
         if(id == R.id.terminar) {
+
+
+            if(pageViewModel.get().getValue().getPasajeroVOList().size()>0){
+
+
             //Toast.makeText(ctx,""+pageViewModel.get().getValue().getPasajeroVOList().size(),Toast.LENGTH_LONG).show();
 
             new ViajeDAO(ctx).toStatus2(VIAJEVO.getId());
             new LoginDataDAO(ctx).uploadIdViaje(0); // esto desac el gps
 
+
+            int i =0;
             for(PasajeroVO pa : pageViewModel.get().getValue().getPasajeroVOList()){
 
                 if(pa.gethBajada()==null || pa.gethBajada().equals("")){//si solo tiene hora de subida
+                    Log.d(TAG,"cambiado" +(++i));
+
                     pa.sethBajada(getFecha());
-                    new PasajeroDAO(ctx).updatehBajada(pa);
-                }else {// si ya tiene hora de bajada
-
-
+                    Log.d(TAG,"fecha"+getFecha());
+                    if(new PasajeroDAO(ctx).updatehBajada(pa)){
+                        Log.d(TAG,pa.getDni()+"actualizacion correcta");
+                    }else {
+                        Log.d(TAG,pa.getDni()+"actualizacion correcta");
+                    }
+                }else {
+                    Log.d(TAG,"con fin"+pa.toString());
                 }
             }
+            VIAJEVO = new ViajeDAO(ctx).buscarById(VIAJEVO.getId());
+            Log.d(TAG,VIAJEVO.toString());
             new ViajeDAO(ctx).updateHoraFin(VIAJEVO.getId(), getFecha());
 
             onBackPressed();
+        }else {//si no hay ningun pasajero
+
+                Toast.makeText(ctx,"No se puede finalizar el viaje sin pasajeros",Toast.LENGTH_LONG).show();
+
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -342,26 +421,30 @@ public class ActivityViaje extends AppCompatActivity implements
 
 
                                 pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);
+
                                 pasajeroVO.sethBajada(getFecha());
+
                                 PageViewModelViaje.addPasajero(0,pasajeroVO);
                                 Log.d(TAG, resultado + "registrando salida");
 
                                 new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
 
-                            }else {// is no tiene hora de bajada
+                            }else {// si tiene hora de bajada
 
-                                Toast.makeText(ctx,"registrado hora de bajada hora de bajada",Toast.LENGTH_SHORT).show();
+                           //     Toast.makeText(ctx,"registrado hora de salida hora de bajada",Toast.LENGTH_SHORT).show();
 
-                                Snackbar snackbar = Snackbar.make(root,"Trabajador ya bajo, ¿Desea Actualizar la hora de bajada?",Snackbar.LENGTH_LONG);
+                                Snackbar snackbar = Snackbar.make(root,ctx.getString(R.string.pregunta_actualizar_hora_salida),Snackbar.LENGTH_LONG);
                                 snackbar.setAction("Actualizar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
 
-                                        pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);
-                                        pasajeroVO.sethBajada(getFecha());
-                                        PageViewModelViaje.addPasajero(0,pasajeroVO);
+                                        pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);//quitando de
 
+                                        pasajeroVO.sethBajada("");
                                         new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                                        PageViewModelViaje.addPasajero(0,pasajeroVO);// volviendolo a agregar
+
 
                                     }
                                 });
@@ -376,7 +459,7 @@ public class ActivityViaje extends AppCompatActivity implements
                             Date date = new Date();
 
                             PasajeroVO pasajeroVO = new PasajeroVO();
-
+                            pasajeroVO.setIdViaje(VIAJEVO.getId());
                             pasajeroVO.sethSubida(formatter.format(date));
                             pasajeroVO.setDni(resultado);
 
@@ -423,9 +506,6 @@ public class ActivityViaje extends AppCompatActivity implements
 
         }
     };
-
-
-
 
     boolean verifiarDuplicado(String DNI){
         boolean flag = false;

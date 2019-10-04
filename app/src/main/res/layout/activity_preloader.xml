@@ -4,46 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/icons"
     tools:context=".views.ActivityPreloader">
+    <!--
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_bg_preloader"
+            android:alpha="0.3"
+
+            tools:ignore="MissingConstraints">
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:visibility="invisible"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"
-        android:scaleX="2.0"
-        android:scaleY="2.0"
-        android:src="@mipmap/ic_launcher_round"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="loco.json"
+        app:lottie_imageAssetsFolder="assets"
+        app:lottie_loop="true"
         tools:ignore="MissingConstraints" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+    <ImageView
+        android:id="@+id/iViewLogoEmpresa"
+        android:layout_width="200dp"
+        android:layout_height="65dp"
+        android:src="@drawable/ibao_logo_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tViewCompanyMark"
+        android:id="@+id/tViewlogo_p1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/mark_margin_bottom"
-        android:layout_marginEnd="@dimen/mark_margin_end"
-        android:text="@string/company_mark"
-        android:textColor="@color/secondaryText"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="PODER ATRAVÉS"
+        android:visibility="invisible"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/iViewLogoEmpresa"
+        app:layout_constraintTop_toBottomOf="@+id/iViewLogoEmpresa" />
 
+    <TextView
+        android:id="@+id/tViewlogo_p2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DEL CONOCIMIENTO"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tViewlogo_p1"
+        app:layout_constraintTop_toBottomOf="@+id/tViewlogo_p1" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/ltWorld"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_marginStart="8dp"
+        android:alpha="1"
+        android:translationX="-100dp"
+        android:translationY="-100dp"
+        android:scaleType="centerCrop"
+        android:rotation="40"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="world_2.json"
+        app:lottie_imageAssetsFolder="assets"
+        app:lottie_loop="true"
+        tools:ignore="MissingConstraints"
+        android:layout_marginLeft="8dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

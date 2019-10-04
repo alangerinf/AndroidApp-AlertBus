@@ -220,6 +220,7 @@ public class PasajeroDAO {
 
 
 
+
     public int deleteByIdViajeDNI(int idViaje,String DNI){
 
 

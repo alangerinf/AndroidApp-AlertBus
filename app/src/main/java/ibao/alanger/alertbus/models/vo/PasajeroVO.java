@@ -1,5 +1,8 @@
 package ibao.alanger.alertbus.models.vo;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.Serializable;
 
 public class PasajeroVO implements Serializable {
@@ -76,4 +79,13 @@ public class PasajeroVO implements Serializable {
     public void sethBajada(String hBajada) {
         this.hBajada = hBajada;
     }
+
+    public String toString(){
+
+        new Gson().toJson(
+                this,
+                new TypeToken<PasajeroVO>() {}.getType());
+        return new Gson().toJson(this);
+    }
+
 }

@@ -54,7 +54,7 @@ public class UploadMaster {
         }else {//si es supervisor ==1
             url = URL_CHECK_VIAJE;//confirmar viaje por supervisor
         }
-
+        Log.d(TAG,url);
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
                 url,

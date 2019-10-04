@@ -3,6 +3,7 @@ package ibao.alanger.alertbus.views;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
@@ -46,7 +47,7 @@ public class MainConductorActivity extends AppCompatActivity {
     private static RecyclerView rViewViajes;
     private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajesConductor rViewAdapterListViajesConductor;
-    private static Handler handler = new Handler();
+    private static Handler handler;
 
     private static TextView tViewSinViajes;
 
@@ -58,9 +59,9 @@ public class MainConductorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_conductor);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ctx = MainConductorActivity.this;
-
+        handler= new Handler();
 
 
         viajeVOList = new ViajeDAO(ctx).listAll();
@@ -108,6 +109,7 @@ public class MainConductorActivity extends AppCompatActivity {
 
     Runnable runnable = new Runnable() {
         public void run() {
+            Log.d(TAG,"runnable() run...");
             if(statusActualizar){
                 statusActualizar = false;
                 tViewSinViajes.setVisibility(View.VISIBLE);
@@ -117,7 +119,9 @@ public class MainConductorActivity extends AppCompatActivity {
                 UploadService.statusUpload = false;
                 actualizarData();
             }
-            handler.postDelayed(runnable, 1000);
+            handler.postDelayed(()->{
+                run();
+            }, 3000);
         }
     };
 
@@ -127,6 +131,12 @@ public class MainConductorActivity extends AppCompatActivity {
         super.onResume();
         actualizarData();
         handler.post(runnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -142,6 +152,11 @@ public class MainConductorActivity extends AppCompatActivity {
 
         rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOList,rViewViajes);
         rViewViajes.setAdapter(rViewAdapterListViajesConductor);
+        if(viajeVOList.size()>0){
+            tViewSinViajes.setVisibility(View.INVISIBLE);
+        }else {
+            tViewSinViajes.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -173,8 +188,7 @@ public class MainConductorActivity extends AppCompatActivity {
 
         if (id == R.id.logout) {
             if(new ViajeDAO(ctx).listByStatusNoFinished().size()>0){//si faltan sincronizar
-                Snackbar.make(Objects.requireNonNull(getCurrentFocus()), "Espere a que se sincronizen los Viajes", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(rViewViajes, "Todos los viajes deben estar sincronizados", Snackbar.LENGTH_LONG).show();
             }else {
 
                 new LoginDataDAO(getBaseContext()).borrarTable();

@@ -12,8 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +35,11 @@ import ibao.alanger.alertbus.utilities.Utils;
 public class ActivityPreloader extends Activity {
 
     private static String TAG = ActivityPreloader.class.getSimpleName();
+    static LottieAnimationView lAVbackground;
+    static ImageView iViewLogoEmpresa;
+    static TextView tViewlogo_p1;
+    static TextView tViewlogo_p2;
+    static Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,69 +48,89 @@ public class ActivityPreloader extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-/*
-        try {
+        declare();
+        startAnimations();
 
-        String tst = "[{\"capacidad\":45,\"comentario\":\"\",\"conductor\":\"QUIROZ NUNEZ, DORITA\",\"hConfirmado\":\"2019-09-24 13:04:14\",\"hFin\":\"2019-09-24 13:06:40\",\"hInicio\":\"2019-09-24 13:04:14\",\"hProgramada\":\"2019-09-24 14:00:00\",\"id\":1,\"idWeb\":0,\"numPasajeros\":0,\"numRestricciones\":0,\"pasajeroVOList\":[{\"dni\":\"45931220\",\"hBajada\":\"\",\"hSubida\":\"2019-09-24 13:05:18\",\"id\":19,\"idViaje\":1,\"name\":\"\",\"observacion\":\"\"},{\"dni\":\"70773577\",\"hBajada\":\"\",\"hSubida\":\"2019-09-24 13:04:52\",\"id\":18,\"idViaje\":1,\"name\":\"\",\"observacion\":\"\"},{\"dni\":\"70156888\",\"hBajada\":\"\",\"hSubida\":\"2019-09-24 13:04:41\",\"id\":17,\"idViaje\":1,\"name\":\"\",\"observacion\":\"\"},{\"dni\":\"77086608\",\"hBajada\":\"2019-09-24 13:06:39\",\"hSubida\":\"2019-09-24 13:04:31\",\"id\":16,\"idViaje\":1,\"name\":\"\",\"observacion\":\"\"},{\"dni\":\"47766453\",\"hBajada\":\"2019-09-24 13:06:39\",\"hSubida\":\"2019-09-24 13:04:24\",\"id\":15,\"idViaje\":1,\"name\":\"\",\"observacion\":\"\"}],\"placa\":\"XYZ-123\",\"proveedor\":\"Transporte El Sol\",\"restriccionVOList\":[{\"desc\":\"\",\"id\":3,\"idViaje\":1,\"name\":\"null\"}],\"ruta\":\"TRUJILLO - CHAO\",\"status\":2}]";
-            Log.d(TAG,"Enc 0: " + (tst));
-        System.out.println("Enc 0: " + (tst));
-        // byte[] stg1 = Utils.compress(tst);
-        //  String codificado = new String(stg1, "ISO-8859-1");
-       //     stg1 = codificado.getBytes("ISO-8859-1");
 
-        String comprimido = Utils.compress(tst);
-        Log.d(TAG,"comprimido:"+comprimido);
-        Log.d(TAG,"descomprimido:"+Utils.decompress(comprimido));
-
-        //String dec1 = null;
-        //dec1 = Utils.decompress(stg1);
-
-     //   System.out.println("unzip: " +(dec1));
-     //   Log.d(TAG,"unzip: " + (dec1));
-        } catch (IOException e) {
-            Log.d(TAG,e.toString());
-            e.printStackTrace();
-        }
-
-*/
-        final Resources res = getResources();
-        final int colorProgress = res.getColor(R.color.primaryLight);
-
-        ((ProgressBar)findViewById(R.id.progressBar))
-                .getIndeterminateDrawable()
-
-                .setColorFilter(colorProgress, PorterDuff.Mode.SRC_IN);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-
-                //verificamos si tenemos internet
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {// si tiene internet
-                    if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
-                        startServices();
-                        openMain();
-                        finish();
-                    } else {
-                        openLogin();
-                        finish();
-                    }
-                } else {// sino  tiene internet
-                    if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
-                        startServices();
-                        openMain();
-                        finish();
-                    } else {
-                        Toast.makeText(getBaseContext(),"Conectese a internet porfavor",Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                }
-
-            }
-        }, 500);
     }
+
+    private void declare() {
+        ctx = this;
+        lAVbackground = findViewById(R.id.lottie);
+        iViewLogoEmpresa = findViewById(R.id.iViewLogoEmpresa);
+        tViewlogo_p1 = findViewById(R.id.tViewlogo_p1);
+        tViewlogo_p2 = findViewById(R.id.tViewlogo_p2);
+    }
+
+    void startAnimations(){
+        final Animation animLayout =
+                android.view.animation.AnimationUtils.loadAnimation(getBaseContext(), R.anim.fade_in);
+
+        Handler handler = new Handler();
+        handler.post(
+                () -> {
+                    lAVbackground.startAnimation(animLayout);
+                    lAVbackground.setVisibility(View.VISIBLE);
+                }
+        );
+
+        final Animation anim_rightFadeIn1 =
+                android.view.animation.AnimationUtils.loadAnimation(getBaseContext(), R.anim.right_fade_in);
+
+        Handler handler1 = new Handler();
+        handler1.post(
+                () -> {
+                    iViewLogoEmpresa.startAnimation(anim_rightFadeIn1);
+                    iViewLogoEmpresa.setVisibility(View.VISIBLE);
+                }
+        );
+        final Animation anim_rightFadeIn2 =
+                android.view.animation.AnimationUtils.loadAnimation(getBaseContext(), R.anim.top_fade_in);
+        Handler handler2 = new Handler();
+        handler2.postDelayed(
+                () -> {
+                    tViewlogo_p1.startAnimation(anim_rightFadeIn2);
+                    tViewlogo_p1.setVisibility(View.VISIBLE);
+                },500
+        );
+        final Animation anim_rightFadeIn3 =
+                android.view.animation.AnimationUtils.loadAnimation(getBaseContext(), R.anim.top_fade_in);
+        Handler handler3 = new Handler();
+        handler3.postDelayed(
+                () -> {
+                    tViewlogo_p2.startAnimation(anim_rightFadeIn3);
+                    tViewlogo_p2.setVisibility(View.VISIBLE);
+                },600
+        );
+
+        Handler handler4 = new Handler();
+        handler4.postDelayed(()->
+        {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            if (networkInfo != null && networkInfo.isConnected()) {// si tiene internet
+                if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
+                    startServices();
+                    openMain();
+                    finish();
+                } else {
+                    openLogin();
+                    finish();
+                }
+            } else {// sino  tiene internet
+                if (new LoginDataDAO(getBaseContext()).verficarLogueo()!=null) {//si esta logueado
+                    startServices();
+                    openMain();
+                    finish();
+                } else {
+                    Toast.makeText(getBaseContext(),"Conectese a internet porfavor",Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        },2000);
+    }
+
 
     void startServices(){
 
@@ -141,6 +172,43 @@ public class ActivityPreloader extends Activity {
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    // Shows the system bars by removing all the flags
+// except for the ones that make the content appear under the system bars.
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 }

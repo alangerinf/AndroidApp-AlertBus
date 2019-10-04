@@ -3,6 +3,7 @@ package ibao.alanger.alertbus.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -33,7 +34,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         final Animation animBtn =
                 android.view.animation.AnimationUtils.loadAnimation(getBaseContext(),R.anim.press_btn);
