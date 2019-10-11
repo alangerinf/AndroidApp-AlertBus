@@ -1,5 +1,6 @@
 package ibao.alanger.alertbus.helpers;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,6 +45,7 @@ public class DownloadChanges {
     String TAG = DownloadChanges.class.getSimpleName();
 
     private static String HEADER_USUARIO = "usuario";
+    private static String HEADER_VIAJES = "viajes";
     public static int status;
 
     static String CHANNEL_NOTIFICATION = "1992";
@@ -82,7 +84,8 @@ public class DownloadChanges {
                                     for(int i=0;i<dataViajes.length();i++){
 
                                         JSONObject viaje = new JSONObject(dataViajes.get(i).toString());
-                                        /***
+
+                                        /**
                                          *      "id":"1",
                                          *      "horaInicio":"2019-10-10 20:00:00",
                                          *      "empresa":"IBAO PERU",
@@ -96,7 +99,10 @@ public class DownloadChanges {
                                          *      "restricciones":"",
                                          *      "deleted":0,
                                          *      "updated":0}
-                                          */
+                                         */
+
+                                        boolean DELETED = viaje.getBoolean("deleted");
+
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
                                         viajeVO.sethProgramada(viaje.getString("horaInicio"));//hora programada
@@ -106,29 +112,21 @@ public class DownloadChanges {
                                         viajeVO.setRuta(viaje.getString("ruta"));
                                         viajeVO.setCapacidad(viaje.getInt("capacidad"));
 
-                                        String restStr = viaje.getString("restricciones");
-
-                                        if(!(restStr==null ||restStr.equalsIgnoreCase("null") || restStr.equals(""))){
-                                            String [] restList = restStr.split(",");
-                                            Log.d(TAG,"restircciones:"+restStr);
-                                            for(String r : restList){
-                                                Log.d(TAG,r);
-                                                new RestriccionDAO(ctx).insertar(r,"",viajeVO.getId());
-                                            }
-                                            viajeVO.getRestriccionVOList().addAll(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
-                                        }
-
 
 //                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
 
 //                                        viajeVO.sethFin(viaje.getString("horaFin"));
 
                                         ViajeVO myViaje = new ViajeDAO(ctx).buscarById(viajeVO.getId());
-
                                         if(myViaje==null){
-                                            if(myViaje.equals(viajeVO.getId())){
-                                               // es =
-                                            }else {
+                                            if(DELETED){
+                                                if( new ViajeDAO(ctx).deleteById(viajeVO.getId()) ){
+                                                    PageViewModelViajesActuales.removeViaje(viajeVO);
+                                                    Intent intent = new Intent(ctx, MainConductorActivity.class);
+                                                    intent.putExtra("deleted",myViaje);
+                                                    ctx.startActivity(intent);
+                                                }
+                                            }else {// solo update
                                                 if( new ViajeDAO(ctx).updateViaje(viajeVO) ){
                                                     PageViewModelViajesActuales.updateViaje(viajeVO);
                                                 }
@@ -136,28 +134,29 @@ public class DownloadChanges {
                                         }
 
 
-                                        //Notification
-                                        // Create an explicit intent for an Activity in your app
-                                        Intent intent = new Intent(ctx, MainConductorActivity.class);
+                                        if(DELETED){
+                                            //Notification
+                                            // Create an explicit intent for an Activity in your app
+                                            Intent intent = new Intent(ctx, MainConductorActivity.class);
 
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
+                                            createNotificationChannel();
 
-                                        createNotificationChannel();
+                                            NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_NOTIFICATION)
+                                                    .setSmallIcon(R.drawable.ic_comment_white_24dp)
+                                                    .setContentTitle("Se te desasigno viaje de "+viajeVO.getProveedor())
+                                                    .setContentText("Ruta: "+viajeVO.getRuta()+", a las "+viajeVO.gethProgramada()+" Horas!")
+                                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                                    // Set the intent that will fire when the user taps the notification
+                                                    .setContentIntent(pendingIntent)
+                                                    .setAutoCancel(true);
+                                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
 
-                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_NOTIFICATION)
-                                                .setSmallIcon(R.drawable.ic_comment_white_24dp)
-                                                .setContentTitle("Nuevo viaje de "+viajeVO.getProveedor())
-                                                .setContentText("Ruta: "+viajeVO.getRuta()+", para las "+viajeVO.gethProgramada()+" Horas!")
-                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                                // Set the intent that will fire when the user taps the notification
-                                                .setContentIntent(pendingIntent)
-                                                .setAutoCancel(true);
-                                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
-
-                                        notificationManager.notify(COUNT_NOTIFICATION, builder.build());
-                                        COUNT_NOTIFICATION++;
+                                            notificationManager.notify(COUNT_NOTIFICATION, builder.build());
+                                            COUNT_NOTIFICATION++;
+                                        }
                                     }
                                     /*
                                     JSONArray dataPasajeros = main.getJSONArray("pasajeros");
@@ -225,12 +224,14 @@ public class DownloadChanges {
             @Override
             protected Map<String,String> getParams(){
                 Map<String, String> params = new HashMap<String, String>();
-
                 //informacion del usuario
                 Gson gson = new Gson();
                 String usuarioJson = gson.toJson(new LoginDataDAO(ctx).verficarLogueo());
+                String viajesJson = gson.toJson(new ViajeDAO(ctx).listAll(false));
                 params.put(HEADER_USUARIO,usuarioJson);
+                params.put(HEADER_VIAJES,viajesJson);
                 Log.d(TAG,HEADER_USUARIO+":"+usuarioJson);
+                Log.d(TAG,HEADER_VIAJES+":"+viajesJson);
                 return params;
             }
 
