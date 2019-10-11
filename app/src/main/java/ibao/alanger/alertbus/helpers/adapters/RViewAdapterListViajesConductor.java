@@ -50,7 +50,10 @@ import java.util.List;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.LoginHelper;
+import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.models.dao.PasajeroDAO;
+import ibao.alanger.alertbus.models.dao.RestriccionDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.utilities.Utils;
@@ -94,8 +97,6 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
         int colorEnable = ContextCompat.getColor(ctx, R.color.customGreen);
         int colorRed = ContextCompat.getColor(ctx, R.color.redAccent700);
 
-
-
         holder.btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +139,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                                     viajeVO.setStatus(1);/// cambiando estado a en curso
                                     viajeVO.sethInicio(Utils.getFecha());
                                     new ViajeDAO(ctx).updateHoraInicio(viajeVO.getId(),viajeVO.gethInicio());
+                                    PageViewModelViajesActuales.viajeToStatus1(viajeVO.getId());
 
                                     recyclerView.getAdapter().notifyDataSetChanged();
 
@@ -259,9 +261,9 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                             */
 
                         try {
-                                Log.d(TAG,"qr data:"+viajeVO.toStringQR());
+                            Log.d(TAG,"qr data:"+viajeVO.toStringQR());
 
-                                    iViewQR3.setImageBitmap(Utils.createQRCode(viajeVO.toStringQR(),2048));
+                            iViewQR3.setImageBitmap(Utils.createQRCode(viajeVO.toStringQR(),2048));
                         } catch (WriterException e) {
                             e.printStackTrace();
                         }
@@ -380,6 +382,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
 
                 holder.fabDelete.setClickable(false);
                 holder.fabDelete.setFocusable(false);
+                holder.btnEnter.setBackgroundResource(R.drawable.shape_customgreen_br30_b0);
 
                 break;
 
@@ -506,6 +509,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
 
     public void goToViajeEnCurso(ViajeVO viajeVO){
         Intent i = new Intent(ctx, ActivityViaje.class);
+        viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
         i.putExtra(ActivityViaje.EXTRA_VIAJE,viajeVO);
         ctx.startActivity(i);
     }

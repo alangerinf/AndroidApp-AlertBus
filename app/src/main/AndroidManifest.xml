@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".views.PasajerosListActivity"></activity>
         <activity android:name=".views.MapsActivity"></activity>
-        <activity android:name=".views.MainConductorActivity"></activity>
+        <activity android:name=".main.MainConductorActivity"></activity>
         <activity android:name=".views.RestricionActivity" />
 
         <service
@@ -64,7 +64,7 @@
             />
         <activity android:name=".views.LoginActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".views.MainSupervisorActivity"
+        <activity android:name=".main.MainSupervisorActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.CustomScannerActivity"
@@ -76,7 +76,7 @@
         </activity>
         <activity
             android:name=".viajeEnCurso.ActivityViaje"
-            android:parentActivityName=".views.MainConductorActivity"
+            android:parentActivityName=".main.MainConductorActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>

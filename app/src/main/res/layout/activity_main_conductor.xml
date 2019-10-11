@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.MainConductorActivity">
+    tools:context=".main.MainConductorActivity">
 
     <TextView
         android:id="@+id/tViewDesc"
@@ -23,6 +23,8 @@
         android:id="@+id/rViewViajes"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"

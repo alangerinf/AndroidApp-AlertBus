@@ -12,6 +12,7 @@ public class Utilities {
 
     public static final String URL_UPLOAD_VIAJE =URL_ROOT+"insertViajes.php";
     public static final String URL_CHECK_VIAJE =URL_ROOT+"checkViajes.php";
+    public static final String URL_CHANGES_VIAJES =URL_ROOT+"updatesViajes.php";
     public static final String URL_UPLOAD_TRACKING=URL_ROOT+"insertTracking.php";
 
 

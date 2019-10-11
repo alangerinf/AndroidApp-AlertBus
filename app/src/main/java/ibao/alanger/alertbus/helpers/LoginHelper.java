@@ -24,8 +24,8 @@ import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.vo.LoginDataVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
-import ibao.alanger.alertbus.views.MainConductorActivity;
-import ibao.alanger.alertbus.views.MainSupervisorActivity;
+import ibao.alanger.alertbus.main.MainConductorActivity;
+import ibao.alanger.alertbus.main.MainSupervisorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_AUTENTIFICATION;
 

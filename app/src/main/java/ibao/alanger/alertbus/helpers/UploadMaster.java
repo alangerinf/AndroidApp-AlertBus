@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import ibao.alanger.alertbus.app.AppController;
+import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
@@ -70,24 +71,20 @@ public class UploadMaster {
                                 JSONObject main = new JSONObject(response);
                                 Log.d(TAG,"flag1");
                                 if(main.getInt("success")==1){
-
                                     JSONArray datos = main.getJSONArray("data");
-
                                     for(int i=0;i<datos.length();i++){
-
                                         JSONObject viaje = datos.getJSONObject(i);
 
                                         if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
-
                                             int idPlanificacion = viaje.getInt("idPlanificacion");
                                             int idWeb = viaje.getInt("idViaje");
                                             new ViajeDAO(ctx).toStatus3(idPlanificacion,idWeb);// este es el estado final para el conductor
+                                            PageViewModelViajesActuales.viajeToStatus3(idPlanificacion);
                                         }else {// si es supervosor =1
                                             int idViaje = viaje.getInt("id");
                                             new ViajeDAO(ctx).toStatus2(idViaje);
+                                            PageViewModelViajesActuales.viajeToStatus2(idViaje);
                                         }
-
-
                                     }
 
                                     UploadService.statusUpload=true;

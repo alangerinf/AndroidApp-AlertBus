@@ -165,7 +165,7 @@ public class ViajeDAO {
         ContentValues values = new ContentValues();
         values.put(TABLE_VIAJE_COL_STATUS,1);
         values.put(TABLE_VIAJE_COL_HORACONFIRMADO,"datetime('now','localtime')");
-        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=? AND "+TABLE_VIAJE_COL_STATUS+"<1",parametros);
+        int res = db.updateViaje(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=? AND "+TABLE_VIAJE_COL_STATUS+"<1",parametros);
         if(res>0){
             flag=true;
         }*/
@@ -288,7 +288,7 @@ public class ViajeDAO {
                             "V."+TABLE_VIAJE_COL_ID+" = "+String.valueOf(id)
                     ,null);
             cursor.moveToFirst();
-                    temp = getAtributtes(cursor);
+                    temp = getAtributtes(cursor,true);
             cursor.close();
         }catch (Exception e){
             Toast.makeText(ctx,e.toString(), Toast.LENGTH_SHORT);
@@ -301,7 +301,7 @@ public class ViajeDAO {
 
     //guardando f:1 v:2 env:1
 
-    public List<ViajeVO> listAll(){
+    public List<ViajeVO> listAll(boolean detail){
         ConexionSQLiteHelper c=new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB );
         SQLiteDatabase db = c.getReadableDatabase();
         List<ViajeVO> ViajeVOList = new  ArrayList<>();
@@ -313,7 +313,7 @@ public class ViajeDAO {
                                 TABLE_VIAJE+" as V"
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = getAtributtes(cursor);
+                ViajeVO temp = getAtributtes(cursor,detail);
 
                 Cursor cursor2 = db.rawQuery(
                         "SELECT " +
@@ -333,6 +333,7 @@ public class ViajeDAO {
             cursor.close();
         }catch (Exception e){
             Toast.makeText(ctx,e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"listAll()"+e.toString());
         }finally {
             db.close();
             c.close();
@@ -344,7 +345,7 @@ public class ViajeDAO {
         boolean flag = false;
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(ctx, DATABASE_NAME,null,VERSION_DB );
         SQLiteDatabase db = conn.getWritableDatabase();
-        List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listAll();
+        List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listAll(true);
         for(int i=0;i<viajeVOList.size();i++){
 
             deleteById(viajeVOList.get(i).getId());
@@ -427,7 +428,7 @@ public class ViajeDAO {
                     sql
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = getAtributtes(cursor);
+                ViajeVO temp = getAtributtes(cursor,true);
                 Log.d("listar ViajeDAO s1 : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -479,7 +480,7 @@ public class ViajeDAO {
                     sql
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = getAtributtes(cursor);
+                ViajeVO temp = getAtributtes(cursor,true);
                 Log.d("listar ViajeDAO s1 : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -520,7 +521,7 @@ public class ViajeDAO {
                     sql
                     ,null);
             while(cursor.moveToNext()){
-                ViajeVO temp = getAtributtes(cursor);
+                ViajeVO temp = getAtributtes(cursor,false);
                 Log.d("listar ViajeDAO s1 : ",""+temp.getId());
                 ViajeVOList.add(temp);
                 // Toast.makeText(ctx,temp.getName(),Toast.LENGTH_SHORT).show();
@@ -542,7 +543,7 @@ public class ViajeDAO {
     }
     */
 
-    private ViajeVO getAtributtes(Cursor cursor){
+    private ViajeVO getAtributtes(Cursor cursor,boolean detail){
         ViajeVO viajeVO = new ViajeVO();
         String[] columnNames = cursor.getColumnNames();
         for(String name : columnNames){
@@ -603,9 +604,39 @@ public class ViajeDAO {
                     break;
             }
 
-            viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
-            viajeVO.setRestriccionVOList(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
+            if(detail){
+
+                viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
+                viajeVO.setRestriccionVOList(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
+            }
         }
         return viajeVO;
+    }
+
+    public boolean updateViaje(ViajeVO viajeVO) {
+        boolean flag = false;
+        ConexionSQLiteHelper c = new ConexionSQLiteHelper(ctx,DATABASE_NAME, null, VERSION_DB);
+        SQLiteDatabase db = c.getWritableDatabase();
+        String[] parametros =
+                {
+                        String.valueOf(viajeVO.getId()),
+                };
+        ContentValues values = new ContentValues();
+        values.put(TABLE_VIAJE_COL_ID,viajeVO.getId());
+        values.put(TABLE_VIAJE_COL_PROVEEDOR,viajeVO.getProveedor());
+        values.put(TABLE_VIAJE_COL_PLACA,viajeVO.getPlaca());
+        values.put(TABLE_VIAJE_COL_CONDUCTOR,viajeVO.getConductor());
+        values.put(TABLE_VIAJE_COL_RUTA,viajeVO.getRuta());
+        values.put(TABLE_VIAJE_COL_HORAPROGRAMADA,viajeVO.gethProgramada());
+        values.put(TABLE_VIAJE_COL_CAPACIDAD,viajeVO.getCapacidad());
+
+        int res = db.update(TABLE_VIAJE,values,TABLE_VIAJE_COL_ID+"=?",parametros);
+        if(res>0){
+            flag=true;
+        }
+        db.close();
+        c.close();
+        return  flag;
+
     }
 }

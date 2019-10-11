@@ -43,7 +43,6 @@ public class LoginActivity extends Activity {
         final EditText eTextUser = findViewById(R.id.eTextUsuario);
         final EditText eTextPassword = findViewById(R.id.eTextPassword);
 
-
         btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

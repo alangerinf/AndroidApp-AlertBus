@@ -6,10 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -27,27 +28,27 @@ import java.util.Map;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.app.AppController;
+import ibao.alanger.alertbus.main.MainConductorActivity;
 import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.RestriccionDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
-import ibao.alanger.alertbus.main.MainConductorActivity;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
 
-public class DownloadNewViajes {
+public class DownloadChanges {
 
     Context ctx;
-    String TAG = DownloadNewViajes.class.getSimpleName();
+    String TAG = DownloadChanges.class.getSimpleName();
 
     private static String HEADER_USUARIO = "usuario";
     public static int status;
 
     static String CHANNEL_NOTIFICATION = "1992";
     static int  COUNT_NOTIFICATION = 0;
-    public DownloadNewViajes(Context ctx)
+    public DownloadChanges(Context ctx)
     {
         status=0;
         this.ctx = ctx;
@@ -80,22 +81,21 @@ public class DownloadNewViajes {
 
                                     for(int i=0;i<dataViajes.length();i++){
 
-
                                         JSONObject viaje = new JSONObject(dataViajes.get(i).toString());
                                         /***
-                                         * {
-                                         *            "id": "1",
-                                         *             "horaInicio": "2019-09-18 20:20:00",
-                                         *             "empresa": "IBAO PERU",
-                                         *             "proveedor": "Transporte El Sol",
-                                         *             "conductor": "QUIROZ NUNEZ, DORITA",
-                                         *             "tipoVehiculo": "Bus",
-                                         *             "placa": "XYZ-123",
-                                         *             "ruta": "TRUJILLO - CHAO",
-                                         *             "tipoTarifa": "UNICA",
-                                         *             "capacidad": 45,
-                                         *             "restricciones": "LICENCIA VENCIDA EL 18/09/2019,SOAT VENCIDO EL 18/09/2019"
-                                         *         }
+                                         *      "id":"1",
+                                         *      "horaInicio":"2019-10-10 20:00:00",
+                                         *      "empresa":"IBAO PERU",
+                                         *      "proveedor":"Transporte El Sol",
+                                         *      "conductor":"QUIROZ NUNEZ, DORITA",
+                                         *      "tipoVehiculo":"Bus",
+                                         *      "placa":"XYZ-123",
+                                         *      "ruta":"TRUJILLO - CHAO",
+                                         *      "tipoTarifa":"UNICA",
+                                         *      "capacidad":45,
+                                         *      "restricciones":"",
+                                         *      "deleted":0,
+                                         *      "updated":0}
                                           */
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
@@ -123,10 +123,16 @@ public class DownloadNewViajes {
 
 //                                        viajeVO.sethFin(viaje.getString("horaFin"));
 
-                                        if(new ViajeDAO(ctx).insertar(
-                                                viajeVO
-                                        )){
-                                            PageViewModelViajesActuales.addViaje(viajeVO);
+                                        ViajeVO myViaje = new ViajeDAO(ctx).buscarById(viajeVO.getId());
+
+                                        if(myViaje==null){
+                                            if(myViaje.equals(viajeVO.getId())){
+                                               // es =
+                                            }else {
+                                                if( new ViajeDAO(ctx).updateViaje(viajeVO) ){
+                                                    PageViewModelViajesActuales.updateViaje(viajeVO);
+                                                }
+                                            }
                                         }
 
 

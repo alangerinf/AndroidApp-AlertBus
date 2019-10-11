@@ -1,15 +1,16 @@
-package ibao.alanger.alertbus.views;
+package ibao.alanger.alertbus.main;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,6 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.Objects;
 
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
@@ -33,21 +33,22 @@ import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajesConductor;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
-import ibao.alanger.alertbus.services.LocationService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
-import ibao.alanger.alertbus.viajeEnCurso.ActivityViaje;
+import ibao.alanger.alertbus.views.ActivityPreloader;
 
 import static ibao.alanger.alertbus.services.SearchViajesService.statusActualizar;
 
 public class MainConductorActivity extends AppCompatActivity {
 
 
+
+    private static PageViewModelViajesActuales liveDataViajes;
+
     private static Context ctx;
     private static RecyclerView rViewViajes;
-    private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajesConductor rViewAdapterListViajesConductor;
-    private static Handler handler;
+  //  private static Handler handler;
 
     private static TextView tViewSinViajes;
 
@@ -61,29 +62,15 @@ public class MainConductorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_conductor);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ctx = MainConductorActivity.this;
-        handler= new Handler();
+     //   handler= new Handler();
 
-
-        viajeVOList = new ViajeDAO(ctx).listAll();
         rViewViajes = findViewById(R.id.rViewViajes);
-
         tViewSinViajes = findViewById(R.id.tViewSinViajes);
 
+       // rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOList,rViewViajes);
+       // rViewViajes.setAdapter(rViewAdapterListViajesConductor);
 
-
-        rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOList,rViewViajes);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext()) {
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                super.onLayoutChildren(recycler, state);
-                //  initSpruce();
-            }
-        };
-
-        rViewViajes.setLayoutManager(linearLayoutManager);
-        rViewViajes.setAdapter(rViewAdapterListViajesConductor);
-
-
+        actualizarData();
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -94,9 +81,10 @@ public class MainConductorActivity extends AppCompatActivity {
         } else {
 
 
-
-
         }
+
+
+        /*
         if(viajeVOList.size()>0){
             tViewSinViajes.setVisibility(View.INVISIBLE);
            // Toast.makeText(ctx,"lisa mayor a 0",Toast.LENGTH_LONG).show();
@@ -104,9 +92,11 @@ public class MainConductorActivity extends AppCompatActivity {
             //Toast.makeText(ctx,"lis= 0",Toast.LENGTH_LONG).show();
             tViewSinViajes.setVisibility(View.VISIBLE);
         }
+        */
 
     }
 
+/*
     Runnable runnable = new Runnable() {
         public void run() {
             Log.d(TAG,"runnable() run...");
@@ -124,19 +114,19 @@ public class MainConductorActivity extends AppCompatActivity {
             }, 3000);
         }
     };
-
+*/
 
     @Override
     public void onResume() {
         super.onResume();
-        actualizarData();
-        handler.post(runnable);
+
+        //handler.post(runnable);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(runnable);
+        //handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -148,6 +138,32 @@ public class MainConductorActivity extends AppCompatActivity {
     }
 
     void actualizarData(){
+
+
+        PageViewModelViajesActuales.set(new ViajeDAO(ctx).listAll(false));
+
+        liveDataViajes = ViewModelProviders.of(this).get(PageViewModelViajesActuales.class);
+
+        final Observer<List<ViajeVO>> listObserver = new Observer<List<ViajeVO>>() {
+            @Override
+            public void onChanged(List<ViajeVO> viajeVOS) {
+
+                rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOS,rViewViajes);
+                rViewViajes.setAdapter(rViewAdapterListViajesConductor);
+                if(viajeVOS.size()>0){
+                    tViewSinViajes.setVisibility(View.INVISIBLE);
+                }else {
+                    tViewSinViajes.setVisibility(View.VISIBLE);
+                }
+
+            }
+        };
+
+        liveDataViajes.getViajeVOList().observe(this,listObserver);
+
+
+
+        /*
         viajeVOList = new ViajeDAO(ctx).listAll();
 
         rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOList,rViewViajes);
@@ -157,6 +173,8 @@ public class MainConductorActivity extends AppCompatActivity {
         }else {
             tViewSinViajes.setVisibility(View.VISIBLE);
         }
+
+        */
     }
 
     @Override
@@ -175,7 +193,7 @@ public class MainConductorActivity extends AppCompatActivity {
 
         if(id == R.id.limpiar) {
             new ViajeDAO(ctx).deleteByStatusSicronized();
-            actualizarData();
+           // actualizarData();
         }
 
         if(id == R.id.version) {

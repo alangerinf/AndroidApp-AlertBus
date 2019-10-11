@@ -1,9 +1,8 @@
-package ibao.alanger.alertbus.views;
+package ibao.alanger.alertbus.main;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.Handler;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,13 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.Objects;
 
 import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
@@ -26,22 +25,22 @@ import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajesSupervisor;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
-import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
-
-import static ibao.alanger.alertbus.services.SearchViajesService.statusActualizar;
+import ibao.alanger.alertbus.views.ActivityPreloader;
+import ibao.alanger.alertbus.views.CustomScannerActivity;
 
 public class MainSupervisorActivity extends AppCompatActivity {
 
 
+    private static PageViewModelViajesActuales liveDataViajes;
     private static Context ctx;
     private static RecyclerView rViewViajes;
-    private static List<ViajeVO> viajeVOList;
+  //  private static List<ViajeVO> viajeVOList;
     private static RViewAdapterListViajesSupervisor rViewAdapterListViajesSupervisor;
 
     private static TextView tViewSinViajes;
 
-    private static Handler handler = new Handler();
+    //private static Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +49,10 @@ public class MainSupervisorActivity extends AppCompatActivity {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ctx = MainSupervisorActivity.this;
 
-        viajeVOList = new ViajeDAO(ctx).listAll();
+       // viajeVOList = new ViajeDAO(ctx).listAll(true);
         rViewViajes = findViewById(R.id.rViewViajes);
 
 
-
-        rViewAdapterListViajesSupervisor = new RViewAdapterListViajesSupervisor(ctx,viajeVOList,rViewViajes);
-
-
-        rViewViajes.setAdapter(rViewAdapterListViajesSupervisor);
 
         tViewSinViajes = findViewById(R.id.tViewSinViajes);
 
@@ -72,7 +66,7 @@ public class MainSupervisorActivity extends AppCompatActivity {
 
     }
 
-
+/*
     Runnable runnable = new Runnable() {
         public void run() {
             if(SearchViajesService.statusActualizar){
@@ -87,8 +81,8 @@ public class MainSupervisorActivity extends AppCompatActivity {
             handler.postDelayed(runnable, 2000);
         }
     };
-
-
+*/
+/*
     void actualizarData(){
         viajeVOList = new ViajeDAO(ctx).listAll();
         tViewSinViajes.setVisibility(View.INVISIBLE);
@@ -102,17 +96,59 @@ public class MainSupervisorActivity extends AppCompatActivity {
         }
     }
 
+    */
+    void actualizarData(){
+
+
+        PageViewModelViajesActuales.set(new ViajeDAO(ctx).listAll(false));
+
+        liveDataViajes = ViewModelProviders.of(this).get(PageViewModelViajesActuales.class);
+
+        final Observer<List<ViajeVO>> listObserver = new Observer<List<ViajeVO>>() {
+            @Override
+            public void onChanged(List<ViajeVO> viajeVOS) {
+
+                rViewAdapterListViajesSupervisor = new RViewAdapterListViajesSupervisor(ctx,viajeVOS,rViewViajes);
+                rViewViajes.setAdapter(rViewAdapterListViajesSupervisor);
+                if(viajeVOS.size()>0){
+                    tViewSinViajes.setVisibility(View.INVISIBLE);
+                }else {
+                    tViewSinViajes.setVisibility(View.VISIBLE);
+                }
+
+            }
+        };
+
+        liveDataViajes.getViajeVOList().observe(this,listObserver);
+
+
+
+        /*
+        viajeVOList = new ViajeDAO(ctx).listAll();
+
+        rViewAdapterListViajesConductor = new RViewAdapterListViajesConductor(ctx,viajeVOList,rViewViajes);
+        rViewViajes.setAdapter(rViewAdapterListViajesConductor);
+        if(viajeVOList.size()>0){
+            tViewSinViajes.setVisibility(View.INVISIBLE);
+        }else {
+            tViewSinViajes.setVisibility(View.VISIBLE);
+        }
+
+        */
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
         actualizarData();
-        handler.post(runnable);
+    //    handler.post(runnable);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(runnable);
+     //   handler.removeCallbacks(runnable);
     }
 
 

@@ -54,6 +54,7 @@ import java.util.Random;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa_ListPasajeros;
+import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.PasajeroDAO;
 import ibao.alanger.alertbus.models.dao.TrackingDAO;
@@ -345,6 +346,7 @@ public class ActivityViaje extends AppCompatActivity implements
             new ViajeDAO(ctx).toStatus2(VIAJEVO.getId());
             new LoginDataDAO(ctx).uploadIdViaje(0); // esto desac el gps
 
+            PageViewModelViajesActuales.viajeToStatus2(VIAJEVO.getId());
 
             int i =0;
             for(PasajeroVO pa : pageViewModel.get().getValue().getPasajeroVOList()){

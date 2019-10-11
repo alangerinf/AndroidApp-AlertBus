@@ -4,32 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import ibao.alanger.alertbus.R;
+import ibao.alanger.alertbus.main.MainConductorActivity;
+import ibao.alanger.alertbus.main.MainSupervisorActivity;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
-import ibao.alanger.alertbus.services.LocationService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
-import ibao.alanger.alertbus.utilities.Utils;
 
 
 public class ActivityPreloader extends Activity {
