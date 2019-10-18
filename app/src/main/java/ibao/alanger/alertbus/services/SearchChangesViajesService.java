@@ -13,6 +13,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import ibao.alanger.alertbus.helpers.DownloadChanges;
 import ibao.alanger.alertbus.helpers.DownloadNewViajes;
 
 public class SearchChangesViajesService extends Service {
@@ -83,8 +84,8 @@ public class SearchChangesViajesService extends Service {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            Log.d(TAG,"buscando viajes");
-            new DownloadNewViajes(ctx).SearchNews();
+            Log.d(TAG,"buscando cambios");
+            new DownloadChanges(ctx).SearchNews();
             handler.postDelayed(runnable, timeMilis);
         }
     };

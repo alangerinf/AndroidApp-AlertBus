@@ -32,12 +32,11 @@ import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.main.MainConductorActivity;
 import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
-import ibao.alanger.alertbus.models.dao.RestriccionDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
 import ibao.alanger.alertbus.services.SearchViajesService;
 
-import static ibao.alanger.alertbus.utilities.Utilities.URL_BUSCARNUEVOS;
+import static ibao.alanger.alertbus.utilities.Utilities.URL_CHANGES_VIAJES;
 
 public class DownloadChanges {
 
@@ -61,7 +60,7 @@ public class DownloadChanges {
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
-                URL_BUSCARNUEVOS,
+                URL_CHANGES_VIAJES,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -78,7 +77,7 @@ public class DownloadChanges {
                                     JSONArray dataViajes = main.getJSONArray("viajes");
 
                                     if(0<dataViajes.length()){
-                                        SearchViajesService.statusActualizar = true;
+                                      //  SearchViajesService.statusActualizar = true;
                                     }
 
                                     for(int i=0;i<dataViajes.length();i++){
@@ -111,7 +110,6 @@ public class DownloadChanges {
                                         viajeVO.setPlaca(viaje.getString("placa"));
                                         viajeVO.setRuta(viaje.getString("ruta"));
                                         viajeVO.setCapacidad(viaje.getInt("capacidad"));
-
 
 //                                        viajeVO.setNumPasajeros(viaje.getInt("totalTrabajadores"));
 

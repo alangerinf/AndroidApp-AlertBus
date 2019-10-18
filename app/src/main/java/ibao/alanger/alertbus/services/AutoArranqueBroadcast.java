@@ -18,6 +18,7 @@ public class AutoArranqueBroadcast extends BroadcastReceiver{
         ctx = context;
         Intent service1 = new Intent(context, SearchViajesService.class);
         Intent service2 = new Intent(context, UploadService.class);
+        Intent service3 = new Intent(context, SearchChangesViajesService.class);
 
         if (new LoginDataDAO(context).verficarLogueo()!=null) {//si esta logueado
 
@@ -26,10 +27,12 @@ public class AutoArranqueBroadcast extends BroadcastReceiver{
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService (service1);
                     context.startForegroundService (service2);
+                    context.startForegroundService (service3);
 
                 }else {
                     context.startService (service1);
                     context.startService (service2);
+                    context.startService (service3);
 
                 }
             }else {// si es supervisor ==1

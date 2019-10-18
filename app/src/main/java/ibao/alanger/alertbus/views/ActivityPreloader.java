@@ -21,6 +21,7 @@ import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.main.MainConductorActivity;
 import ibao.alanger.alertbus.main.MainSupervisorActivity;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
+import ibao.alanger.alertbus.services.SearchChangesViajesService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
 
@@ -130,15 +131,19 @@ public class ActivityPreloader extends Activity {
         Context context = getBaseContext();
         Intent service1 = new Intent(context, SearchViajesService.class);
         Intent service2 = new Intent(context, UploadService.class);
+        Intent service3 = new Intent(context, SearchChangesViajesService.class);
+
 
         if (new LoginDataDAO(context).verficarLogueo()!=null) {//si esta logueado
             if(new LoginDataDAO(context).verficarLogueo().getTypeUser()==0){// si es conductor
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService (service1);
                     context.startForegroundService (service2);
+                    context.startForegroundService (service3);
                 }else {
                     context.startService (service1);
                     context.startService (service2);
+                    context.startService (service3);
                 }
             }else {// si es supervisor ==1
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

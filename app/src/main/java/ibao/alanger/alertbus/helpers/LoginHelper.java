@@ -22,6 +22,7 @@ import java.util.Map;
 import ibao.alanger.alertbus.app.AppController;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.vo.LoginDataVO;
+import ibao.alanger.alertbus.services.SearchChangesViajesService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
 import ibao.alanger.alertbus.main.MainConductorActivity;
@@ -157,6 +158,8 @@ public class LoginHelper {
     void  startServices(){
         Intent service1 = new Intent(ctx, SearchViajesService.class);
         Intent service2 = new Intent(ctx, UploadService.class);
+        Intent service3 = new Intent(ctx, SearchChangesViajesService.class);
+
 
         if (new LoginDataDAO(ctx).verficarLogueo()!=null) {//si esta logueado
 
@@ -165,10 +168,12 @@ public class LoginHelper {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ctx.startForegroundService (service1);
                     ctx.startForegroundService (service2);
+                    ctx.startForegroundService (service3);
 
                 }else {
                     ctx.startService (service1);
                     ctx.startService (service2);
+                    ctx.startService (service3);
 
                 }
             }else {// si es supervisor ==1

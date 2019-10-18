@@ -33,6 +33,7 @@ import ibao.alanger.alertbus.helpers.adapters.RViewAdapterListViajesConductor;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
+import ibao.alanger.alertbus.services.SearchChangesViajesService;
 import ibao.alanger.alertbus.services.SearchViajesService;
 import ibao.alanger.alertbus.services.UploadService;
 import ibao.alanger.alertbus.views.ActivityPreloader;
@@ -215,6 +216,7 @@ public class MainConductorActivity extends AppCompatActivity {
                 startActivity(intent);
                 stopService(new Intent(getBaseContext(),SearchViajesService.class));
                 stopService(new Intent(getBaseContext(),UploadService.class));
+                stopService(new Intent(getBaseContext(), SearchChangesViajesService.class));
                 finish();
             }
         }
