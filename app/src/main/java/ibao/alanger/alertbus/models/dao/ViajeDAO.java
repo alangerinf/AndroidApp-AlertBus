@@ -605,7 +605,6 @@ public class ViajeDAO {
             }
 
             if(detail){
-
                 viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
                 viajeVO.setRestriccionVOList(new RestriccionDAO(ctx).listByIdViaje(viajeVO.getId()));
             }

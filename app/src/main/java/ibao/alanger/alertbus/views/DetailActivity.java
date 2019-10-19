@@ -231,6 +231,7 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         }
+
     }
 
     private int compareString( String sTexto, String sTextoBuscado){

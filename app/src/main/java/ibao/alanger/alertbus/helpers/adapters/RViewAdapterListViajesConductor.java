@@ -260,10 +260,14 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                             Bitmap bitmap =  barcodeEncoder.createBitmap(bitMatrix);
                             */
 
-                        try {
-                            Log.d(TAG,"qr data:"+viajeVO.toStringQR());
 
-                            iViewQR3.setImageBitmap(Utils.createQRCode(viajeVO.toStringQR(),2048));
+
+                        try {
+                            ViajeVO temp = new ViajeDAO(ctx).buscarById(viajeVO.getId());
+
+                            Log.d(TAG,"qr data:"+temp.toStringQR());
+
+                            iViewQR3.setImageBitmap(Utils.createQRCode(temp.toStringQR(),2048));
                         } catch (WriterException e) {
                             e.printStackTrace();
                         }

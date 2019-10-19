@@ -43,8 +43,22 @@ public class PageViewModelViajesActuales extends ViewModel {
     public static void updateViaje(ViajeVO viajeVO){
         for(ViajeVO v:viajeVOList){
             if(v.getId()==viajeVO.getId()){
-                viajeVOList.remove(viajeVO);
-                viajeVOList.add(viajeVO);
+
+                v.setId(viajeVO.getId());
+                v.setIdWeb(viajeVO.getIdWeb());
+                v.sethInicio(viajeVO.gethInicio());
+                v.sethFin(viajeVO.gethFin());
+                v.setPlaca(viajeVO.getPlaca());
+                v.setRuta(viajeVO.getRuta());
+                v.setCapacidad(viajeVO.getCapacidad());
+                v.setProveedor(viajeVO.getProveedor());
+                v.setStatus(viajeVO.getStatus());
+                v.setConductor(viajeVO.getConductor());
+                v.sethProgramada(viajeVO.gethProgramada());
+                v.setNumPasajerosRegistrados(viajeVO.getNumPasajerosRegistrados());
+                v.setNumRestriccionesRegistradas(viajeVO.getNumRestriccionesRegistradas());
+                v.sethConfirmado(viajeVO.gethConfirmado());
+
                 break;
             }
         }

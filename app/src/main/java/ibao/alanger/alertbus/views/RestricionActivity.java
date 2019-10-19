@@ -45,7 +45,7 @@ public class RestricionActivity extends AppCompatActivity {
 
     static ViajeVO VIAJE;
 
-    static String TAG = RestricionActivity.class.getSimpleName();
+    static String TAG = "TAG"+RestricionActivity.class.getSimpleName();
 
     Context ctx = this;
 
@@ -67,11 +67,7 @@ public class RestricionActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         VIAJE = new ViajeDAO(ctx).buscarById(b.getInt("id"));
-
         consultarRestricciones(VIAJE.getIdWeb());
-
-
-
 
     }
 

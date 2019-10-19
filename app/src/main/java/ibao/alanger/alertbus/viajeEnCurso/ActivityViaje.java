@@ -368,6 +368,8 @@ public class ActivityViaje extends AppCompatActivity implements
             VIAJEVO = new ViajeDAO(ctx).buscarById(VIAJEVO.getId());
             Log.d(TAG,VIAJEVO.toString());
             new ViajeDAO(ctx).updateHoraFin(VIAJEVO.getId(), getFecha());
+            VIAJEVO.sethFin(getFecha());
+            PageViewModelViajesActuales.updateViaje(VIAJEVO);
 
             onBackPressed();
         }else {//si no hay ningun pasajero
