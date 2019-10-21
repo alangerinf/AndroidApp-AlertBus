@@ -56,7 +56,7 @@ public class DownloadChanges {
     }
 
     public void SearchNews(){
-        Log.d(TAG,"SearchNews()");
+        Log.d(TAG,"SearchNews() Changeas");
 
         status=1;
         StringRequest sr = new StringRequest(Request.Method.POST,
@@ -100,7 +100,7 @@ public class DownloadChanges {
                                          *      "updated":0}
                                          */
 
-                                        boolean DELETED = viaje.getBoolean("deleted");
+                                        boolean DELETED = viaje.getInt("deleted")>0;
 
                                         ViajeVO viajeVO = new ViajeVO();
                                         viajeVO.setId(viaje.getInt("id"));
@@ -116,16 +116,23 @@ public class DownloadChanges {
 //                                        viajeVO.sethFin(viaje.getString("horaFin"));
 
                                         ViajeVO myViaje = new ViajeDAO(ctx).buscarById(viajeVO.getId());
-                                        if(myViaje==null){
+                                        if(myViaje!=null){
                                             if(DELETED){
                                                 if( new ViajeDAO(ctx).deleteById(viajeVO.getId()) ){
+
+                                                    Log.d(TAG,"delete intent ok");
                                                     PageViewModelViajesActuales.removeViaje(viajeVO);
+                                                    /*
                                                     Intent intent = new Intent(ctx, MainConductorActivity.class);
                                                     intent.putExtra("deleted",myViaje);
                                                     ctx.startActivity(intent);
+                                                     */
                                                 }
                                             }else {// solo update
+
+                                                Log.d(TAG,"update intent");
                                                 if( new ViajeDAO(ctx).updateViaje(viajeVO) ){
+                                                    Log.d(TAG,"update ok");
                                                     PageViewModelViajesActuales.updateViaje(viajeVO);
                                                 }
                                             }

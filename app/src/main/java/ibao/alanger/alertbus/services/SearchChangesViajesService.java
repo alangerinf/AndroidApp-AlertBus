@@ -61,8 +61,9 @@ public class SearchChangesViajesService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flag, int idProcess)
     {
+        Log.d(TAG,"onStartComand");
         handler.removeCallbacks(runnable);
-        runnable.run();
+        handler.post(runnable);
         return START_STICKY;
     }
 

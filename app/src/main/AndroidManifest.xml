@@ -43,6 +43,10 @@
             android:name=".services.UploadService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".services.SearchChangesViajesService"
+            android:enabled="true"
+            android:exported="true" />
         <service android:name=".services.LocationService">
             <intent-filter>
                 <action android:name=".servicioDisponible" />

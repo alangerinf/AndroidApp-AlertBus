@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_LOGINDATA;
 import static ibao.alanger.alertbus.utilities.Utilities.CREATE_TABLE_PASAJERO;
@@ -18,7 +17,6 @@ import static ibao.alanger.alertbus.utilities.Utilities.TABLE_TRACKING;
 import static ibao.alanger.alertbus.utilities.Utilities.TABLE_VIAJE;
 
 public class ConexionSQLiteHelper extends SQLiteOpenHelper{
-
     public static int VERSION_DB = 1;
     private Context ctx;
     public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -137,9 +138,13 @@ public class ActivityPreloader extends Activity {
         if (new LoginDataDAO(context).verficarLogueo()!=null) {//si esta logueado
             if(new LoginDataDAO(context).verficarLogueo().getTypeUser()==0){// si es conductor
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Log.d(TAG,"startServices");
                     context.startForegroundService (service1);
+                    Log.d(TAG,"startService1");
                     context.startForegroundService (service2);
+                    Log.d(TAG,"startService2");
                     context.startForegroundService (service3);
+                    Log.d(TAG,"startService3");
                 }else {
                     context.startService (service1);
                     context.startService (service2);

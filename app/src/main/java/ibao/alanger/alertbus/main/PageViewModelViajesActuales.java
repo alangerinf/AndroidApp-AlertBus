@@ -36,14 +36,18 @@ public class PageViewModelViajesActuales extends ViewModel {
     }
 
     public static void removeViaje(ViajeVO viajeVO){
-        viajeVOList.remove(viajeVO);
+        for(ViajeVO v:viajeVOList){
+            if(v.getId()==viajeVO.getId()){
+                viajeVOList.remove(v);
+                break;
+            }
+        }
         set(viajeVOList);
     }
 
     public static void updateViaje(ViajeVO viajeVO){
         for(ViajeVO v:viajeVOList){
             if(v.getId()==viajeVO.getId()){
-
                 v.setId(viajeVO.getId());
                 v.setIdWeb(viajeVO.getIdWeb());
                 v.sethInicio(viajeVO.gethInicio());
