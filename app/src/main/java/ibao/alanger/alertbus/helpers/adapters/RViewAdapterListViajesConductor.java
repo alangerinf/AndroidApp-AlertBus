@@ -382,11 +382,14 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
                 holder.tViewStatusEnCurso.setTextColor(colorEnable);
                 holder.tViewStatusFinalizado.setTextColor(colorDisable);
                 holder.tViewStatusSincronizado.setTextColor(colorDisable);
+
                 holder.btnEnter.setText("Continuar");
+                holder.btnEnter.setBackgroundResource(R.drawable.shape_customgreen_br30_b0);
 
                 holder.fabDelete.setClickable(false);
                 holder.fabDelete.setFocusable(false);
-                holder.btnEnter.setBackgroundResource(R.drawable.shape_customgreen_br30_b0);
+                holder.fabDelete.setBackgroundTintList(ColorStateList.valueOf(colorDisable));
+
 
                 break;
 

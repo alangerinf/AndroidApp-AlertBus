@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,6 +27,10 @@ import androidx.core.app.NotificationCompat;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.models.dao.TrackingDAO;
@@ -90,6 +95,7 @@ public class LocationService extends Service {
     public int onStartCommand(Intent i, int flags, int startId) {
 
         isEnable = true;
+
         ctx = this;
 
         //handler.removeCallbacks(runnable);
@@ -101,6 +107,18 @@ public class LocationService extends Service {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        criteria.setAltitudeRequired(false);
+        criteria.setSpeedRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setBearingRequired(false);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+
         int time = 1000*20;// 180 sec
 
         mlocListener = new MyLocationListener();
@@ -108,7 +126,17 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return 0;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0, mlocListener);
+
+       // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0, mlocListener);
+
+        /*
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+*/
+
 
         boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -120,7 +148,7 @@ public class LocationService extends Service {
         } else {
             // First get location from Network Provider
             if (isNetworkEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, time, 0, mlocListener);
+                locationManager.requestLocationUpdates(bestProvider, time, 0, mlocListener);
                 Log.d("Network", "Network");
                 if (locationManager != null) {
                     location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -133,7 +161,8 @@ public class LocationService extends Service {
             //get the location by gps
             if (isGPSEnabled) {
                 if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0, mlocListener);
+                    locationManager.requestLocationUpdates(bestProvider, time, 0, mlocListener);
+                   // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0, mlocListener);
                     Log.d("GPS Enabled", "GPS Enabled");
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -169,6 +198,7 @@ public class LocationService extends Service {
 
     @Override
     public void onDestroy() {
+
         locationManager.removeUpdates(mlocListener);
         Log.d(TAG,"onDestroy");
 
