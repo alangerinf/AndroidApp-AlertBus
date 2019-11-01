@@ -42,7 +42,7 @@
 
     <string name="pregunta_comenzar_viaje">¿Está seguro que desea comenzar el Viaje?</string>
     <string name="pregunta_eliminar_viaje">¿Está seguro que desea eliminar el Viaje?</string>
-    <string name="pregunta_actualizar_hora_salida">Trabajador ya salió, ¿Desea quitar la hora de salida?</string>
+    <string name="pregunta_actualizar_hora_salida">Se elimino la hora de salida del Trabajador</string>
 
 
 </resources>

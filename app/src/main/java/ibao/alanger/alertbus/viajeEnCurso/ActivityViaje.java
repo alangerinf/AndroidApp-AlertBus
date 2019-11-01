@@ -1,11 +1,16 @@
 package ibao.alanger.alertbus.viajeEnCurso;
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +41,6 @@ import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.journeyapps.barcodescanner.ViewfinderView;
@@ -52,18 +55,20 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import ibao.alanger.alertbus.BuildConfig;
 import ibao.alanger.alertbus.R;
 import ibao.alanger.alertbus.helpers.adapters.AdapterDialogMapa_ListPasajeros;
 import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.PasajeroDAO;
-import ibao.alanger.alertbus.models.dao.TrackingDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.PasajeroVO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
-import ibao.alanger.alertbus.utilities.Utils;
 
-import static java.security.AccessController.getContext;
+
+
+import com.physicaloid.lib.Physicaloid;
+import com.physicaloid.lib.usb.driver.uart.ReadLisener;
 
 
 import static android.Manifest.permission.CAMERA;
@@ -76,7 +81,11 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private String TAG = ActivityViaje.class.getSimpleName();
 
-    private CaptureManager capture;
+
+    PendingIntent permissionIntent;
+    Physicaloid mPhysicaloid; // initialising library
+    public static final String INTENT_ACTION_GRANT_USB = BuildConfig.APPLICATION_ID + ".GRANT_USB";
+
     private DecoratedBarcodeView barcodeScannerView;
 
     private static FloatingActionButton fAButtonShowDialogMap;
@@ -93,19 +102,172 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private static View root ;
 
-    private Context ctx;
+    private Context ctx = ActivityViaje.this;
 
     private ViajeVO VIAJEVO;
 
     TextView tViewHEmbarque;
     TextView tViewDateEmbarque;
 
+
+    private static String RFID="";
+
+
+    private final BroadcastReceiver usbReceiverDetached = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+
+                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                if (device != null) {
+                    if(mPhysicaloid.close()) {
+                        mPhysicaloid.clearReadListener();
+                        //setEnabledUi(false);
+                        Toast.makeText(ctx,"Dispositivo Desconectado",Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+
+                    Toast.makeText(ctx,"No se logro Desconectar",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
+    private final BroadcastReceiver usbReceiverAttached = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+
+                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                if (device != null) {
+                    UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+                    Toast.makeText(ctx,device.getDeviceName(),Toast.LENGTH_SHORT).show();
+                    manager.requestPermission(device, permissionIntent);
+                }else {
+
+                    Toast.makeText(ctx,"No se logro Desconectar",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
+    private final BroadcastReceiver usbReceiverPermissionUSB = new BroadcastReceiver() {
+
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            Toast.makeText(ctx,action,Toast.LENGTH_SHORT).show();
+
+            if (INTENT_ACTION_GRANT_USB.equals(action)) {
+                synchronized (ctx) {
+                    UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if(device != null){
+                            //call method to set up device communication
+                            Toast.makeText(ctx,"permiso acceptadoooo",Toast.LENGTH_LONG).show();
+
+                            mPhysicaloid.setBaudrate(300);
+
+                            if(mPhysicaloid.open()) {
+                                try{
+                                    Toast.makeText(ctx,"Escuchando Serial ",Toast.LENGTH_LONG).show();
+                                    // setEnabledUi(true);
+                                    mPhysicaloid.addReadListener(new ReadLisener() {
+
+                                        @Override
+                                        public void onRead(int size) {
+                                            byte[] buf = new byte[size];
+                                            mPhysicaloid.read(buf, size);
+
+
+                                            RFID = RFID+new String(buf);
+                                            RFID = RFID.replace(" ","");
+                                            handler.post(
+                                                    new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Toast.makeText(ctx," ->"+RFID +"<-"+RFID.length(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                            );
+
+
+                                            if(RFID.length()>=14){
+
+                                                RFID = RFID.substring(0,14);
+                                                /***
+                                                 * todo: guardar
+                                                 * guardar
+                                                 */
+                                                handler.post(
+                                                        new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                String temp = ""+RFID;
+                                                                Toast.makeText(ctx, temp+"->"+temp.length(), Toast.LENGTH_SHORT).show();
+                                                                insertarRFID(temp);
+                                                            }
+                                                        }
+                                                );
+                                                RFID="";
+                                            }
+                                            //Toast.makeText(ctx,new String(buf),Toast.LENGTH_LONG).show();
+
+                                            //tvAppend(tvRead, Html.fromHtml("<font color=blue>" + new String(buf) + "</font>"));
+
+                                        }
+                                    });
+                                }catch (Exception e){
+                                    Log.d("hello",e.toString());
+                                    Toast.makeText(ctx,"hello"+e.toString(),Toast.LENGTH_LONG).show();
+                                }
+
+                            } else {
+                                Toast.makeText(ctx, "Cannot open", Toast.LENGTH_LONG).show();
+                            }
+
+
+                        }
+                    }
+                    else {
+                        Toast.makeText(ctx,"permiso ddenegado",Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "permission denied for device " + device);
+                    }
+                }
+            }
+
+
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viaje);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        ctx = this;
+
+
+        mPhysicaloid = new Physicaloid(ctx);
+
+        permissionIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(INTENT_ACTION_GRANT_USB), 0);
+
+        IntentFilter filter = new IntentFilter(INTENT_ACTION_GRANT_USB);
+
+        registerReceiver(usbReceiverPermissionUSB, filter);
+
+        IntentFilter filterDetached = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        registerReceiver(usbReceiverDetached, filterDetached);
+
+        IntentFilter filterAttached = new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+        registerReceiver(usbReceiverAttached, filterAttached);
+
+
 
         root = findViewById(R.id.root);
 
@@ -132,9 +294,6 @@ public class ActivityViaje extends AppCompatActivity implements
 
         tViewHEmbarque.setText(""+getHour(viajeVO.gethInicio()));
         tViewDateEmbarque.setText(""+getDate(viajeVO.gethInicio()));
-
-
-
 
 
         //      Bundle b = getIntent().getExtras();
@@ -214,6 +373,8 @@ public class ActivityViaje extends AppCompatActivity implements
         });
 
         validarPermisos();
+
+
     }
 
 
@@ -259,11 +420,26 @@ public class ActivityViaje extends AppCompatActivity implements
 
     RViewAdapterListPasajerosOnViaje adapter = null;
 
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
 
         barcodeScannerView.resume();
+/*
+        IntentFilter filter = new IntentFilter(INTENT_ACTION_GRANT_USB);
+        registerReceiver(usbReceiverPermissionUSB, filter);
+
+        IntentFilter filterDetached = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        registerReceiver(usbReceiverDetached, filterDetached);
+
+        IntentFilter filterAttached = new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+        registerReceiver(usbReceiverAttached, filterAttached);
+
+
+ */
     }
 
     @Override
@@ -271,6 +447,12 @@ public class ActivityViaje extends AppCompatActivity implements
         super.onPause();
 
         barcodeScannerView.pause();
+/*
+        unregisterReceiver(usbReceiverPermissionUSB);
+        unregisterReceiver(usbReceiverDetached);
+        unregisterReceiver(usbReceiverAttached);
+
+ */
     }
 
     @Override
@@ -437,22 +619,14 @@ public class ActivityViaje extends AppCompatActivity implements
 
                            //     Toast.makeText(ctx,"registrado hora de salida hora de bajada",Toast.LENGTH_SHORT).show();
 
+
+                                pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);//quitando de
+                                pasajeroVO.sethBajada("");
+                                new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                                PageViewModelViaje.addPasajero(0,pasajeroVO);// volviendolo a agregar
+
                                 Snackbar snackbar = Snackbar.make(root,ctx.getString(R.string.pregunta_actualizar_hora_salida),Snackbar.LENGTH_LONG);
-                                snackbar.setAction("Actualizar", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);//quitando de
-
-                                        pasajeroVO.sethBajada("");
-                                        new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
-
-                                        PageViewModelViaje.addPasajero(0,pasajeroVO);// volviendolo a agregar
-
-
-                                    }
-                                });
-
                                 snackbar.show();
                             }
 
@@ -641,6 +815,106 @@ public class ActivityViaje extends AppCompatActivity implements
     public String getFecha(){
         DateFormat df = new DateFormat();
         return df.format("yyyy-MM-dd kk:mm:ss", new Date()).toString();
+    }
+
+
+
+    private void insertarRFID(String result){
+        String resultado = result;
+        Log.d(TAG, "tamaño " + resultado.length());
+
+        if (resultado == null  || resultado.length() != 14) {//si s e rechazo
+            // Prevent duplicate scans
+            Log.d(TAG, resultado + "DUPLICADO");
+
+            return;
+        } else {
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    beepManager.setVibrateEnabled(true);
+                    beepManager.setBeepEnabled(true);
+
+
+                    Log.d(TAG,""+count++);
+
+                    if(verifiarDuplicado(resultado)){//si ya se ingreso
+
+                        PasajeroVO pasajeroVO  = getPasajeroDuplicado(resultado);
+
+                        if(pasajeroVO.gethBajada()==null || pasajeroVO.gethBajada().equals("")){//si no tiene hora de bajada
+
+
+                            pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);
+
+                            pasajeroVO.sethBajada(getFecha());
+
+                            PageViewModelViaje.addPasajero(0,pasajeroVO);
+                            Log.d(TAG, resultado + "registrando salida");
+
+                            new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                        }else {// si tiene hora de bajada
+
+                            //     Toast.makeText(ctx,"registrado hora de salida hora de bajada",Toast.LENGTH_SHORT).show();
+
+
+                            pageViewModel.get().getValue().getPasajeroVOList().remove(pasajeroVO);//quitando de
+                            pasajeroVO.sethBajada("");
+                            new PasajeroDAO(ctx).updatehBajada(pasajeroVO);
+
+                            PageViewModelViaje.addPasajero(0,pasajeroVO);// volviendolo a agregar
+
+                            Snackbar snackbar = Snackbar.make(root,ctx.getString(R.string.pregunta_actualizar_hora_salida),Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+
+                    }else {// si es un nuevo ingreso
+
+                        Log.d(TAG,"añadiendo"+resultado);
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = new Date();
+
+                        PasajeroVO pasajeroVO = new PasajeroVO();
+                        pasajeroVO.setIdViaje(VIAJEVO.getId());
+                        pasajeroVO.sethSubida(formatter.format(date));
+                        pasajeroVO.setDni(resultado);
+
+
+                        new PasajeroDAO(ctx).insertar(
+                                pasajeroVO.getDni(),
+                                pasajeroVO.getName(),
+                                VIAJEVO.getId(),
+                                pasajeroVO.gethSubida(),
+                                "",
+                                ""
+                        );
+
+                        PageViewModelViaje.addPasajero(pasajeroVO);
+
+                        Log.d(TAG, resultado + "registrando entrada");
+
+                    }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            beepManager.playBeepSoundAndVibrate();
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
+
+
+        }
     }
 
 }

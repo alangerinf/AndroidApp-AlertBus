@@ -138,7 +138,6 @@ public class DownloadChanges {
                                             }
                                         }
 
-
                                         if(DELETED){
                                             //Notification
                                             // Create an explicit intent for an Activity in your app
