@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +35,6 @@ import ibao.alanger.alertbus.main.PageViewModelViajesActuales;
 import ibao.alanger.alertbus.models.dao.LoginDataDAO;
 import ibao.alanger.alertbus.models.dao.ViajeDAO;
 import ibao.alanger.alertbus.models.vo.ViajeVO;
-import ibao.alanger.alertbus.services.SearchViajesService;
 
 import static ibao.alanger.alertbus.utilities.Utilities.URL_CHANGES_VIAJES;
 
@@ -264,7 +264,19 @@ public class DownloadChanges {
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+        /*
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                DownloadChanges temp = new DownloadChanges(ctx);
+                temp.SearchNews();
+            }
+        });
+
+         */
     }
+
+    Handler h = new Handler();
 
 
 }

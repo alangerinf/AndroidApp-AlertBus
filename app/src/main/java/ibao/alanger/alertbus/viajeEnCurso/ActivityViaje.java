@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +94,8 @@ public class ActivityViaje extends AppCompatActivity implements
     private ViewfinderView viewfinderView;
 
     private static FloatingActionButton fAButtonLinterna;
+    private static TextView tViewRFID;
+    private static ScrollView scrollViewRFID;
 
     private static boolean statusLight;
 
@@ -124,14 +127,37 @@ public class ActivityViaje extends AppCompatActivity implements
                 if (device != null) {
                     if(mPhysicaloid.close()) {
                         mPhysicaloid.clearReadListener();
-                        //setEnabledUi(false);
+                        scrollViewRFID.setVisibility(View.GONE);
+                        handler.removeCallbacks(runSearchRFID);
                         Toast.makeText(ctx,"Dispositivo Desconectado",Toast.LENGTH_SHORT).show();
                     }
                 }else {
-
                     Toast.makeText(ctx,"No se logro Desconectar",Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    };
+
+    Runnable runSearchRFID = new Runnable() {
+        @Override
+        public void run() {
+
+            int numLines = tViewRFID.getLineCount();
+
+            if(numLines>1){
+                int start = tViewRFID.getLayout().getLineStart(numLines-2);
+                int end = tViewRFID.getLayout().getLineEnd(numLines-2);
+                String strRFID = tViewRFID.getText().toString().substring(start, end-1);
+
+                if(strRFID.length()>=14){
+                        handler.post(()->{
+                            insertarRFID(strRFID);
+                            tViewRFID.setText(tViewRFID.getText().toString().substring(end));
+                        })  ;
+                }
+            }
+
+            handler.postDelayed(runSearchRFID,200);
         }
     };
 
@@ -146,10 +172,11 @@ public class ActivityViaje extends AppCompatActivity implements
                 if (device != null) {
                     UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
                     Toast.makeText(ctx,device.getDeviceName(),Toast.LENGTH_SHORT).show();
+
                     manager.requestPermission(device, permissionIntent);
                 }else {
 
-                    Toast.makeText(ctx,"No se logro Desconectar",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx,"No se logro Conecetar",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -169,13 +196,16 @@ public class ActivityViaje extends AppCompatActivity implements
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if(device != null){
                             //call method to set up device communication
-                            Toast.makeText(ctx,"permiso acceptadoooo",Toast.LENGTH_LONG).show();
-
-                            mPhysicaloid.setBaudrate(300);
+                            //Toast.makeText(ctx,"permiso Aceptadoooo",Toast.LENGTH_LONG).show();
+                            scrollViewRFID.setVisibility(View.VISIBLE);
+                            handler.post(
+                                runSearchRFID
+                            );
+                            mPhysicaloid.setBaudrate(9600);
 
                             if(mPhysicaloid.open()) {
                                 try{
-                                    Toast.makeText(ctx,"Escuchando Serial ",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ctx,"Escuchando puerto Serial",Toast.LENGTH_LONG).show();
                                     // setEnabledUi(true);
                                     mPhysicaloid.addReadListener(new ReadLisener() {
 
@@ -184,58 +214,35 @@ public class ActivityViaje extends AppCompatActivity implements
                                             byte[] buf = new byte[size];
                                             mPhysicaloid.read(buf, size);
 
+                                            String temporal = ""+RFID;
 
-                                            RFID = RFID+new String(buf);
-                                            RFID = RFID.replace(" ","");
+                                            temporal = temporal+new String(buf);
+
+                                            String finalTemporal = temporal;
                                             handler.post(
-                                                    new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            Toast.makeText(ctx," ->"+RFID +"<-"+RFID.length(), Toast.LENGTH_SHORT).show();
-                                                        }
+                                                    ()->{
+                                                        tViewRFID.append(finalTemporal);
+                                                        scrollViewRFID.fullScroll(View.FOCUS_DOWN);
                                                     }
+
                                             );
-
-
-                                            if(RFID.length()>=14){
-
-                                                RFID = RFID.substring(0,14);
-                                                /***
-                                                 * todo: guardar
-                                                 * guardar
-                                                 */
-                                                handler.post(
-                                                        new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                String temp = ""+RFID;
-                                                                Toast.makeText(ctx, temp+"->"+temp.length(), Toast.LENGTH_SHORT).show();
-                                                                insertarRFID(temp);
-                                                            }
-                                                        }
-                                                );
-                                                RFID="";
-                                            }
-                                            //Toast.makeText(ctx,new String(buf),Toast.LENGTH_LONG).show();
-
-                                            //tvAppend(tvRead, Html.fromHtml("<font color=blue>" + new String(buf) + "</font>"));
 
                                         }
                                     });
                                 }catch (Exception e){
                                     Log.d("hello",e.toString());
-                                    Toast.makeText(ctx,"hello"+e.toString(),Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ctx,"Error "+e.toString(),Toast.LENGTH_LONG).show();
                                 }
 
                             } else {
-                                Toast.makeText(ctx, "Cannot open", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ctx, "No se pudo abrir Serial", Toast.LENGTH_LONG).show();
                             }
 
 
                         }
                     }
                     else {
-                        Toast.makeText(ctx,"permiso ddenegado",Toast.LENGTH_LONG).show();
+                        Toast.makeText(ctx,"Permiso Denegado",Toast.LENGTH_LONG).show();
                         Log.d(TAG, "permission denied for device " + device);
                     }
                 }
@@ -287,7 +294,8 @@ public class ActivityViaje extends AppCompatActivity implements
 
         statusLight = false;
         fAButtonLinterna = findViewById(R.id.fAButtonLinterna);
-
+        tViewRFID = findViewById(R.id.tViewRFID);
+        scrollViewRFID = findViewById(R.id.scrollViewRFID);
 
         tViewDateEmbarque= findViewById(R.id.tViewDateEmbarque);
         tViewHEmbarque = findViewById(R.id.tViewHEmbarque);
@@ -820,20 +828,22 @@ public class ActivityViaje extends AppCompatActivity implements
 
 
     private void insertarRFID(String result){
-        String resultado = result;
+
+        String resultado = result.trim();
         Log.d(TAG, "tamaño " + resultado.length());
 
         if (resultado == null  || resultado.length() != 14) {//si s e rechazo
             // Prevent duplicate scans
             Log.d(TAG, resultado + "DUPLICADO");
 
+           // Toast.makeText(ctx,resultado+resultado.length()+"no",Toast.LENGTH_SHORT).show();
             return;
         } else {
-
             handler.post(new Runnable() {
                 @Override
                 public void run() {
 
+                   // Toast.makeText(ctx,"ok",Toast.LENGTH_SHORT).show();
 
                     beepManager.setVibrateEnabled(true);
                     beepManager.setBeepEnabled(true);
