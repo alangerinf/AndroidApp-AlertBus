@@ -46,8 +46,8 @@ public class UploadMaster {
         this.ctx = ctx;
     }
 
-    public void UploadViaje(final List<ViajeVO> viajeVOList){
-        Log.d(TAG,"UploadViaje()");
+    public void UploadViajeFinish(final List<ViajeVO> viajeVOList){
+        Log.d(TAG,"UploadViajeFinish()");
 
         String url;
         if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
@@ -148,7 +148,100 @@ public class UploadMaster {
         AppController.getInstance().addToRequestQueue(sr);
     }
 
+    public void UploadViajeProgress(final ViajeVO viajeVO){
+        Log.d(TAG,"UploadViajeProgress()");
 
+        String url;
+        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
+            url = URL_UPLOAD_VIAJE;//sincronizar viaje
+        }else {//si es supervisor ==1
+            url = URL_CHECK_VIAJE;//confirmar viaje por supervisor
+        }
+        Log.d(TAG,url);
+        status=1;
+        StringRequest sr = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d(TAG,"RESP: "+response);
+                        status=2;
+
+                        if(!response.isEmpty()){
+                            try {
+                                JSONObject main = new JSONObject(response);
+                                Log.d(TAG,"flag1");
+                                if(main.getInt("success")==1){
+                                    JSONArray datos = main.getJSONArray("data");
+                                    for(int i=0;i<datos.length();i++){
+                                        JSONObject viaje = datos.getJSONObject(i);
+
+                                        if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
+                                            int idPlanificacion = viaje.getInt("idPlanificacion");
+                                            int idWeb = viaje.getInt("idViaje");
+                                            new ViajeDAO(ctx).toStatus3(idPlanificacion,idWeb);// este es el estado final para el conductor
+                                            PageViewModelViajesActuales.viajeToStatus3(idPlanificacion);
+                                        }else {// si es supervosor =1
+                                            int idViaje = viaje.getInt("id");
+                                            new ViajeDAO(ctx).toStatus2(idViaje);
+                                            PageViewModelViajesActuales.viajeToStatus2(idViaje);
+                                        }
+                                    }
+
+                                }
+
+                            } catch (JSONException e) {
+                                Toast.makeText(ctx, "Puede que no se hallan sincronizar sus datos JSON, por favor de aviso al administrador de la  aplicación", Toast.LENGTH_LONG).show();
+                                Log.d(TAG, e.toString());
+                            }
+                        }else{
+                            Toast.makeText(ctx, "No se recibio respuesta del Servidor", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        progress.dismiss();
+                        // Toast.makeText(ctx,"Error al conectarse, verifique su conexion con el servidor",Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(ctx,error.toString(),Toast.LENGTH_LONG).show();
+                        Log.d("error 2",error.toString());
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+
+                //informacion del usuario
+                Gson gson = new Gson();
+                String usuarioJson = gson.toJson(new LoginDataDAO(ctx).verficarLogueo());
+                params.put("usuario",usuarioJson);
+
+                //viajes
+                gson = new Gson();
+
+                String viajesJson = gson.toJson(
+                        viajeVO,
+                        new TypeToken<ViajeVO>() {}.getType());
+                params.put("viaje",viajesJson);
+
+                Log.d(TAG,"usuario:"+usuarioJson);
+                Log.d(TAG,"viajes:"+viajesJson);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> headers = new HashMap<String, String>();
+                headers.put("Content-Type","application/x-www-form-urlencoded");
+                return headers;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(sr);
+    }
 
 
 }

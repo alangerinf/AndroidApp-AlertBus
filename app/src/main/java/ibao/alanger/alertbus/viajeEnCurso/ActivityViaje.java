@@ -203,41 +203,44 @@ public class ActivityViaje extends AppCompatActivity implements
                             );
                             mPhysicaloid.setBaudrate(9600);
 
-                            if(mPhysicaloid.open()) {
-                                try{
-                                    Toast.makeText(ctx,"Escuchando puerto Serial",Toast.LENGTH_LONG).show();
-                                    // setEnabledUi(true);
-                                    mPhysicaloid.addReadListener(new ReadLisener() {
+                            try{
+                                if(mPhysicaloid.open()) {
+                                    try{
+                                        Toast.makeText(ctx,"Escuchando puerto Serial",Toast.LENGTH_LONG).show();
+                                        // setEnabledUi(true);
+                                        mPhysicaloid.addReadListener(new ReadLisener() {
 
-                                        @Override
-                                        public void onRead(int size) {
-                                            byte[] buf = new byte[size];
-                                            mPhysicaloid.read(buf, size);
+                                            @Override
+                                            public void onRead(int size) {
+                                                byte[] buf = new byte[size];
+                                                mPhysicaloid.read(buf, size);
 
-                                            String temporal = ""+RFID;
+                                                String temporal = ""+RFID;
 
-                                            temporal = temporal+new String(buf);
+                                                temporal = temporal+new String(buf);
 
-                                            String finalTemporal = temporal;
-                                            handler.post(
-                                                    ()->{
-                                                        tViewRFID.append(finalTemporal);
-                                                        scrollViewRFID.fullScroll(View.FOCUS_DOWN);
-                                                    }
+                                                String finalTemporal = temporal;
+                                                handler.post(
+                                                        ()->{
+                                                            tViewRFID.append(finalTemporal);
+                                                            scrollViewRFID.fullScroll(View.FOCUS_DOWN);
+                                                        }
 
-                                            );
+                                                );
 
-                                        }
-                                    });
-                                }catch (Exception e){
-                                    Log.d("hello",e.toString());
-                                    Toast.makeText(ctx,"Error "+e.toString(),Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }catch (Exception e){
+                                        Log.d("hello",e.toString());
+                                        Toast.makeText(ctx,"Error "+e.toString(),Toast.LENGTH_LONG).show();
+                                    }
+
+                                } else {
+                                    Toast.makeText(ctx, "No se pudo abrir Serial", Toast.LENGTH_LONG).show();
                                 }
-
-                            } else {
-                                Toast.makeText(ctx, "No se pudo abrir Serial", Toast.LENGTH_LONG).show();
+                            }catch (Exception e){
+                                Toast.makeText(ctx,"ERR: "+e.toString(),Toast.LENGTH_LONG).show();
                             }
-
 
                         }
                     }
@@ -273,8 +276,6 @@ public class ActivityViaje extends AppCompatActivity implements
 
         IntentFilter filterAttached = new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         registerReceiver(usbReceiverAttached, filterAttached);
-
-
 
         root = findViewById(R.id.root);
 
@@ -427,8 +428,6 @@ public class ActivityViaje extends AppCompatActivity implements
     }
 
     RViewAdapterListPasajerosOnViaje adapter = null;
-
-
 
 
     @Override

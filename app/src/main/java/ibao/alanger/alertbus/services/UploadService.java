@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -98,12 +97,18 @@ public class UploadService extends Service { // tracking y sincronizacioin de vi
             List<ViajeVO> viajeVOList = new ViajeDAO(ctx).listByStatusWaitingAtUpload();
             if(viajeVOList.size()>0){
                 Log.d(TAG,"subiendo "+viajeVOList.size()+" viajes");
-                new UploadMaster(ctx).UploadViaje(viajeVOList);
+                new UploadMaster(ctx).UploadViajeFinish(viajeVOList);
             }
 
             if(new LoginDataDAO(ctx).verficarLogueo().getTypeUser()==0){// si es conductor
-                if(new LoginDataDAO(ctx).verficarLogueo().getIdViaje()>0 ){
-
+                int IDVIAJE = new LoginDataDAO(ctx).verficarLogueo().getIdViaje();
+                if(IDVIAJE >0 ){ // si hay un viaje activo
+  //                  ViajeVO VIAJE = new ViajeDAO(ctx).buscarById(IDVIAJE);
+                    /*
+                    if(VIAJE!=null && VIAJE.getIdWeb()!=0){
+                        new UploadMaster(ctx).UploadViajeProgress(VIAJE);
+                    }
+*/
                     if(!LocationService.isEnable){
                         Intent intent = new Intent(ctx,LocationService.class);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
