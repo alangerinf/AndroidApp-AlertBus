@@ -5,7 +5,9 @@ public class Utilities {
 
     private static String TAG = Utilities.class.getSimpleName();
 
-    public static final String URL_ROOT="http://35.167.15.182/AlertBus/EcoSac/Requests/";
+    //public static final String URL_ROOT="http://35.167.15.182/AlertBus/EcoSac/Requests/";
+    public static final String URL_ROOT="http://35.167.15.182/AlertBus/Demo/Requests/";
+
     public static final String URL_AUTENTIFICATION=URL_ROOT+"autenticar.php";
     public static final String URL_BUSCARNUEVOS=URL_ROOT+"getViajes.php";
     public static final String URL_BUSCARTRABAJADOR=URL_ROOT+"getTrabajador.php";

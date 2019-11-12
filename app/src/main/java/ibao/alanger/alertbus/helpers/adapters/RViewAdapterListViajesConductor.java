@@ -518,6 +518,7 @@ public class RViewAdapterListViajesConductor extends RecyclerView.Adapter<RViewA
         Intent i = new Intent(ctx, ActivityViaje.class);
         viajeVO.setPasajeroVOList(new PasajeroDAO(ctx).listByIdViaje(viajeVO.getId()));
         i.putExtra(ActivityViaje.EXTRA_VIAJE,viajeVO);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         ctx.startActivity(i);
     }
 

@@ -53,6 +53,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -82,10 +84,9 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private String TAG = ActivityViaje.class.getSimpleName();
 
-
-    PendingIntent permissionIntent;
-    Physicaloid mPhysicaloid; // initialising library
-    public static final String INTENT_ACTION_GRANT_USB = BuildConfig.APPLICATION_ID + ".GRANT_USB";
+    private static PendingIntent permissionIntent;
+    private static Physicaloid mPhysicaloid; // initialising library
+    public static final String INTENT_ACTION_GRANT_USB = BuildConfig.APPLICATION_ID + ".USB_PERMISSION";
 
     private DecoratedBarcodeView barcodeScannerView;
 
@@ -156,7 +157,6 @@ public class ActivityViaje extends AppCompatActivity implements
                         })  ;
                 }
             }
-
             handler.postDelayed(runSearchRFID,200);
         }
     };
@@ -187,27 +187,30 @@ public class ActivityViaje extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            Toast.makeText(ctx,action,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ctx,action,Toast.LENGTH_SHORT).show();
 
             if (INTENT_ACTION_GRANT_USB.equals(action)) {
                 synchronized (ctx) {
+
                     UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if(device != null){
                             //call method to set up device communication
-                            //Toast.makeText(ctx,"permiso Aceptadoooo",Toast.LENGTH_LONG).show();
-                            scrollViewRFID.setVisibility(View.VISIBLE);
-                            handler.post(
-                                runSearchRFID
-                            );
-                            mPhysicaloid.setBaudrate(9600);
-
+                            Toast.makeText(ctx,"Permiso Aceptado",Toast.LENGTH_SHORT).show();
                             try{
+                                mPhysicaloid = new Physicaloid(ctx);
                                 if(mPhysicaloid.open()) {
-                                    try{
-                                        Toast.makeText(ctx,"Escuchando puerto Serial",Toast.LENGTH_LONG).show();
+                                        scrollViewRFID.setVisibility(View.VISIBLE);
+
+                                        handler.post(
+                                                runSearchRFID
+                                        );
+                                        mPhysicaloid.setBaudrate(9600);
+
+                                        Toast.makeText(ctx,"Escuchando Puerto Serial",Toast.LENGTH_LONG).show();
                                         // setEnabledUi(true);
+                                        mPhysicaloid.clearReadListener();
                                         mPhysicaloid.addReadListener(new ReadLisener() {
 
                                             @Override
@@ -230,10 +233,7 @@ public class ActivityViaje extends AppCompatActivity implements
 
                                             }
                                         });
-                                    }catch (Exception e){
-                                        Log.d("hello",e.toString());
-                                        Toast.makeText(ctx,"Error "+e.toString(),Toast.LENGTH_LONG).show();
-                                    }
+
 
                                 } else {
                                     Toast.makeText(ctx, "No se pudo abrir Serial", Toast.LENGTH_LONG).show();
@@ -259,11 +259,12 @@ public class ActivityViaje extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // Toast.makeText(ctx,"onCreate",Toast.LENGTH_LONG).show();
         setContentView(R.layout.activity_viaje);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        mPhysicaloid = new Physicaloid(ctx);
+
 
         permissionIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(INTENT_ACTION_GRANT_USB), 0);
 
@@ -352,11 +353,10 @@ public class ActivityViaje extends AppCompatActivity implements
             }
         });
 
-
         barcodeScannerView = (DecoratedBarcodeView)findViewById(R.id.zxing_barcode_scanner);
         barcodeScannerView.setTorchListener(this);
 
-        Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39,BarcodeFormat.CODABAR);
+        Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39, BarcodeFormat.CODE_93,BarcodeFormat.CODE_128,BarcodeFormat.EAN_8,BarcodeFormat.EAN_13,BarcodeFormat.UPC_EAN_EXTENSION,BarcodeFormat.CODABAR);
         barcodeScannerView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
         barcodeScannerView.initializeFromIntent(getIntent());
         barcodeScannerView.decodeContinuous(callback);
@@ -382,6 +382,19 @@ public class ActivityViaje extends AppCompatActivity implements
         });
 
         validarPermisos();
+
+        //extra devices directly conetion
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        while(deviceIterator.hasNext()){
+            UsbDevice device = deviceIterator.next();
+            Toast.makeText(ctx,device.getDeviceName(),Toast.LENGTH_SHORT).show();
+            manager.requestPermission(device, permissionIntent);
+
+        }
+
+
 
 
     }
@@ -512,6 +525,53 @@ public class ActivityViaje extends AppCompatActivity implements
         return false;
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+        try{
+            unregisterReceiver(usbReceiverPermissionUSB);
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+        try{
+            unregisterReceiver(usbReceiverDetached);
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+
+        try{
+            unregisterReceiver(usbReceiverAttached);
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+
+
+        this.finish();
+
+    }
+
+
+    private void closeActivity(){
+        if(mPhysicaloid.close()) {
+            mPhysicaloid.clearReadListener();
+            scrollViewRFID.setVisibility(View.GONE);
+            handler.removeCallbacks(runSearchRFID);
+           // Toast.makeText(ctx,"Dispositivo Desconectado",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        //Toast.makeText(ctx,"onDestroy",Toast.LENGTH_SHORT).show();
+
+        try{
+            closeActivity();
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

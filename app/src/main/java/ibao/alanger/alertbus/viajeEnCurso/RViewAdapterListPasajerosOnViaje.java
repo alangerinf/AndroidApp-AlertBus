@@ -143,7 +143,7 @@ public class RViewAdapterListPasajerosOnViaje extends RecyclerView.Adapter<RView
                                 }
 
                             } catch (JSONException e) {
-                                Toast.makeText(ctx, "Error al obtener nombre del trabajador", Toast.LENGTH_LONG).show();
+                              //  Toast.makeText(ctx, "Error al obtener nombre del trabajador", Toast.LENGTH_LONG).show();
                                 Log.d(TAG, e.toString());
                             }
                         }else{
