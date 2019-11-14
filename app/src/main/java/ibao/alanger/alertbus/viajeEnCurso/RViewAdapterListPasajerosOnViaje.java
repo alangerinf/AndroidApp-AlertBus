@@ -173,7 +173,7 @@ public class RViewAdapterListPasajerosOnViaje extends RecyclerView.Adapter<RView
                 params.put("dni",pasajeroVO.getDni());
 
                 Log.d(TAG,"usuario:"+usuarioJson);
-                Log.d(TAG,"dni:"+pasajeroVO.getDni());
+                Log.d(TAG,"dni:<"+pasajeroVO.getDni()+">");
 
                 return params;
             }

@@ -94,7 +94,7 @@ public class ActivityViaje extends AppCompatActivity implements
 
     private ViewfinderView viewfinderView;
 
-    private static FloatingActionButton fAButtonLinterna;
+    private static FloatingActionButton fAButtonLinterna,fAButtonSwitch;
     private static TextView tViewRFID;
     private static ScrollView scrollViewRFID;
 
@@ -263,7 +263,8 @@ public class ActivityViaje extends AppCompatActivity implements
         setContentView(R.layout.activity_viaje);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
+        getIntent()
+                .putExtra("SCAN_CAMERA_ID",1);
 
 
         permissionIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(INTENT_ACTION_GRANT_USB), 0);
@@ -296,6 +297,9 @@ public class ActivityViaje extends AppCompatActivity implements
 
         statusLight = false;
         fAButtonLinterna = findViewById(R.id.fAButtonLinterna);
+        fAButtonSwitch = findViewById(R.id.fAButtonSwitch);
+
+
         tViewRFID = findViewById(R.id.tViewRFID);
         scrollViewRFID = findViewById(R.id.scrollViewRFID);
 
@@ -339,27 +343,27 @@ public class ActivityViaje extends AppCompatActivity implements
         // if the device does not have flashlight in its camera,
         // then remove the switch flashlight button...
 
-
-
         changeMaskColor(null);
 
+        /*
         fAButtonShowDialogMap = findViewById(R.id.fAButtonShowDialogMap);
         fAButtonShowDialogMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AdapterDialogMapa_ListPasajeros adapterDialogMapa = new AdapterDialogMapa_ListPasajeros(v.getContext(),-8.1329634,-79.049854,-8.125603,-79.031894);
                 adapterDialogMapa.popDialog();
             }
         });
 
+         */
+
         barcodeScannerView = (DecoratedBarcodeView)findViewById(R.id.zxing_barcode_scanner);
         barcodeScannerView.setTorchListener(this);
-
         Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39, BarcodeFormat.CODE_93,BarcodeFormat.CODE_128,BarcodeFormat.EAN_8,BarcodeFormat.EAN_13,BarcodeFormat.UPC_EAN_EXTENSION,BarcodeFormat.CODABAR);
         barcodeScannerView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
         barcodeScannerView.initializeFromIntent(getIntent());
         barcodeScannerView.decodeContinuous(callback);
+
 
         beepManager = new BeepManager(this);
 
@@ -394,8 +398,33 @@ public class ActivityViaje extends AppCompatActivity implements
 
         }
 
+        fAButtonSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(ctx,"Cambiando Camara",Toast.LENGTH_SHORT).show();
+                barcodeScannerView.pause();
+                Intent  i = getIntent();
+                int cameraId = i.getExtras().getInt("SCAN_CAMERA_ID");
 
+                if(cameraId==0) {
+                    cameraId = 1;
+                    Toast.makeText(ctx,"cambiando de Trasera a Delantera",Toast.LENGTH_SHORT).show();
+                }else {
+                    cameraId=0;
+                    Toast.makeText(ctx,"cambiando de Delantera a Trasera",Toast.LENGTH_SHORT).show();
+                }
 
+                i.putExtra("SCAN_CAMERA_ID",cameraId);
+                barcodeScannerView = null;
+                barcodeScannerView = (DecoratedBarcodeView)findViewById(R.id.zxing_barcode_scanner);
+                barcodeScannerView.setTorchListener(ActivityViaje.this);
+                Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39, BarcodeFormat.CODE_93,BarcodeFormat.CODE_128,BarcodeFormat.EAN_8,BarcodeFormat.EAN_13,BarcodeFormat.UPC_EAN_EXTENSION,BarcodeFormat.CODABAR);
+                barcodeScannerView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
+                barcodeScannerView.initializeFromIntent(getIntent());
+                barcodeScannerView.decodeContinuous(callback);
+                onResume();
+            }
+        });
 
     }
 
@@ -467,6 +496,7 @@ public class ActivityViaje extends AppCompatActivity implements
         super.onPause();
 
         barcodeScannerView.pause();
+        handler.removeCallbacks(runSearchRFID);
 /*
         unregisterReceiver(usbReceiverPermissionUSB);
         unregisterReceiver(usbReceiverDetached);

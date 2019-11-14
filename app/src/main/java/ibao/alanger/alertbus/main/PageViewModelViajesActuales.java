@@ -62,7 +62,6 @@ public class PageViewModelViajesActuales extends ViewModel {
                 v.setNumPasajerosRegistrados(viajeVO.getNumPasajerosRegistrados());
                 v.setNumRestriccionesRegistradas(viajeVO.getNumRestriccionesRegistradas());
                 v.sethConfirmado(viajeVO.gethConfirmado());
-
                 break;
             }
         }
