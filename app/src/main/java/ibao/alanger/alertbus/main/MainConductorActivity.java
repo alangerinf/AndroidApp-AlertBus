@@ -194,7 +194,7 @@ public class MainConductorActivity extends AppCompatActivity {
 
         if(id == R.id.limpiar) {
             new ViajeDAO(ctx).deleteByStatusSicronized();
-           // actualizarData();
+            actualizarData();
         }
 
         if(id == R.id.version) {
