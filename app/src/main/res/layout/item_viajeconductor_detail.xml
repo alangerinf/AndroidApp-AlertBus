@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,390 +10,406 @@
 
     app:layout_constraintTop_toTopOf="parent">
 
-
-    <TextView
-        android:id="@+id/tViewStatusEnCurso"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="En Curso"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tViewS1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tViewS3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/slash"
-        android:textColor="@color/primaryText"
-        app:layout_constraintBottom_toBottomOf="@+id/tViewStatusVerificado"
-        app:layout_constraintStart_toEndOf="@+id/tViewStatusEnCurso"
-        app:layout_constraintTop_toTopOf="@+id/tViewStatusEnCurso" />
-
-    <TextView
-        android:id="@+id/tViewS4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/slash"
-        android:textColor="@color/primaryText"
-        app:layout_constraintBottom_toBottomOf="@+id/tViewStatusVerificado"
-        app:layout_constraintStart_toEndOf="@+id/tViewStatusFinalizado"
-        app:layout_constraintTop_toTopOf="@+id/tViewStatusFinalizado" />
-
-    <TextView
-        android:id="@+id/tViewStatusFinalizado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Finalizado"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tViewS2"
-        app:layout_constraintStart_toEndOf="@+id/tViewS3"
-        app:layout_constraintTop_toTopOf="@+id/tViewS3" />
-
-    <TextView
-        android:id="@+id/tViewStatusSincronizado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Sincronizado"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tViewS2"
-        app:layout_constraintStart_toEndOf="@+id/tViewS4"
-        app:layout_constraintTop_toTopOf="@+id/tViewS4" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView12"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/tViewStatusFinalizado">
-
-        <TextView
-            android:id="@+id/tViewHEmbarque"
-            android:layout_width="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="10:30"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_tittle"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tViewDateEmbarque"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="16dp">
+            <TextView
+                android:id="@+id/tViewStatusEnCurso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="En Curso"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tViewS3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/slash"
+                android:textColor="@color/primaryText" />
+            <TextView
+                android:id="@+id/tViewStatusFinalizado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Finalizado"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tViewS4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/slash"
+                android:textColor="@color/primaryText" />
+            <TextView
+                android:id="@+id/tViewStatusSincronizado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Sincronizado"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="02/03/1888"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tViewHEmbarque" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tViewHEmbarque"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="10:30"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_tittle"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/tViewDateEmbarque"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="02/03/1888"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hora Embarque"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:gravity="center"/>
+            </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
-        app:layout_constraintStart_toEndOf="@+id/textView12"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
+            <LinearLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tViewHDesembarque"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="--:--"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_tittle"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/tViewDateDesembarque"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="No Finalizado"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hora Desembarque"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textColor="@color/primaryText"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tViewHDesembarque"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/constraintLayout4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="--:--"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_tittle"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tViewDateDesembarque"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_empresa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Empresa"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                    android:textColor="@color/primaryText" />
+
+                <TextView
+                    android:id="@+id/tViewEmpresa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_proveedor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Transportista"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tViewTP1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                    android:textColor="@color/primaryText" />
+
+                <TextView
+                    android:id="@+id/tViewProveedor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_ruta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Ruta"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tViewTP7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"/>
+                <TextView
+                    android:id="@+id/tViewRuta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:text="@string/prueba_texto_corto"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_nPlaca"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Placa"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tViewTP2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+
+                <TextView
+                    android:id="@+id/tViewPlaca"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:text="ABCDEFG"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_porCapacidad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Capacidad"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tViewTP8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+                <TextView
+                    android:id="@+id/tViewCapacidad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="200"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/tView_cantidad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Cant. Pasajeros"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="@string/twoPoints"
+                android:textColor="@color/primaryText"
+                android:textSize="@dimen/textsize_secondary"/>
+                <TextView
+                    android:id="@+id/tViewCantidad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginStart="3dp"
+                    android:text="200"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textsize_secondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnEnter"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="No Finalizado"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tViewHDesembarque" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text=" "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hora Embarque"
-        android:textColor="@color/primaryText"
-        android:textSize="@dimen/textsize_secondary"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hora Desembarque"
-        android:textSize="@dimen/textsize_secondary"
-        android:textColor="@color/primaryText"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/shadow_center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13">
-
-        <TextView
-            android:id="@+id/tView_proveedor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Proveedor"
-            android:textColor="@color/primaryText"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/shape_customgreen_br30_b0"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Comenzar Viaje"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_primary" />
 
-            android:textSize="@dimen/textsize_secondary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/tViewTP1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/twoPoints"
-            android:textColor="@color/primaryText"
-
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintBottom_toBottomOf="@+id/tView_proveedor"
-            app:layout_constraintStart_toEndOf="@+id/tView_proveedor" />
-
-        <TextView
-            android:id="@+id/tViewProveedor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/prueba_texto_corto"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tViewTP1"
-            app:layout_constraintTop_toTopOf="@+id/tViewTP1" />
-
-        <TextView
-            android:id="@+id/tView_nPlaca"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Placa"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/tView_proveedor"
-            app:layout_constraintTop_toBottomOf="@+id/tViewProveedor" />
-
-        <TextView
-            android:id="@+id/tViewTP2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/twoPoints"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintBottom_toBottomOf="@+id/tView_nPlaca"
-            app:layout_constraintStart_toStartOf="@+id/tViewTP1" />
-
-        <TextView
-            android:id="@+id/tViewPlaca"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/prueba_texto_corto"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintEnd_toEndOf="@+id/tViewProveedor"
-            app:layout_constraintStart_toEndOf="@+id/tViewTP2"
-            app:layout_constraintTop_toTopOf="@+id/tViewTP2" />
-
-        <TextView
-            android:id="@+id/tViewConductor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/prueba_texto_corto"
-            android:textColor="@color/primaryText"
-
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintEnd_toEndOf="@+id/tViewPlaca"
-            app:layout_constraintStart_toEndOf="@+id/tViewTP3"
-            app:layout_constraintTop_toTopOf="@+id/tViewTP3" />
-
-        <TextView
-            android:id="@+id/tViewRuta"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/prueba_texto_corto"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintEnd_toEndOf="@+id/tViewConductor"
-            app:layout_constraintStart_toEndOf="@+id/tViewTP7"
-            app:layout_constraintTop_toTopOf="@+id/tViewTP7" />
-
-        <TextView
-            android:id="@+id/tViewCapacidad"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="4dp"
-            android:text="@string/prueba_texto_corto"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tViewRuta"
-            app:layout_constraintStart_toEndOf="@+id/tViewTP8"
-            app:layout_constraintTop_toTopOf="@+id/tViewTP8" />
-
-        <TextView
-            android:id="@+id/tView_porCapacidad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capacidad"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/tView_ruta"
-            app:layout_constraintTop_toBottomOf="@+id/tViewRuta" />
-
-        <TextView
-            android:id="@+id/tViewTP8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/twoPoints"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintStart_toStartOf="@+id/tViewTP7"
-            app:layout_constraintTop_toTopOf="@+id/tView_porCapacidad" />
-
-        <TextView
-            android:id="@+id/tViewTP7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/twoPoints"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintBottom_toBottomOf="@+id/tView_ruta"
-            app:layout_constraintStart_toStartOf="@+id/tViewTP3" />
-
-        <TextView
-            android:id="@+id/tViewTP3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/twoPoints"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            app:layout_constraintBottom_toBottomOf="@+id/tView_conductor"
-            app:layout_constraintStart_toStartOf="@+id/tViewTP2" />
-
-        <TextView
-            android:id="@+id/tView_conductor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Conductor"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            android:textStyle="bold"
-
-            app:layout_constraintStart_toStartOf="@+id/tView_nPlaca"
-            app:layout_constraintTop_toBottomOf="@+id/tViewPlaca" />
-
-        <TextView
-            android:id="@+id/tView_ruta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ruta"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textsize_secondary"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/tView_conductor"
-            app:layout_constraintTop_toBottomOf="@+id/tViewConductor" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/btnEnter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/shape_customgreen_br30_b0"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="Comenzar Viaje"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textsize_primary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+    </LinearLayout>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:scaleX="0.7"
-        android:scaleY="0.7"
         app:backgroundTint="@color/red"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_delete_sweep_white_24dp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/tViewConductor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:text="@string/prueba_texto_corto"
+        android:textColor="@color/primaryText"
+        android:visibility="gone"
+
+        android:textSize="@dimen/textsize_secondary" />
+
+    <TextView
+        android:id="@+id/tViewTP3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/twoPoints"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tView_conductor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conductor"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textsize_secondary"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+</FrameLayout>

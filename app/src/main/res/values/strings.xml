@@ -24,7 +24,7 @@
     <string name="todo">TODO</string>
     <string name="usuario">Usuario</string>
     <string name="contrasena">Contraseña</string>
-    <string name="ingresar">Ingresar</string>
+    <string name="ingresar">Iniciar Sesión</string>
     <string name="company_mark">@Ibao.pe</string>
 
     <string name="prueba_texto_corto">PRUEBA TEXTO CORTO</string>
@@ -42,7 +42,7 @@
 
     <string name="pregunta_comenzar_viaje">¿Está seguro que desea comenzar el Viaje?</string>
     <string name="pregunta_eliminar_viaje">¿Está seguro que desea eliminar el Viaje?</string>
-    <string name="pregunta_actualizar_hora_salida">Se elimino la hora de salida del Trabajador</string>
+    <string name="pregunta_actualizar_hora_salida">Se eliminó la hora de salida del Trabajador</string>
 
 
 </resources>

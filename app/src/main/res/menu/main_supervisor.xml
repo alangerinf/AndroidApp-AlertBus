@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/qr"
-        android:title="Versión"
+        android:title="Escanear Viaje"
         android:icon="@drawable/ic_qr_scanner"
         app:showAsAction="ifRoom" />
 </menu>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ibao.alanger.alertbus">
+    package="ibao.alertbus.ecosac">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,11 +15,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <uses-feature android:name="android.hardware.usb.host" />
 
     <application
-        android:name=".app.AppController"
+        android:name="ibao.alertbus.ecosac.app.AppController"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,68 +26,77 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".views.TestQRActivity">
 
-
-        </activity>
-        <activity android:name=".views.PasajerosListActivity"></activity>
-        <activity android:name=".views.MapsActivity"></activity>
-        <activity android:name=".main.MainConductorActivity"></activity>
-        <activity android:name=".views.RestricionActivity" />
+        <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+            android:resource="@xml/device_filter" />
+        <activity android:name="ibao.alertbus.ecosac.views.PasajerosListActivity" />
+        <activity android:name="ibao.alertbus.ecosac.views.MapsActivity" />
+        <activity android:name="ibao.alertbus.ecosac.main.MainConductorActivity" android:screenOrientation="portrait"/>
+        <activity android:name="ibao.alertbus.ecosac.views.RestricionActivity" />
 
         <service
-            android:name=".services.SearchViajesService"
+            android:name="ibao.alertbus.ecosac.services.SearchViajesService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.UploadService"
+            android:name="ibao.alertbus.ecosac.services.UploadService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.SearchChangesViajesService"
+            android:name="ibao.alertbus.ecosac.services.SearchChangesViajesService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".services.LocationService">
+        <service android:name="ibao.alertbus.ecosac.services.LocationService">
             <intent-filter>
                 <action android:name=".servicioDisponible" />
             </intent-filter>
         </service>
 
-        <activity android:name=".views.ActivityPreloader"
+        <activity
+            android:name="ibao.alertbus.ecosac.views.ActivityPreloader"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Fullscreen"
-            >
+            android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.DetailActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".views.LoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".main.MainSupervisorActivity"
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+        <activity
+            android:name="ibao.alertbus.ecosac.views.DetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".views.CustomScannerActivity"
-            android:parentActivityName=".views.PasajerosListActivity"
-            android:screenOrientation="portrait"
-            android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-        </activity>
+            android:name="ibao.alertbus.ecosac.views.LoginActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".viajeEnCurso.ActivityViaje"
-            android:parentActivityName=".main.MainConductorActivity"
+            android:name="ibao.alertbus.ecosac.main.MainSupervisorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="ibao.alertbus.ecosac.views.CustomScannerActivity"
+            android:parentActivityName="ibao.alertbus.ecosac.views.PasajerosListActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name="ibao.alertbus.ecosac.viajeEnCurso.ActivityViaje"
+            android:parentActivityName="ibao.alertbus.ecosac.main.MainConductorActivity"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateAlwaysHidden" >
 
-        <receiver android:name=".services.AutoArranqueBroadcast">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="ibao.alertbus.ecosac.services.AutoArranqueBroadcast">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

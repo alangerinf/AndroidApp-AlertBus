@@ -7,10 +7,10 @@
     <dimen name="fab_margin">16dp</dimen>
 
 
-    <dimen name="textsize_primary">18sp</dimen>
-    <dimen name="textsize_secondary">16sp</dimen>
-    <dimen name="textsize_tertiary">14sp</dimen>
-    <dimen name="textsize_tittle">20sp</dimen>
+    <dimen name="textsize_primary">17sp</dimen>
+    <dimen name="textsize_secondary">15sp</dimen>
+    <dimen name="textsize_tertiary">13sp</dimen>
+    <dimen name="textsize_tittle">18sp</dimen>
 
 
     <dimen name="mark_size_text">12sp</dimen>

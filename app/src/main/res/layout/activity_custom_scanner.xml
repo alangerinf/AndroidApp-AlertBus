@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Enfoque Fijamente el código QR dentro del marco."
+            android:text="Apunta tu teléfono hacia el código QR para escanearlo"
             android:textSize="@dimen/textsize_tittle"
             android:textStyle="bold"
             android:textAlignment="center"

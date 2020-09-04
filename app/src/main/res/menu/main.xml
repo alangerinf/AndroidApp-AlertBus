@@ -9,6 +9,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/trasbordo"
+        android:title="Transbordo"
+        android:icon="@drawable/ic_interchange"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/logout"
         android:title="Cerrar Sesión"
         app:showAsAction="never" />

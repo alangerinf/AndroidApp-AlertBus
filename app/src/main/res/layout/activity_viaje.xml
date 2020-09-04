@@ -4,21 +4,22 @@
     android:id="@+id/root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".views.CustomScannerActivity">
+    android:layout_height="match_parent">
+
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
-        android:id="@+id/zxing_barcode_scanner"
+        android:id="@+id/zxing_barcode_scannerReal"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout8"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
+        app:layout_constraintVertical_bias="0.0"
         app:zxing_scanner_layout="@layout/custom_barcode_scanner">
 
     </com.journeyapps.barcodescanner.DecoratedBarcodeView>
-
 
     <ProgressBar
         android:id="@+id/progress_circular"
@@ -30,10 +31,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scanner"
+        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scannerReal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/zxing_barcode_scanner" />
+        app:layout_constraintTop_toTopOf="@+id/zxing_barcode_scannerReal" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fAButtonLinterna"
@@ -43,9 +44,12 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scanner"
-        app:layout_constraintEnd_toEndOf="@+id/zxing_barcode_scanner"
-        app:srcCompat="@drawable/ic_light_white_off"
+        android:backgroundTint="#ffdd87"
+        app:borderWidth="0dp"
+        android:tint="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scannerReal"
+        app:layout_constraintEnd_toEndOf="@+id/zxing_barcode_scannerReal"
+        app:srcCompat="@drawable/flashlight_icon"
         tools:ignore="MissingConstraints" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -56,19 +60,19 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="@color/white"
+        app:borderWidth="0dp"
         app:rippleColor="@color/accent"
-        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scanner"
-        app:layout_constraintStart_toStartOf="@+id/zxing_barcode_scanner"
-        app:srcCompat="@drawable/ic_switch_camera_black_24dp"
-        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/zxing_barcode_scannerReal"
+        app:layout_constraintStart_toStartOf="@+id/zxing_barcode_scannerReal"
+        app:srcCompat="@drawable/switch_camear_icon"
         tools:ignore="MissingConstraints" />
 
     <ScrollView
         android:id="@+id/scrollViewRFID"
         android:elevation="100dp"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="20dp"
         android:visibility="visible"
         android:focusable="true"
         android:clickable="true"
@@ -109,7 +113,6 @@
 
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -146,6 +149,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="02/03/1888"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tViewHEmbarque" />
@@ -182,6 +186,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="No Finalizado"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tViewHDesembarque" />
@@ -274,7 +279,9 @@
             app:layout_constraintStart_toEndOf="@id/cs_tView_Num_Pasajeros"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout9"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -288,19 +295,33 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/av_rViewPasajeros"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:spanCount="1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <EditText
+            android:id="@+id/txtNumeroRFID"
+            android:layout_width="225dp"
+            android:layout_height="20dp"
+            android:backgroundTint="@android:color/white"
+            android:inputType="textPersonName"
+            android:padding="0dp"
+            android:textSize="12sp"
+            android:layout_marginStart="150dp"
+            app:layout_constraintStart_toEndOf="@id/cs_tView_Num_Pasajeros"
+            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
